@@ -23,6 +23,12 @@ class CompetitionUnit extends ModelBase {
       foreignKey: 'vesselParticipantGroupId',
       constraints: false,
     });
+
+    this.hasMany(models.TrackHistory, {
+      as: 'tracks',
+      foreignKey: 'userProfileId',
+      constraints: false,
+    });
   }
 }
 

@@ -33,6 +33,12 @@ class VesselParticipant extends ModelBase {
       constraints: false,
       foreignKey: 'vesselParticipantGroupId',
     });
+
+    this.hasMany(models.TrackHistory, {
+      as: 'tracks',
+      foreignKey: 'vesselParticipantId',
+      constraints: false,
+    });
   }
 }
 
