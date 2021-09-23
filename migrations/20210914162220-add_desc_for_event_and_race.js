@@ -21,15 +21,11 @@ module.exports = {
       'country',
       Sequelize.STRING,
     );
-    await queryInterface.addColumn(
-      'CalendarEvents',
-      'city',
-      Sequelize.STRING(1000),
-    );
+    await queryInterface.addColumn('CalendarEvents', 'city', Sequelize.STRING);
     await queryInterface.addColumn(
       'CompetitionUnits',
       'description',
-      Sequelize.STRING,
+      Sequelize.STRING(1000),
     );
   },
   /**
