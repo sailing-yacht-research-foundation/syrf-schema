@@ -35,19 +35,18 @@ db.CourseUnsequencedTimedGeometry =
 db.CourseUnsequencedUntimedGeometry =
   require('./entities/CourseUnsequencedUntimedGeometry')(sequelize);
 db.Developer = require('./entities/Developer')(sequelize);
-db.CompetitionResult = require('./entities/analysisEngine/CompetitionResult')(
+db.CompetitionResult = require('./entities/CompetitionResult')(sequelize);
+db.VesselParticipantEvent = require('./entities/VesselParticipantEvent')(
   sequelize,
 );
-db.VesselParticipantEvent =
-  require('./entities/analysisEngine/VesselParticipantEvent')(sequelize);
-db.VesselParticipantLeg =
-  require('./entities/analysisEngine/VesselParticipantLeg')(sequelize);
-db.VesselParticipantTrack =
-  require('./entities/analysisEngine/VesselParticipantTrack')(sequelize);
+db.VesselParticipantLeg = require('./entities/VesselParticipantLeg')(sequelize);
+db.VesselParticipantTrack = require('./entities/VesselParticipantTrack')(
+  sequelize,
+);
 db.VesselParticipantTrackJson =
-  require('./entities/analysisEngine/VesselParticipantTrackJson')(sequelize);
+  require('./entities/VesselParticipantTrackJson')(sequelize);
 db.VesselParticipantCrewTrack =
-  require('./entities/analysisEngine/VesselParticipantCrewTrack')(sequelize);
+  require('./entities/VesselParticipantCrewTrack')(sequelize);
 db.TrackHistory = require('./entities/TrackHistory')(sequelize);
 
 for (const key in db) {
