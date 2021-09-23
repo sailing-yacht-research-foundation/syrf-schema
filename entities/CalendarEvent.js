@@ -26,6 +26,12 @@ class CalendarEvent extends ModelBase {
       foreignKey: 'calendarEventId',
       constraints: false,
     });
+
+    this.hasMany(models.VesselParticipantGroup, {
+      as: 'groups',
+      foreignKey: 'calendarEventId',
+      constraints: false,
+    });
   }
 }
 

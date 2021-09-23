@@ -13,6 +13,12 @@ class VesselParticipantCrew extends ModelBase {
       constraints: false,
       foreignKey: 'participantId',
     });
+
+    this.hasMany(models.TrackHistory, {
+      as: 'tracks',
+      foreignKey: 'crewId',
+      constraints: false,
+    });
   }
 }
 

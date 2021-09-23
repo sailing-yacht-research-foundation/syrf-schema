@@ -14,6 +14,12 @@ class VesselParticipantGroup extends ModelBase {
       constraints: false,
       foreignKey: 'vesselParticipantGroupId',
     });
+
+    this.belongsTo(models.CalenderEvent, {
+      as: 'event',
+      constraints: false,
+      foreignKey: 'calendarEventId',
+    });
   }
 }
 
@@ -27,6 +33,9 @@ module.exports = (sequelize) => {
         primaryKey: true,
       },
       vesselParticipantGroupId: {
+        type: DataTypes.STRING,
+      },
+      name: {
         type: DataTypes.STRING,
       },
     },

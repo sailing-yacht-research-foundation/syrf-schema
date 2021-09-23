@@ -15,6 +15,10 @@ module.exports = (sequelize) => {
         type: DataTypes.UUID,
         allowNull: false,
       },
+      competitionUnitId: {
+        type: DataTypes.UUID,
+        allowNull: false,
+      },
       position: {
         type: DataTypes.GEOMETRY('POINT', 4326),
         allowNull: false,
