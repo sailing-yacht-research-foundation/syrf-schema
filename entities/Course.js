@@ -3,9 +3,15 @@ const ModelBase = require('../ModelBase');
 
 class Course extends ModelBase {
   static associate(models) {
-    this.belongsTo(models.CompetitionUnit, {
+    this.belongsTo(models.CalenderEvent, {
+      as: 'event',
+      foreignKey: 'calendarEventId',
+      constraints: false,
+    });
+
+    this.hasMany(models.CompetitionUnit, {
       as: 'competitionUnit',
-      foreignKey: 'competitionUnitId',
+      foreignKey: 'courseId',
       constraints: false,
     });
 
@@ -40,6 +46,9 @@ module.exports = (sequelize) => {
         defaultValue: DataTypes.UUIDV1,
         allowNull: false,
         primaryKey: true,
+      },
+      name: {
+        type: DataTypes.STRING,
       },
     },
     {
