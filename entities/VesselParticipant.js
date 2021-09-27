@@ -54,6 +54,12 @@ module.exports = (sequelize) => {
       vesselParticipantId: {
         type: DataTypes.STRING,
       },
+      vesselId: {
+        type: DataTypes.UUID,
+      },
+      vesselParticipantGroupId: {
+        type: DataTypes.UUID,
+      },
     },
     {
       modelName: 'VesselParticipant',

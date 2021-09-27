@@ -35,6 +35,12 @@ module.exports = (sequelize) => {
         type: DataTypes.BOOLEAN,
         defaultValue: false,
       },
+      participantId: {
+        type: DataTypes.UUID,
+      },
+      vesselParticipantId: {
+        type: DataTypes.UUID,
+      },
     },
     {
       modelName: 'VesselParticipantCrew',
