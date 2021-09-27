@@ -68,6 +68,15 @@ module.exports = (sequelize) => {
       boundingBox: {
         type: DataTypes.GEOMETRY('POLYGON', 4326),
       },
+      courseId: {
+        type: DataTypes.UUID,
+      },
+      calendarEventId: {
+        type: DataTypes.UUID,
+      },
+      vesselParticipantGroupId: {
+        type: DataTypes.UUID,
+      },
       description: {
         type: DataTypes.STRING(1000),
       },

@@ -26,6 +26,21 @@ module.exports = (sequelize) => {
       validTo: {
         type: DataTypes.DATE,
       },
+      courseId: {
+        type: DataTypes.UUID,
+      },
+      geometryType: {
+        type: DataTypes.STRING,
+      },
+      order: {
+        type: DataTypes.INTEGER,
+      },
+      coordinates: {
+        type: DataTypes.JSON,
+      },
+      properties: {
+        type: DataTypes.JSON,
+      },
     },
     {
       modelName: 'CourseSequencedGeometry',
