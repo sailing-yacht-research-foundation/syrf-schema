@@ -11,11 +11,11 @@ module.exports = (sequelize) => {
         allowNull: false,
         primaryKey: true,
       },
-      competitionUnitId: {
+      vesselParticipantCrewId: {
         type: DataTypes.UUID,
         allowNull: false,
       },
-      vesselParticipantCrewId: {
+      competitionUnitId: {
         type: DataTypes.UUID,
         allowNull: false,
       },

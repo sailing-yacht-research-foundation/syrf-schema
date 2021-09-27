@@ -47,6 +47,7 @@ db.VesselParticipantTrackJson =
   require('./entities/VesselParticipantTrackJson')(sequelize);
 db.VesselParticipantCrewTrack =
   require('./entities/VesselParticipantCrewTrack')(sequelize);
+db.TrackHistory = require('./entities/TrackHistory')(sequelize);
 
 for (const key in db) {
   if (Object.hasOwnProperty.call(db, key)) {

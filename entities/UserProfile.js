@@ -15,6 +15,12 @@ class UserProfile extends ModelBase {
       as: 'calendarEditors',
       constraints: false,
     });
+
+    this.hasMany(models.TrackHistory, {
+      as: 'tracks',
+      foreignKey: 'userProfileId',
+      constraints: false,
+    });
   }
 }
 

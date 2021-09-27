@@ -23,6 +23,12 @@ class CompetitionUnit extends ModelBase {
       foreignKey: 'vesselParticipantGroupId',
       constraints: false,
     });
+
+    this.hasMany(models.TrackHistory, {
+      as: 'tracks',
+      foreignKey: 'userProfileId',
+      constraints: false,
+    });
   }
 }
 
@@ -46,6 +52,12 @@ module.exports = (sequelize) => {
       },
       approximateStart: {
         type: DataTypes.DATE,
+      },
+      approximateStart_utc: {
+        type: DataTypes.DATE,
+      },
+      approximateStart_zone: {
+        type: DataTypes.STRING,
       },
       timeLimit: {
         type: DataTypes.DATE,
