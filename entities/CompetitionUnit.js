@@ -53,6 +53,12 @@ module.exports = (sequelize) => {
       approximateStart: {
         type: DataTypes.DATE,
       },
+      approximateStart_utc: {
+        type: DataTypes.DATE,
+      },
+      approximateStart_zone: {
+        type: DataTypes.STRING,
+      },
       timeLimit: {
         type: DataTypes.DATE,
       },
