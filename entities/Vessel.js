@@ -40,6 +40,7 @@ module.exports = (sequelize) => {
       },
       bulkCreated: {
         type: DataTypes.BOOLEAN,
+        defaultValue: false,
       },
     },
     {
