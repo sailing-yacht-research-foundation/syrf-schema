@@ -11,26 +11,30 @@ module.exports = {
    * @returns
    */
   up: async (queryInterface, Sequelize) => {
-    await queryInterface.addColumn(
-      'CalendarEvents',
-      'description',
-      Sequelize.STRING(1000),
-    );
-    await queryInterface.addColumn(
-      'CalendarEvents',
-      'country',
-      Sequelize.STRING,
-    );
-    await queryInterface.addColumn(
-      'CalendarEvents',
-      'city',
-      Sequelize.STRING(1000),
-    );
-    await queryInterface.addColumn(
-      'CompetitionUnits',
-      'description',
-      Sequelize.STRING,
-    );
+    const tableInfo = await queryInterface.describeTable('CalendarEvents');
+
+    if (!tableInfo.description) {
+      await queryInterface.addColumn(
+        'CalendarEvents',
+        'description',
+        Sequelize.STRING(1000),
+      );
+      await queryInterface.addColumn(
+        'CalendarEvents',
+        'country',
+        Sequelize.STRING,
+      );
+      await queryInterface.addColumn(
+        'CalendarEvents',
+        'city',
+        Sequelize.STRING(1000),
+      );
+      await queryInterface.addColumn(
+        'CompetitionUnits',
+        'description',
+        Sequelize.STRING,
+      );
+    }
   },
   /**
    * @param {QueryInterface} queryInterface

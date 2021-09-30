@@ -11,10 +11,20 @@ module.exports = {
    * @returns
    */
   up: async (queryInterface, Sequelize) => {
-    await queryInterface.addColumn('VesselParticipantCrews', 'startedStream', {
-      type: Sequelize.BOOLEAN,
-      defaultValue: false,
-    });
+    const tableInfo = await queryInterface.describeTable(
+      'VesselParticipantCrews',
+    );
+
+    if (!tableInfo.startedStream) {
+      await queryInterface.addColumn(
+        'VesselParticipantCrews',
+        'startedStream',
+        {
+          type: Sequelize.BOOLEAN,
+          defaultValue: false,
+        },
+      );
+    }
   },
   /**
    * @param {QueryInterface} queryInterface

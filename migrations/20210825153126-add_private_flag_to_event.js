@@ -11,11 +11,15 @@ module.exports = {
    * @returns
    */
   up: async (queryInterface, Sequelize) => {
-    await queryInterface.addColumn(
-      'CalendarEvents',
-      'isPrivate',
-      Sequelize.BOOLEAN,
-    );
+    const tableInfo = await queryInterface.describeTable('CalendarEvents');
+
+    if (!tableInfo.isPrivate) {
+      await queryInterface.addColumn(
+        'CalendarEvents',
+        'isPrivate',
+        Sequelize.BOOLEAN,
+      );
+    }
   },
 
   /**
