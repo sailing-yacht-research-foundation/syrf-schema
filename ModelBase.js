@@ -3,7 +3,7 @@
  * @typedef {import('sequelize').QueryInterface} QueryInterface
  */
 
-const { Model, Op } = require('sequelize');
+const { Model, Op, literal } = require('sequelize');
 
 class ModelBase extends Model {
   static associateBase(models) {
@@ -104,10 +104,19 @@ class ModelBase extends Model {
 
     if (filters.length > 0) params.where = { [Op.and]: conditions };
 
-    let result = await this.findAndCountAll(params);
+    let [result, count] = await Promise.all([
+      this.findAll(params),
+      this.count({
+        ...params,
+        attributes: [
+          [literal(`COUNT(DISTINCT("${this.name}"."id"))`), 'count'],
+        ],
+      }),
+    ]);
 
     return {
-      ...result,
+      count,
+      rows: result,
       page,
       size: pagingSize,
       sort: sortQuery,
