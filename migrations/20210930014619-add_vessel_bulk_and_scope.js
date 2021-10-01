@@ -11,15 +11,15 @@ module.exports = {
    * @returns
    */
   up: async (queryInterface, Sequelize) => {
-    const tableInfo = await queryInterface.describeTable('Courses');
+    const tableInfo = await queryInterface.describeTable('Vessels');
 
-    if (!tableInfo.calendarEventId) {
+    if (!tableInfo.scope) {
+      await queryInterface.addColumn('Vessels', 'scope', Sequelize.UUID);
       await queryInterface.addColumn(
-        'Courses',
-        'calendarEventId',
-        Sequelize.UUID,
+        'Vessels',
+        'bulkCreated',
+        Sequelize.BOOLEAN,
       );
-      await queryInterface.addColumn('Courses', 'name', Sequelize.STRING);
     }
   },
   /**
@@ -28,7 +28,7 @@ module.exports = {
    * @returns
    */
   down: async (queryInterface) => {
-    await queryInterface.removeColumn('Courses', 'calendarEventId');
-    await queryInterface.removeColumn('Courses', 'name');
+    await queryInterface.removeColumn('Vessels', 'scope');
+    await queryInterface.removeColumn('Vessels', 'bulkCreated');
   },
 };

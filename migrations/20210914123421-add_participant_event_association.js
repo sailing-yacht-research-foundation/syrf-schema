@@ -11,11 +11,15 @@ module.exports = {
    * @returns
    */
   up: async (queryInterface, Sequelize) => {
-    await queryInterface.addColumn(
-      'Participants',
-      'calendarEventId',
-      Sequelize.UUID,
-    );
+    const tableInfo = await queryInterface.describeTable('Participants');
+
+    if (!tableInfo.calendarEventId) {
+      await queryInterface.addColumn(
+        'Participants',
+        'calendarEventId',
+        Sequelize.UUID,
+      );
+    }
   },
   /**
    * @param {QueryInterface} queryInterface

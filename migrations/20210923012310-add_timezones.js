@@ -11,37 +11,41 @@ module.exports = {
    * @returns
    */
   up: async (queryInterface, Sequelize) => {
-    await queryInterface.addColumn(
-      'CompetitionUnits',
-      'approximateStart_utc',
-      Sequelize.DATE,
-    );
-    await queryInterface.addColumn(
-      'CalendarEvents',
-      'approximateStartTime_utc',
-      Sequelize.DATE,
-    );
-    await queryInterface.addColumn(
-      'CalendarEvents',
-      'approximateEndTime_utc',
-      Sequelize.DATE,
-    );
+    const tableInfo = await queryInterface.describeTable('CompetitionUnits');
 
-    await queryInterface.addColumn(
-      'CompetitionUnits',
-      'approximateStart_zone',
-      Sequelize.STRING,
-    );
-    await queryInterface.addColumn(
-      'CalendarEvents',
-      'approximateStartTime_zone',
-      Sequelize.STRING,
-    );
-    await queryInterface.addColumn(
-      'CalendarEvents',
-      'approximateEndTime_zone',
-      Sequelize.STRING,
-    );
+    if (!tableInfo.approximateStart_utc) {
+      await queryInterface.addColumn(
+        'CompetitionUnits',
+        'approximateStart_utc',
+        Sequelize.DATE,
+      );
+      await queryInterface.addColumn(
+        'CalendarEvents',
+        'approximateStartTime_utc',
+        Sequelize.DATE,
+      );
+      await queryInterface.addColumn(
+        'CalendarEvents',
+        'approximateEndTime_utc',
+        Sequelize.DATE,
+      );
+
+      await queryInterface.addColumn(
+        'CompetitionUnits',
+        'approximateStart_zone',
+        Sequelize.STRING,
+      );
+      await queryInterface.addColumn(
+        'CalendarEvents',
+        'approximateStartTime_zone',
+        Sequelize.STRING,
+      );
+      await queryInterface.addColumn(
+        'CalendarEvents',
+        'approximateEndTime_zone',
+        Sequelize.STRING,
+      );
+    }
   },
   /**
    * @param {QueryInterface} queryInterface

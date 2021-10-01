@@ -35,6 +35,13 @@ module.exports = (sequelize) => {
       orcJsonPolars: {
         type: DataTypes.JSON,
       },
+      scope: {
+        type: DataTypes.UUID,
+      },
+      bulkCreated: {
+        type: DataTypes.BOOLEAN,
+        defaultValue: false,
+      },
     },
     {
       modelName: 'Vessel',

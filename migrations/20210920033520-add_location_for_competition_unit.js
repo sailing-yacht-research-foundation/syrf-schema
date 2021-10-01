@@ -11,26 +11,30 @@ module.exports = {
    * @returns
    */
   up: async (queryInterface, Sequelize) => {
-    await queryInterface.addColumn(
-      'CompetitionUnits',
-      'approximateStartLocation',
-      Sequelize.GEOMETRY('POINT', 4326),
-    );
-    await queryInterface.addColumn(
-      'CompetitionUnits',
-      'approximateEndLocation',
-      Sequelize.GEOMETRY('POINT', 4326),
-    );
-    await queryInterface.addColumn(
-      'CompetitionUnits',
-      'country',
-      Sequelize.STRING,
-    );
-    await queryInterface.addColumn(
-      'CompetitionUnits',
-      'city',
-      Sequelize.STRING,
-    );
+    const tableInfo = await queryInterface.describeTable('CalendarEvents');
+
+    if (!tableInfo.description) {
+      await queryInterface.addColumn(
+        'CompetitionUnits',
+        'approximateStartLocation',
+        Sequelize.GEOMETRY('POINT', 4326),
+      );
+      await queryInterface.addColumn(
+        'CompetitionUnits',
+        'approximateEndLocation',
+        Sequelize.GEOMETRY('POINT', 4326),
+      );
+      await queryInterface.addColumn(
+        'CompetitionUnits',
+        'country',
+        Sequelize.STRING,
+      );
+      await queryInterface.addColumn(
+        'CompetitionUnits',
+        'city',
+        Sequelize.STRING,
+      );
+    }
   },
   /**
    * @param {QueryInterface} queryInterface

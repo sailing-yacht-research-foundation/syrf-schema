@@ -12,13 +12,17 @@ module.exports = {
    * @returns
    */
   up: async (queryInterface, Sequelize) => {
-    queryInterface.addColumn('CompetitionUnits', 'endTime', Sequelize.DATE);
-    queryInterface.addColumn('CompetitionUnits', 'timeLimit', Sequelize.DATE);
-    queryInterface.addColumn(
-      'CalendarEvents',
-      'approximateEndTime',
-      Sequelize.DATE,
-    );
+    const tableInfo = await queryInterface.describeTable('CompetitionUnits');
+
+    if (!tableInfo.endTime) {
+      queryInterface.addColumn('CompetitionUnits', 'endTime', Sequelize.DATE);
+      queryInterface.addColumn('CompetitionUnits', 'timeLimit', Sequelize.DATE);
+      queryInterface.addColumn(
+        'CalendarEvents',
+        'approximateEndTime',
+        Sequelize.DATE,
+      );
+    }
   },
   /**
    * @param {QueryInterface} queryInterface
@@ -27,7 +31,7 @@ module.exports = {
    */
   down: async (queryInterface) => {
     queryInterface.removeColumn('CompetitionUnits', 'endTime');
-    queryInterface.addColumn('CompetitionUnits', 'timeLimit');
-    queryInterface.addColumn('CalendarEvents', 'approximateEndTime');
+    queryInterface.removeColumn('CompetitionUnits', 'timeLimit');
+    queryInterface.removeColumn('CalendarEvents', 'approximateEndTime');
   },
 };
