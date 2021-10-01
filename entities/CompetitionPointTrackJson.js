@@ -25,7 +25,7 @@ module.exports = (sequelize) => {
       },
     },
     {
-      modelName: 'competitionPointTrackJson',
+      modelName: 'CompetitionPointTrackJson',
       sequelize,
       timestamps: false,
     },
