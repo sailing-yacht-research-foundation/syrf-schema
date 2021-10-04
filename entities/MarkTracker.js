@@ -1,0 +1,41 @@
+const { DataTypes } = require('sequelize');
+const ModelBase = require('../ModelBase');
+
+class MarkTracker extends ModelBase {
+  static associate(models) {
+    this.belongsTo(models.CalenderEvent, {
+      as: 'event',
+      foreignKey: 'calendarEventId',
+      constraints: false,
+    });
+    this.belongsTo(models.CalenderEvent, {
+      as: 'user',
+      foreignKey: 'userProfileId',
+      constraints: false,
+    });
+  }
+}
+
+module.exports = (sequelize) => {
+  MarkTracker.init(
+    {
+      id: {
+        type: DataTypes.UUID,
+        defaultValue: DataTypes.UUIDV1,
+        allowNull: false,
+        primaryKey: true,
+      },
+      name: {
+        type: DataTypes.STRING,
+      },
+      trackerUrl: {
+        type: DataTypes.STRING,
+      },
+    },
+    {
+      modelName: 'MarkTracker',
+      sequelize,
+    },
+  );
+  return MarkTracker;
+};
