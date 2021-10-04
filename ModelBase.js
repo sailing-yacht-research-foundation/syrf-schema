@@ -1,6 +1,7 @@
 /**
- * @typedef {import('sequelize').FindAndCountOptions} FindAndCountOptions
+ * @typedef {import('sequelize').FindOptions} FindOptions
  * @typedef {import('sequelize').QueryInterface} QueryInterface
+ * @typedef {import('./index')} Models
  */
 
 const { Model, Op, literal } = require('sequelize');
@@ -27,7 +28,7 @@ class ModelBase extends Model {
   static associate() {}
 
   /**
-   * @param {FindAndCountOptions} attribute
+   * @param {FindOptions} attribute
    * @param {Object} paging
    * @returns
    */
