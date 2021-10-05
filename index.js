@@ -50,6 +50,8 @@ db.VesselParticipantCrewTrack =
 db.VesselParticipantCrewTrackJson =
   require('./entities/VesselParticipantCrewTrackJson')(sequelize);
 db.TrackHistory = require('./entities/TrackHistory')(sequelize);
+db.CoursePoint = require('./entities/CoursePoint')(sequelize);
+db.MarkTracker = require('./entities/MarkTracker')(sequelize);
 
 for (const key in db) {
   if (Object.hasOwnProperty.call(db, key)) {
