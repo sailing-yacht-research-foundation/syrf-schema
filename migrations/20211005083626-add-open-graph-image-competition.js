@@ -10,7 +10,7 @@ module.exports = {
      */
     const tableInfo = await queryInterface.describeTable('CompetitionUnits');
 
-    if (!tableInfo.isPrivate) {
+    if (!tableInfo.openGraphImage) {
       await queryInterface.addColumn(
         'CompetitionUnits',
         'openGraphImage',
