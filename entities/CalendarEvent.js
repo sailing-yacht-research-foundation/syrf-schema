@@ -110,6 +110,9 @@ module.exports = (sequelize) => {
       city: {
         type: DataTypes.STRING,
       },
+      openGraphImage: {
+        type: DataTypes.STRING,
+      },
     },
     {
       modelName: 'CalendarEvent',
