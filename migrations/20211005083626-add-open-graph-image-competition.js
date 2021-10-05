@@ -8,15 +8,26 @@ module.exports = {
      * Example:
      * await queryInterface.createTable('users', { id: Sequelize.INTEGER });
      */
-    const tableInfo = await queryInterface.describeTable('CompetitionUnits');
-
-    if (!tableInfo.openGraphImage) {
-      await queryInterface.addColumn(
-        'CompetitionUnits',
-        'openGraphImage',
-        Sequelize.STRING,
-      );
-    }
+    await queryInterface.sequelize.transaction(async (transaction) => {
+      const compInfo = await queryInterface.describeTable('CompetitionUnits');
+      if (!compInfo.openGraphImage) {
+        await queryInterface.addColumn(
+          'CompetitionUnits',
+          'openGraphImage',
+          Sequelize.STRING,
+          { transaction },
+        );
+      }
+      const eventInfo = await queryInterface.describeTable('CalendarEvents');
+      if (!eventInfo.openGraphImage) {
+        await queryInterface.addColumn(
+          'CalendarEvents',
+          'openGraphImage',
+          Sequelize.STRING,
+          { transaction },
+        );
+      }
+    });
   },
 
   down: async (queryInterface) => {
@@ -26,6 +37,14 @@ module.exports = {
      * Example:
      * await queryInterface.dropTable('users');
      */
-    await queryInterface.removeColumn('CompetitionUnits', 'openGraphImage');
+
+    await queryInterface.sequelize.transaction(async (transaction) => {
+      await queryInterface.removeColumn('CompetitionUnits', 'openGraphImage', {
+        transaction,
+      });
+      await queryInterface.removeColumn('CompetitionUnits', 'openGraphImage', {
+        transaction,
+      });
+    });
   },
 };
