@@ -8,7 +8,7 @@ class MarkTracker extends ModelBase {
       foreignKey: 'calendarEventId',
       constraints: false,
     });
-    this.belongsTo(models.CalenderEvent, {
+    this.belongsTo(models.UserProfile, {
       as: 'user',
       foreignKey: 'userProfileId',
       constraints: false,
