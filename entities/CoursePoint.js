@@ -20,6 +20,12 @@ class CoursePoint extends ModelBase {
       foreignKey: 'geometryId',
       constraints: false,
     });
+
+    this.belongsTo(models.MarkTracker, {
+      as: 'tracker',
+      foreignKey: 'markTrackerId',
+      constraints: false,
+    });
   }
 }
 
