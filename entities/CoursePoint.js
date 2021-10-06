@@ -38,6 +38,9 @@ module.exports = (sequelize) => {
       order: {
         type: DataTypes.INTEGER,
       },
+      properties: {
+        type: DataTypes.JSON,
+      },
     },
     {
       modelName: 'CoursePoint',

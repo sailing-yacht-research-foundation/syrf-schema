@@ -8,6 +8,11 @@ class CourseUnsequencedUntimedGeometry extends GeometryBase {
       foreignKey: 'courseId',
       constraints: false,
     });
+    this.hasMany(models.CoursePoint, {
+      as: 'points',
+      foreignKey: 'geometryId',
+      constraints: false,
+    });
   }
 }
 
