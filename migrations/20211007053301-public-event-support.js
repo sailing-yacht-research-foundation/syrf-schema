@@ -9,10 +9,10 @@ module.exports = {
      * await queryInterface.createTable('users', { id: Sequelize.INTEGER });
      */
     await queryInterface.sequelize.transaction(async (transaction) => {
-      const compInfo = await queryInterface.describeTable('CompetitionUnits');
+      const compInfo = await queryInterface.describeTable('CalendarEvents');
       if (!compInfo.isOpen) {
         await queryInterface.addColumn(
-          'CompetitionUnits',
+          'CalendarEvents',
           'isOpen',
           Sequelize.BOOLEAN,
           { transaction },
@@ -29,7 +29,7 @@ module.exports = {
      * await queryInterface.dropTable('users');
      */
     await queryInterface.sequelize.transaction(async (transaction) => {
-      await queryInterface.removeColumn('CompetitionUnits', 'isOpen', {
+      await queryInterface.removeColumn('CalendarEvents', 'isOpen', {
         transaction,
       });
     });
