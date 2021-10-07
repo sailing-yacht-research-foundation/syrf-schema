@@ -13,6 +13,11 @@ class MarkTracker extends ModelBase {
       foreignKey: 'userProfileId',
       constraints: false,
     });
+    this.hasMany(models.CoursePoint, {
+      as: 'points',
+      foreignKey: 'markTrackerId',
+      constraints: false,
+    });
   }
 }
 
