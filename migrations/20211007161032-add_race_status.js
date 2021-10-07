@@ -17,7 +17,7 @@ module.exports = {
       await queryInterface.addColumn(
         'CompetitionUnits',
         'status',
-        Sequelize.UUID,
+        Sequelize.STRING(20),
       );
     }
   },

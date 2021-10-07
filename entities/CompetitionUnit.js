@@ -94,7 +94,7 @@ module.exports = (sequelize) => {
         type: DataTypes.STRING,
       },
       status: {
-        type: DataTypes.STRING,
+        type: DataTypes.STRING(20),
         defaultValue: competitionUnitStatus.SCHEDULED,
       },
     },
