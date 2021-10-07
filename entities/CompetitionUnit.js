@@ -97,7 +97,7 @@ module.exports = (sequelize) => {
       },
       isOpen: {
         type: DataTypes.BOOLEAN,
-        defaultValue: false,
+        defaultValue: true,
       },
     },
     {
