@@ -95,6 +95,10 @@ module.exports = (sequelize) => {
       openGraphImage: {
         type: DataTypes.STRING,
       },
+      isOpen: {
+        type: DataTypes.BOOLEAN,
+        defaultValue: false,
+      },
     },
     {
       modelName: 'CompetitionUnit',
