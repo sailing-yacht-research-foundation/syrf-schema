@@ -18,6 +18,14 @@ module.exports = {
           { transaction },
         );
       }
+      if (!compInfo.location) {
+        await queryInterface.addColumn(
+          'CalendarEvents',
+          'location',
+          Sequelize.GEOMETRY('POINT', 4326),
+          { transaction },
+        );
+      }
     });
   },
 
@@ -30,6 +38,9 @@ module.exports = {
      */
     await queryInterface.sequelize.transaction(async (transaction) => {
       await queryInterface.removeColumn('CalendarEvents', 'isOpen', {
+        transaction,
+      });
+      await queryInterface.removeColumn('CalendarEvents', 'location', {
         transaction,
       });
     });

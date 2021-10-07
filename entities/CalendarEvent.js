@@ -56,6 +56,9 @@ module.exports = (sequelize) => {
       lat: {
         type: DataTypes.FLOAT,
       },
+      location: {
+        type: DataTypes.GEOMETRY('POINT', 4326),
+      },
       externalUrl: {
         type: DataTypes.STRING,
       },
