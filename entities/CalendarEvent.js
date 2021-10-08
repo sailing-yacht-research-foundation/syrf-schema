@@ -50,11 +50,8 @@ module.exports = (sequelize) => {
       locationName: {
         type: DataTypes.STRING,
       },
-      lon: {
-        type: DataTypes.FLOAT,
-      },
-      lat: {
-        type: DataTypes.FLOAT,
+      location: {
+        type: DataTypes.GEOMETRY('POINT', 4326),
       },
       externalUrl: {
         type: DataTypes.STRING,
@@ -109,6 +106,14 @@ module.exports = (sequelize) => {
       },
       city: {
         type: DataTypes.STRING,
+      },
+      openGraphImage: {
+        type: DataTypes.STRING,
+      },
+      isOpen: {
+        type: DataTypes.BOOLEAN,
+        defaultValue: true,
+        allowNull: false,
       },
     },
     {

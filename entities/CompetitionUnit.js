@@ -97,6 +97,9 @@ module.exports = (sequelize) => {
         type: DataTypes.STRING(20),
         defaultValue: competitionUnitStatus.SCHEDULED,
       },
+      openGraphImage: {
+        type: DataTypes.STRING,
+      },
     },
     {
       modelName: 'CompetitionUnit',
