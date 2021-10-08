@@ -53,6 +53,9 @@ db.TrackHistory = require('./entities/TrackHistory')(sequelize);
 db.CoursePoint = require('./entities/CoursePoint')(sequelize);
 db.MarkTracker = require('./entities/MarkTracker')(sequelize);
 db.SlicedWeather = require('./entities/SlicedWeather')(sequelize);
+db.CompetitionPointTrackJson = require('./entities/CompetitionPointTrackJson')(
+  sequelize,
+);
 
 for (const key in db) {
   if (Object.hasOwnProperty.call(db, key)) {
