@@ -100,8 +100,6 @@ class ModelBase extends Model {
       limit: pagingSize,
       offset: pagingSize * (pageQuery - 1),
       order: Array.isArray(customSort) ? customSort : [[sortQuery, srdirQuery]],
-      raw: true,
-      nest: true,
       ...attribute,
     };
 
