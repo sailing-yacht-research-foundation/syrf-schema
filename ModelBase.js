@@ -34,7 +34,17 @@ class ModelBase extends Model {
    */
   static async findAllWithPaging(
     attribute = {},
-    { size, page, sort, srdir, customSort, query, draw, filters = [] } = {},
+    {
+      size,
+      page,
+      sort,
+      srdir,
+      customSort,
+      query,
+      draw,
+      filters = [],
+      multiSort = [],
+    } = {},
   ) {
     let pagingSize = Math.max(size, 1);
     let pageQuery = Math.max(page, 1);
@@ -96,10 +106,15 @@ class ModelBase extends Model {
         });
     });
 
+    let paginationSorts = [[sortQuery, srdirQuery]];
+    if (multiSort?.length > 0) paginationSorts = multiSort;
+
     let params = {
       limit: pagingSize,
       offset: pagingSize * (pageQuery - 1),
-      order: Array.isArray(customSort) ? customSort : [[sortQuery, srdirQuery]],
+      order: Array.isArray(customSort)
+        ? [...customSort, ...paginationSorts]
+        : paginationSorts,
       ...attribute,
     };
 
