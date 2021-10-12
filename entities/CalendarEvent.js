@@ -121,6 +121,10 @@ module.exports = (sequelize) => {
         defaultValue: true,
         allowNull: false,
       },
+      source: {
+        type: DataTypes.STRING,
+        allowNull: true,
+      },
     },
     {
       modelName: 'CalendarEvent',
