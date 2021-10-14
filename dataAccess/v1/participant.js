@@ -1,10 +1,9 @@
 const uuid = require('uuid');
-const { errorCodes } = require('../../enums');
+const { errorCodes, statusCodes } = require('../../enums');
 const db = require('../../index');
 const {
   includeMeta,
   ValidationError,
-  statusCodes,
 } = require('../../utils/utils');
 
 const include = [
