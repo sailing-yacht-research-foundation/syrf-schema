@@ -1,5 +1,5 @@
 const { DataTypes } = require('sequelize');
-const { competitionUnitStatus } = require('../../enums');
+const { competitionUnitStatus } = require('../enums');
 const ModelBase = require('../ModelBase');
 
 class CompetitionUnit extends ModelBase {
