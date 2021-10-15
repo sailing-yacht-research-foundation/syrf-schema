@@ -26,8 +26,8 @@ exports.AuthError = AuthError;
 exports.setCreateMeta = (data = {}, user) => {
   const now = Date.now();
 
-  data.createdById = user.id;
-  data.developerId = user.developerId;
+  data.createdById = user?.id;
+  data.developerId = user?.developerId;
   data.createdAt = now;
 
   return data;
@@ -36,7 +36,7 @@ exports.setCreateMeta = (data = {}, user) => {
 exports.setUpdateMeta = (data = {}, user) => {
   const now = Date.now();
 
-  data.updatedById = user.id;
+  data.updatedById = user?.id;
   data.updatedAt = now;
 
   return data;
