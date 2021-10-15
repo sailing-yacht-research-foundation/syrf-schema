@@ -20,15 +20,17 @@ const include = [
   ...includeMeta,
 ];
 
-exports.upsert = async (id, data = {}) => {
+exports.upsert = async (id, data = {}, transaction) => {
   if (!id) id = uuid.v4();
 
   const [result] = await db.CalenderEvent.upsert({
     ...data,
     id,
-  });
+  }, { transaction });
 
-  await result.setEditors(data.editors.map((t) => t.id));
+  if (data.editors && editors.length) {
+    await result.setEditors(data.editors.map((t) => t.id));
+  }
 
   return result?.toJSON();
 };
@@ -149,7 +151,7 @@ exports.getById = async (id, transaction) => {
   return data;
 };
 
-exports.delete = async (id) => {
+exports.delete = async (id, transaction) => {
   const data = await db.CalenderEvent.findByPk(id, {
     include,
   });
@@ -159,7 +161,7 @@ exports.delete = async (id) => {
       where: {
         id: id,
       },
-    });
+    }, { transaction });
   }
 
   return data?.toJSON();
