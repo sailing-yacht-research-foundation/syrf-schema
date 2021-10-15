@@ -62,7 +62,6 @@ db.CompetitionPointTrack = require('./entities/CompetitionPointTrack')(
   sequelize,
 );
 db.CompetitionUnitWind = require('./entities/CompetitionUnitWind')(sequelize);
-db.SlicedWeather = require('./entities/')(sequelize);
 
 for (const key in db) {
   if (Object.hasOwnProperty.call(db, key)) {
