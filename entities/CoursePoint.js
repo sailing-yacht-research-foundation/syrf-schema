@@ -47,6 +47,12 @@ module.exports = (sequelize) => {
       properties: {
         type: DataTypes.JSON,
       },
+      geometryId: {
+        type: DataTypes.UUID,
+      },
+      markTrackerId: {
+        type: DataTypes.UUID,
+      },
     },
     {
       modelName: 'CoursePoint',

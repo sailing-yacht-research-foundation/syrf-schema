@@ -99,7 +99,7 @@ module.exports = (sequelize) => {
         type: DataTypes.INTEGER,
       },
       ics: {
-        type: DataTypes.STRING,
+        type: DataTypes.TEXT,
       },
       isPrivate: {
         type: DataTypes.BOOLEAN,
