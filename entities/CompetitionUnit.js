@@ -1,5 +1,4 @@
 const { DataTypes } = require('sequelize');
-const { competitionUnitStatus } = require('../enums');
 const ModelBase = require('../ModelBase');
 
 class CompetitionUnit extends ModelBase {
@@ -95,7 +94,7 @@ module.exports = (sequelize) => {
       },
       status: {
         type: DataTypes.STRING(20),
-        defaultValue: competitionUnitStatus.SCHEDULED,
+        defaultValue: 'SCHEDULED',
       },
       openGraphImage: {
         type: DataTypes.STRING,
