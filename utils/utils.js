@@ -1,7 +1,6 @@
-const db = require('../models');
+const db = require('../index');
 
 const BaseError = require('./BaseError');
-const AuthError = require('./AuthError');
 const ValidationError = require('./ValidationError');
 const { Transaction } = require('sequelize');
 
@@ -21,7 +20,6 @@ exports.includeMeta = [
 exports.ValidationError = ValidationError;
 
 exports.BaseError = BaseError;
-exports.AuthError = AuthError;
 
 exports.setCreateMeta = (data = {}, user) => {
   const now = Date.now();
@@ -113,6 +111,14 @@ exports.getRaceTimeBuffer = (time, buffer = 60000) => {
     end: new Date(time.getTime() + buffer),
   };
 };
+
+/**
+ * Create transaction for syrf database
+ * @returns {Transaction} Sequelize Transaction
+ */
+exports.createTransaction = async () => {
+  return await db.sequelize.transaction();
+}
 
 exports.useTransaction =
   (fc) =>

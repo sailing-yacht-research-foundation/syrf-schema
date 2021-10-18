@@ -34,13 +34,13 @@ const include = [
   ...includeMeta,
 ];
 
-exports.upsert = async (id, data = {}) => {
+exports.upsert = async (id, data = {}, transaction) => {
   if (!id) id = uuid.v4();
 
   const [result] = await db.CompetitionUnit.upsert({
     ...data,
     id,
-  });
+  }, { transaction });
 
   return result?.toJSON();
 };
@@ -216,7 +216,7 @@ exports.getOnGoingRacesWithCourse = async () => {
   return result;
 };
 
-exports.updateCountryCity = async (competitionUnitIds, data = null) => {
+exports.updateCountryCity = async (competitionUnitIds, data = null, transaction) => {
   await db.CompetitionUnit.update(
     {
       country: data?.country,
@@ -224,13 +224,13 @@ exports.updateCountryCity = async (competitionUnitIds, data = null) => {
       approximateStartLocation: !data
         ? null
         : {
-            crs: {
-              type: 'name',
-              properties: { name: 'EPSG:4326' },
-            },
-            type: 'Point',
-            coordinates: data.centerPoint,
+          crs: {
+            type: 'name',
+            properties: { name: 'EPSG:4326' },
           },
+          type: 'Point',
+          coordinates: data.centerPoint,
+        },
     },
     {
       where: {
@@ -238,11 +238,12 @@ exports.updateCountryCity = async (competitionUnitIds, data = null) => {
           [Op.in]: competitionUnitIds,
         },
       },
+      transaction
     },
   );
 };
 
-exports.addOpenGraphImage = async (competitionUnitIds, data) => {
+exports.addOpenGraphImage = async (competitionUnitIds, data, transaction) => {
   const { openGraphImage } = data;
   await db.CompetitionUnit.update(
     {
@@ -254,6 +255,7 @@ exports.addOpenGraphImage = async (competitionUnitIds, data) => {
           [Op.in]: competitionUnitIds,
         },
       },
+      transaction
     },
   );
 };
