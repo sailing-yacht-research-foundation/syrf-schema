@@ -44,14 +44,17 @@ const include = [
   ...includeMeta,
 ];
 
-exports.upsert = async (id, data = {}) => {
+exports.upsert = async (id, data = {}, transaction) => {
   if (!id) id = uuid.v4();
 
   const [[result]] = await Promise.all([
-    db.VesselParticipantGroup.upsert({
-      ...data,
-      id,
-    }),
+    db.VesselParticipantGroup.upsert(
+      {
+        ...data,
+        id,
+      },
+      { transaction },
+    ),
   ]);
 
   return result?.toJSON();

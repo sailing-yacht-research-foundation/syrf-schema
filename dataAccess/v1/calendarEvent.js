@@ -23,12 +23,15 @@ const include = [
 exports.upsert = async (id, data = {}, transaction) => {
   if (!id) id = uuid.v4();
 
-  const [result] = await db.CalenderEvent.upsert({
-    ...data,
-    id,
-  }, { transaction });
+  const [result] = await db.CalenderEvent.upsert(
+    {
+      ...data,
+      id,
+    },
+    { transaction },
+  );
 
-  if (data.editors && editors.length) {
+  if (data.editors?.length) {
     await result.setEditors(data.editors.map((t) => t.id));
   }
 
@@ -157,11 +160,14 @@ exports.delete = async (id, transaction) => {
   });
 
   if (data) {
-    await db.CalenderEvent.destroy({
-      where: {
-        id: id,
+    await db.CalenderEvent.destroy(
+      {
+        where: {
+          id: id,
+        },
       },
-    }, { transaction });
+      { transaction },
+    );
   }
 
   return data?.toJSON();
