@@ -82,17 +82,6 @@ module.exports = {
       joinDate: {
         type: Sequelize.DataTypes.DATE,
       },
-      invitationId: {
-        type: Sequelize.DataTypes.UUID,
-        allowNull: true,
-        onDelete: 'CASCADE',
-        references: {
-          model: {
-            tableName: 'GroupInvitations',
-          },
-          key: 'id',
-        },
-      },
       isAdmin: {
         type: Sequelize.DataTypes.BOOLEAN,
         allowNull: false,
