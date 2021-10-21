@@ -32,9 +32,13 @@ module.exports = (sequelize) => {
         type: DataTypes.UUID,
         allowNull: false,
       },
+      email: {
+        type: DataTypes.STRING,
+        allowNull: false,
+      },
       userId: {
         type: DataTypes.UUID,
-        allowNull: false,
+        allowNull: true,
       },
       invitationDate: {
         type: DataTypes.DATE,

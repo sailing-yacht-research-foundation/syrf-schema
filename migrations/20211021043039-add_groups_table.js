@@ -48,9 +48,13 @@ module.exports = {
           key: 'id',
         },
       },
+      email: {
+        type: Sequelize.DataTypes.STRING,
+        allowNull: false,
+      },
       userId: {
         type: Sequelize.DataTypes.UUID,
-        allowNull: false,
+        allowNull: true,
         onDelete: 'CASCADE',
         references: {
           model: {
