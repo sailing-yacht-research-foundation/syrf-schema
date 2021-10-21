@@ -155,7 +155,7 @@ exports.getByUserId = async (id, pagination) => {
   return result;
 };
 
-exports.delete = async (id) => {
+exports.delete = async (id, transaction) => {
   const data = await db.Participant.findByPk(id, {
     include,
   });
@@ -165,6 +165,7 @@ exports.delete = async (id) => {
       where: {
         id: id,
       },
+      transaction
     });
   }
 

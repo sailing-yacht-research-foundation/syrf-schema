@@ -46,6 +46,7 @@ module.exports = (sequelize) => {
     {
       modelName: 'Vessel',
       sequelize,
+      paranoid: true,
     },
   );
   return Vessel;

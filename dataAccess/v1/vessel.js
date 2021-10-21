@@ -48,7 +48,7 @@ exports.getById = async (id) => {
   return result?.toJSON();
 };
 
-exports.delete = async (id) => {
+exports.delete = async (id, transaction) => {
   const data = await db.Vessel.findByPk(id, {
     include,
   });
@@ -58,6 +58,7 @@ exports.delete = async (id) => {
       where: {
         id: id,
       },
+      transaction
     });
   }
 

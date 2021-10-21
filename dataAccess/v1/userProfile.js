@@ -1,18 +1,19 @@
 const db = require('../../index');
 
-exports.upsert = async (userProfile = {}) => {
+exports.upsert = async (userProfile = {}, transaction) => {
   const [result] = await db.UserProfile.upsert({
     ...userProfile,
-  });
+  }, { transaction });
 
   return result.toJSON();
 };
 
-exports.updateProfile = async (userId, userProfile = {}) => {
+exports.updateProfile = async (userId, userProfile = {}, transaction) => {
   const result = await db.UserProfile.update(userProfile, {
     where: {
       id: userId,
     },
+    transaction
   });
 
   return result;
@@ -33,7 +34,7 @@ exports.getBySub = async (sub) => {
   );
 };
 
-exports.delete = async (sub) => {
+exports.delete = async (sub, transaction) => {
   const data = await db.UserProfile.findByPk(sub);
 
   if (data) {
@@ -41,6 +42,7 @@ exports.delete = async (sub) => {
       where: {
         id: sub,
       },
+      transaction
     });
   }
 
