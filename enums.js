@@ -113,6 +113,11 @@ const defaultKMLOptions = {
   heading: 0,
 };
 
+const groupVisibilities = {
+  public: 'PUBLIC',
+  private: 'PRIVATE',
+  moderated: 'MODERATED',
+};
 
 module.exports = {
   competitionUnitStatus,
@@ -123,5 +128,6 @@ module.exports = {
   searchIndex,
   raceSetupType,
   openCompetitionConfig,
-  defaultKMLOptions
+  defaultKMLOptions,
+  groupVisibilities,
 };
