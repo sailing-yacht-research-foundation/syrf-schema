@@ -3,6 +3,7 @@ const { groupVisibilities, groupTypes } = require('../enums');
 const ModelBase = require('../ModelBase');
 
 class Group extends ModelBase {
+  static associateBase() {}
   static associate(models) {
     this.belongsToMany(models.UserProfile, {
       as: 'members',

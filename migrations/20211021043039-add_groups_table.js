@@ -10,8 +10,8 @@ module.exports = {
   up: async (queryInterface, Sequelize) => {
     const visibilityEnums = [];
     // eslint-disable-next-line no-unused-vars
-    for (const [key, _value] of Object.entries(groupVisibilities)) {
-      visibilityEnums.push(key);
+    for (const [_key, value] of Object.entries(groupVisibilities)) {
+      visibilityEnums.push(value);
     }
     const groupTypeEnums = [];
     // eslint-disable-next-line no-unused-vars
@@ -40,6 +40,9 @@ module.exports = {
       visibility: {
         type: Sequelize.DataTypes.ENUM(visibilityEnums),
         allowNull: false,
+      },
+      description: {
+        type: Sequelize.DataTypes.TEXT,
       },
       createdAt: {
         type: Sequelize.DataTypes.DATE,
