@@ -31,9 +31,7 @@ exports.upsert = async (id, data = {}, transaction) => {
     { transaction },
   );
 
-  if (data.editors?.length) {
-    await result.setEditors(data.editors.map((t) => t.id));
-  }
+  await result.setEditors((data.editors || []).map((t) => t.id));
 
   return result?.toJSON();
 };
