@@ -47,6 +47,9 @@ module.exports = (sequelize) => {
       description: {
         type: DataTypes.TEXT,
       },
+      createdById: {
+        type: DataTypes.UUID,
+      },
     },
     {
       modelName: 'Group',

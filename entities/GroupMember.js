@@ -3,6 +3,7 @@ const { groupMemberStatus } = require('../enums');
 const ModelBase = require('../ModelBase');
 
 class GroupMember extends ModelBase {
+  static associateBase() {}
   static associate(models) {
     this.belongsTo(models.Group, {
       as: 'group',
