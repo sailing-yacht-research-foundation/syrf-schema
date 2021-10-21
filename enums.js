@@ -125,6 +125,12 @@ const groupMemberStatus = {
   declined: 'DECLINED',
 };
 
+const groupTypes = {
+  organization: 'ORGANIZATION',
+  committee: 'COMMITTEE',
+  team: 'team',
+};
+
 module.exports = {
   competitionUnitStatus,
   conversionValues,
@@ -137,4 +143,5 @@ module.exports = {
   defaultKMLOptions,
   groupVisibilities,
   groupMemberStatus,
+  groupTypes,
 };
