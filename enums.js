@@ -128,7 +128,7 @@ const groupMemberStatus = {
 const groupTypes = {
   organization: 'ORGANIZATION',
   committee: 'COMMITTEE',
-  team: 'team',
+  team: 'TEAM',
 };
 
 module.exports = {
