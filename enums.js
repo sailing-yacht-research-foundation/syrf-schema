@@ -121,8 +121,8 @@ const groupVisibilities = {
 
 const groupMemberStatus = {
   invited: 'INVITED',
+  requested: 'REQUESTED',
   accepted: 'ACCEPTED',
-  declined: 'DECLINED',
 };
 
 const groupTypes = {

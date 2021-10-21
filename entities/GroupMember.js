@@ -18,6 +18,11 @@ class GroupMember extends ModelBase {
 }
 
 module.exports = (sequelize) => {
+  const statusEnums = [];
+  // eslint-disable-next-line no-unused-vars
+  for (const [_key, value] of Object.entries(groupMemberStatus)) {
+    statusEnums.push(value);
+  }
   GroupMember.init(
     {
       id: {
@@ -51,7 +56,7 @@ module.exports = (sequelize) => {
         allowNull: false,
       },
       status: {
-        type: DataTypes.STRING,
+        type: DataTypes.ENUM(statusEnums),
         allowNull: false,
         defaultValue: groupMemberStatus.invited,
       },

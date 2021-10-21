@@ -1,5 +1,5 @@
 const { DataTypes } = require('sequelize');
-const { groupVisibilities } = require('../enums');
+const { groupVisibilities, groupTypes } = require('../enums');
 const ModelBase = require('../ModelBase');
 
 class Group extends ModelBase {
@@ -16,8 +16,13 @@ class Group extends ModelBase {
 module.exports = (sequelize) => {
   const visibilityEnums = [];
   // eslint-disable-next-line no-unused-vars
-  for (const [key, _value] of Object.entries(groupVisibilities)) {
-    visibilityEnums.push(key);
+  for (const [_key, value] of Object.entries(groupVisibilities)) {
+    visibilityEnums.push(value);
+  }
+  const groupTypeEnums = [];
+  // eslint-disable-next-line no-unused-vars
+  for (const [_key, value] of Object.entries(groupTypes)) {
+    groupTypeEnums.push(value);
   }
   Group.init(
     {
@@ -32,11 +37,14 @@ module.exports = (sequelize) => {
         allowNull: false,
       },
       groupType: {
-        type: DataTypes.STRING,
+        type: DataTypes.ENUM(groupTypeEnums),
       },
       visibility: {
         type: DataTypes.ENUM(visibilityEnums),
         allowNull: false,
+      },
+      description: {
+        type: DataTypes.TEXT,
       },
     },
     {

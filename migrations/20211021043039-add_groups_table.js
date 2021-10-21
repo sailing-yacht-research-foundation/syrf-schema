@@ -1,6 +1,10 @@
 'use strict';
 
-const { groupVisibilities, groupMemberStatus } = require('../enums');
+const {
+  groupVisibilities,
+  groupMemberStatus,
+  groupTypes,
+} = require('../enums');
 
 module.exports = {
   up: async (queryInterface, Sequelize) => {
@@ -9,7 +13,16 @@ module.exports = {
     for (const [key, _value] of Object.entries(groupVisibilities)) {
       visibilityEnums.push(key);
     }
-
+    const groupTypeEnums = [];
+    // eslint-disable-next-line no-unused-vars
+    for (const [_key, value] of Object.entries(groupTypes)) {
+      groupTypeEnums.push(value);
+    }
+    const statusEnums = [];
+    // eslint-disable-next-line no-unused-vars
+    for (const [_key, value] of Object.entries(groupMemberStatus)) {
+      statusEnums.push(value);
+    }
     await queryInterface.createTable('Groups', {
       id: {
         type: Sequelize.DataTypes.UUID,
@@ -22,7 +35,7 @@ module.exports = {
         allowNull: false,
       },
       groupType: {
-        type: Sequelize.DataTypes.STRING,
+        type: Sequelize.DataTypes.ENUM(groupTypeEnums),
       },
       visibility: {
         type: Sequelize.DataTypes.ENUM(visibilityEnums),
@@ -88,7 +101,7 @@ module.exports = {
         allowNull: false,
       },
       status: {
-        type: Sequelize.DataTypes.STRING,
+        type: Sequelize.DataTypes.ENUM(statusEnums),
         allowNull: false,
         defaultValue: groupMemberStatus.invited,
       },
