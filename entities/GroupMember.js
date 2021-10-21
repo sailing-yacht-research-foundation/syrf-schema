@@ -1,4 +1,5 @@
 const { DataTypes } = require('sequelize');
+const { groupMemberStatus } = require('../enums');
 const ModelBase = require('../ModelBase');
 
 class GroupMember extends ModelBase {
@@ -50,10 +51,18 @@ module.exports = (sequelize) => {
         allowNull: false,
         defaultValue: false,
       },
-      isOwner: {
-        type: DataTypes.BOOLEAN,
+      email: {
+        type: DataTypes.STRING,
         allowNull: false,
-        defaultValue: false,
+      },
+      status: {
+        type: DataTypes.STRING,
+        allowNull: false,
+        defaultValue: groupMemberStatus.invited,
+      },
+      invitorId: {
+        type: DataTypes.UUID,
+        allowNull: true,
       },
     },
     {

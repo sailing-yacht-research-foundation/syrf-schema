@@ -1,6 +1,6 @@
 'use strict';
 
-const { groupVisibilities, groupInvitationStatus } = require('../enums');
+const { groupVisibilities, groupMemberStatus } = require('../enums');
 
 module.exports = {
   up: async (queryInterface, Sequelize) => {
@@ -28,52 +28,25 @@ module.exports = {
         type: Sequelize.DataTypes.ENUM(visibilityEnums),
         allowNull: false,
       },
-    });
-
-    await queryInterface.createTable('GroupInvitations', {
-      id: {
-        type: Sequelize.DataTypes.UUID,
-        defaultValue: Sequelize.DataTypes.UUIDV1,
-        allowNull: false,
-        primaryKey: true,
-      },
-      groupId: {
-        type: Sequelize.DataTypes.UUID,
-        allowNull: false,
-        onDelete: 'CASCADE',
-        references: {
-          model: {
-            tableName: 'Groups',
-          },
-          key: 'id',
-        },
-      },
-      email: {
-        type: Sequelize.DataTypes.STRING,
-        allowNull: false,
-      },
-      userId: {
-        type: Sequelize.DataTypes.UUID,
-        allowNull: true,
-        onDelete: 'CASCADE',
-        references: {
-          model: {
-            tableName: 'UserProfiles',
-          },
-          key: 'id',
-        },
-      },
-      invitationDate: {
+      createdAt: {
         type: Sequelize.DataTypes.DATE,
+        allowNull: false,
       },
-      invitorId: {
+      updatedAt: {
+        type: Sequelize.DataTypes.DATE,
+        allowNull: false,
+      },
+      createdById: {
         type: Sequelize.DataTypes.UUID,
         allowNull: true,
       },
-      status: {
-        type: Sequelize.DataTypes.STRING,
-        allowNull: false,
-        defaultValue: groupInvitationStatus.pending,
+      updatedById: {
+        type: Sequelize.DataTypes.UUID,
+        allowNull: true,
+      },
+      developerId: {
+        type: Sequelize.DataTypes.UUID,
+        allowNull: true,
       },
     });
 
@@ -97,7 +70,7 @@ module.exports = {
       },
       userId: {
         type: Sequelize.DataTypes.UUID,
-        allowNull: false,
+        allowNull: true,
         onDelete: 'CASCADE',
         references: {
           model: {
@@ -125,17 +98,44 @@ module.exports = {
         allowNull: false,
         defaultValue: false,
       },
-      isOwner: {
-        type: Sequelize.DataTypes.BOOLEAN,
+      email: {
+        type: Sequelize.DataTypes.STRING,
         allowNull: false,
-        defaultValue: false,
+      },
+      status: {
+        type: Sequelize.DataTypes.STRING,
+        allowNull: false,
+        defaultValue: groupMemberStatus.invited,
+      },
+      invitorId: {
+        type: Sequelize.DataTypes.UUID,
+        allowNull: true,
+      },
+      createdAt: {
+        type: Sequelize.DataTypes.DATE,
+        allowNull: false,
+      },
+      updatedAt: {
+        type: Sequelize.DataTypes.DATE,
+        allowNull: false,
+      },
+      createdById: {
+        type: Sequelize.DataTypes.UUID,
+        allowNull: true,
+      },
+      updatedById: {
+        type: Sequelize.DataTypes.UUID,
+        allowNull: true,
+      },
+      developerId: {
+        type: Sequelize.DataTypes.UUID,
+        allowNull: true,
       },
     });
   },
 
   down: async (queryInterface) => {
     queryInterface.dropTable('GroupMembers');
-    queryInterface.dropTable('GroupInvitations');
     queryInterface.dropTable('Groups');
   },
 };

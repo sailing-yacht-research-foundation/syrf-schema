@@ -119,8 +119,8 @@ const groupVisibilities = {
   moderated: 'MODERATED',
 };
 
-const groupInvitationStatus = {
-  pending: 'PENDING',
+const groupMemberStatus = {
+  invited: 'INVITED',
   accepted: 'ACCEPTED',
   declined: 'DECLINED',
 };
@@ -136,5 +136,5 @@ module.exports = {
   openCompetitionConfig,
   defaultKMLOptions,
   groupVisibilities,
-  groupInvitationStatus,
+  groupMemberStatus,
 };
