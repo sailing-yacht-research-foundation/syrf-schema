@@ -28,12 +28,6 @@ class UserProfile extends ModelBase {
       foreignKey: 'userId',
       constraints: false,
     });
-    this.belongsToMany(models.GroupInvitation, {
-      as: 'groupInvitations',
-      through: models.GroupInvitation,
-      foreignKey: 'userId',
-      constraints: false,
-    });
   }
 }
 

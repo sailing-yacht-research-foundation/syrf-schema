@@ -14,11 +14,6 @@ class GroupMember extends ModelBase {
       foreignKey: 'userId',
       onDelete: 'cascade',
     });
-    this.belongsTo(models.GroupInvitation, {
-      as: 'invitation',
-      foreignKey: 'invitationId',
-      onDelete: 'cascade',
-    });
   }
 }
 
