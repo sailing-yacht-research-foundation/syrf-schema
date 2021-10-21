@@ -32,7 +32,7 @@ exports.upsert = async (id, data = {}, transaction) => {
   );
 
   await result.setEditors((data.editors || []).map((t) => t.id));
-
+  
   return result?.toJSON();
 };
 
