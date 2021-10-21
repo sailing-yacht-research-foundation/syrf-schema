@@ -25,7 +25,13 @@ class UserProfile extends ModelBase {
     this.belongsToMany(models.Group, {
       as: 'groups',
       through: models.VesselParticipantCrew,
-      foreignKey: 'groupId',
+      foreignKey: 'userId',
+      constraints: false,
+    });
+    this.belongsToMany(models.GroupInvitation, {
+      as: 'groupInvitations',
+      through: models.GroupInvitation,
+      foreignKey: 'userId',
       constraints: false,
     });
   }

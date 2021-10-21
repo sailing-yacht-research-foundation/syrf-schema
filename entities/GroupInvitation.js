@@ -1,28 +1,26 @@
 const { DataTypes } = require('sequelize');
+const { groupInvitationStatus } = require('../enums');
 const ModelBase = require('../ModelBase');
 
-class GroupMember extends ModelBase {
+class GroupInvitation extends ModelBase {
   static associate(models) {
     this.belongsTo(models.Group, {
       as: 'group',
+      constraints: false,
       foreignKey: 'groupId',
       onDelete: 'cascade',
     });
     this.belongsTo(models.UserProfile, {
-      as: 'member',
+      as: 'user',
+      constraints: false,
       foreignKey: 'userId',
-      onDelete: 'cascade',
-    });
-    this.belongsTo(models.GroupInvitation, {
-      as: 'invitation',
-      foreignKey: 'invitationId',
       onDelete: 'cascade',
     });
   }
 }
 
 module.exports = (sequelize) => {
-  GroupMember.init(
+  GroupInvitation.init(
     {
       id: {
         type: DataTypes.UUID,
@@ -38,28 +36,23 @@ module.exports = (sequelize) => {
         type: DataTypes.UUID,
         allowNull: false,
       },
-      joinDate: {
+      invitationDate: {
         type: DataTypes.DATE,
       },
-      invitationId: {
+      invitorId: {
         type: DataTypes.UUID,
         allowNull: true,
       },
-      isAdmin: {
-        type: DataTypes.BOOLEAN,
+      status: {
+        type: DataTypes.STRING,
         allowNull: false,
-        defaultValue: false,
-      },
-      isOwner: {
-        type: DataTypes.BOOLEAN,
-        allowNull: false,
-        defaultValue: false,
+        defaultValue: groupInvitationStatus.pending,
       },
     },
     {
-      modelName: 'GroupMember',
+      modelName: 'GroupInvitation',
       sequelize,
     },
   );
-  return GroupMember;
+  return GroupInvitation;
 };
