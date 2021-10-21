@@ -44,10 +44,6 @@ module.exports = {
         type: Sequelize.DataTypes.UUID,
         allowNull: true,
       },
-      developerId: {
-        type: Sequelize.DataTypes.UUID,
-        allowNull: true,
-      },
     });
 
     await queryInterface.createTable('GroupMembers', {
@@ -113,10 +109,6 @@ module.exports = {
         allowNull: true,
       },
       updatedById: {
-        type: Sequelize.DataTypes.UUID,
-        allowNull: true,
-      },
-      developerId: {
         type: Sequelize.DataTypes.UUID,
         allowNull: true,
       },
