@@ -3,6 +3,7 @@ const db = require('../index');
 const BaseError = require('./BaseError');
 const ValidationError = require('./ValidationError');
 const { Transaction } = require('sequelize');
+const turf = require('@turf/turf');
 
 exports.includeMeta = [
   {

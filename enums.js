@@ -92,10 +92,36 @@ const statusCodes = {
   NETWORK_AUTHENTICATION_REQUIRED: 511,
 };
 
+const searchIndex = {
+  CALENDAR_EVENTS: 'races',
+};
+
+const raceSetupType = {
+  START: 'START',
+  STOP: 'STOP',
+  COMPETITION_UNIT_SYNC: 'COMPETITION_UNIT_SYNC',
+};
+
+const openCompetitionConfig = {
+  defaultDistance: 1, // in miles
+};
+
+const defaultKMLOptions = {
+  lineColor: 'B0E0E659',
+  lineWidth: 6,
+  scale: 1,
+  heading: 0,
+};
+
+
 module.exports = {
   competitionUnitStatus,
   conversionValues,
   geometryType,
   errorCodes,
-  statusCodes
+  statusCodes,
+  searchIndex,
+  raceSetupType,
+  openCompetitionConfig,
+  defaultKMLOptions
 };
