@@ -31,6 +31,7 @@ const errorCodes = {
   REGISTERED_USER_ONLY: 'E011', // rejected access to user management, only registered user allowed to access user management
   INVALID_GRANT: 'E012', // invalid grant for password login
   INVALID_REFRESH_TOKEN: 'E013', //invalid refresh token
+  UNAUTHORIZED_DATA_READ: 'E014', //unauthorized data read
 };
 
 const statusCodes = {

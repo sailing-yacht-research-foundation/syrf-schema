@@ -29,7 +29,10 @@ module.exports = (sequelize) => {
       ipAddress: {
         type: DataTypes.STRING,
       },
-      expireAt: {
+      replyPort: {
+        type: DataTypes.INTEGER,
+      },
+      expiredAt: {
         type: DataTypes.DATE,
       },
     },

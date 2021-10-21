@@ -62,6 +62,9 @@ db.CompetitionPointTrack = require('./entities/CompetitionPointTrack')(
   sequelize,
 );
 db.CompetitionUnitWind = require('./entities/CompetitionUnitWind')(sequelize);
+db.ExpeditionSubscription = require('./entities/ExpeditionSubscription')(
+  sequelize,
+);
 
 db.Group = require('./entities/Group')(sequelize);
 db.GroupMember = require('./entities/GroupMember')(sequelize);
