@@ -99,7 +99,7 @@ exports.getGroupsByUserId = async (paging, { userId, status }) => {
   const where = paging.query
     ? {
         '$group.groupName$': {
-          [db.Op.like]: `%${paging.query}%`,
+          [db.Op.iLike]: `%${paging.query}%`,
         },
         userId,
         status,
@@ -136,7 +136,7 @@ exports.getUsersByGroupId = async (paging, { groupId, status }) => {
   const where = paging.query
     ? {
         '$member.name$': {
-          [db.Op.like]: `%${paging.query}%`,
+          [db.Op.iLike]: `%${paging.query}%`,
         },
         groupId,
         status,

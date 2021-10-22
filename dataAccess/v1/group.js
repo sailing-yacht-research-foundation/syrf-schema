@@ -11,7 +11,7 @@ exports.getAll = async (paging, { visibilities }) => {
 
   if (paging.query) {
     where.groupName = {
-      [db.Op.like]: `%${paging.query}%`,
+      [db.Op.iLike]: `%${paging.query}%`,
     };
   }
 
