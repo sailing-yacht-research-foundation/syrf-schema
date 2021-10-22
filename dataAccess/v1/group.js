@@ -1,9 +1,13 @@
 const uuid = require('uuid');
 const db = require('../../index');
-const { includeMeta } = require('../../utils/utils');
+const { Op } = require('../../index');
 
-exports.getAll = async (paging, groupType) => {
-  let where = {};
+exports.getAll = async (paging, { visibilities }) => {
+  let where = {
+    visibility: {
+      [Op.in]: visibilities,
+    },
+  };
 
   if (paging.query) {
     where.groupName = {
@@ -11,21 +15,12 @@ exports.getAll = async (paging, groupType) => {
     };
   }
 
-  if (groupType) {
-    where.groupType = groupType;
-  }
-
-  const result = await db.Group.findAllWithPaging(
-    { where, include: [...includeMeta] },
-    paging,
-  );
+  const result = await db.Group.findAllWithPaging({ where }, paging);
   return result;
 };
 
 exports.getById = async (id) => {
-  const result = await db.Group.findByPk(id, {
-    include: [...includeMeta],
-  });
+  const result = await db.Group.findByPk(id);
 
   return result?.toJSON();
 };
