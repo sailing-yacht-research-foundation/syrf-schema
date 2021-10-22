@@ -1,6 +1,6 @@
 const uuid = require('uuid');
 const db = require('../../index');
-const { includeMeta } = require('../../utils/utils');
+const { Op } = require('../../index');
 
 const include = [
   {
@@ -13,7 +13,6 @@ const include = [
     model: db.UserProfile,
     attributes: ['id', 'name', 'email'],
   },
-  ...includeMeta,
 ];
 
 exports.getById = async (id) => {
@@ -22,6 +21,37 @@ exports.getById = async (id) => {
   });
 
   return result?.toJSON();
+};
+
+exports.getByEmails = async (groupId, emails) => {
+  const result = await db.GroupMember.findAll({
+    where: {
+      groupId,
+      email: {
+        [Op.in]: emails,
+      },
+    },
+  });
+
+  return result;
+};
+
+exports.getByUserAndGroup = async (userId, groupId) => {
+  const result = await db.GroupMember.findOne({
+    where: {
+      userId,
+      groupId,
+    },
+    attributes: ['id', 'status', 'joinDate', 'isAdmin'],
+    include: [
+      {
+        as: 'member',
+        model: db.UserProfile,
+        attributes: ['id', 'name', 'email'],
+      },
+    ],
+  });
+  return result;
 };
 
 exports.upsert = async (id, data = {}, transaction) => {
@@ -41,7 +71,7 @@ exports.bulkCreate = async (data, transaction) => {
     return [];
   }
   const result = await db.GroupMember.bulkCreate(data, {
-    ignoreDuplicates: true,
+    updateOnDuplicate: ['status'],
     validate: true,
     transaction,
   });
