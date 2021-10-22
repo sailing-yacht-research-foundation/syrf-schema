@@ -15,16 +15,6 @@ class Group extends ModelBase {
 }
 
 module.exports = (sequelize) => {
-  const visibilityEnums = [];
-  // eslint-disable-next-line no-unused-vars
-  for (const [_key, value] of Object.entries(groupVisibilities)) {
-    visibilityEnums.push(value);
-  }
-  const groupTypeEnums = [];
-  // eslint-disable-next-line no-unused-vars
-  for (const [_key, value] of Object.entries(groupTypes)) {
-    groupTypeEnums.push(value);
-  }
   Group.init(
     {
       id: {
@@ -38,10 +28,10 @@ module.exports = (sequelize) => {
         allowNull: false,
       },
       groupType: {
-        type: DataTypes.ENUM(groupTypeEnums),
+        type: DataTypes.ENUM(Object.values(groupTypes)),
       },
       visibility: {
-        type: DataTypes.ENUM(visibilityEnums),
+        type: DataTypes.ENUM(Object.values(groupVisibilities)),
         allowNull: false,
       },
       description: {
