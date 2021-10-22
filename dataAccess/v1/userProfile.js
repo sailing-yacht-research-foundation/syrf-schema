@@ -1,9 +1,12 @@
 const db = require('../../index');
-
+const { Op } = require('../../index');
 exports.upsert = async (userProfile = {}, transaction) => {
-  const [result] = await db.UserProfile.upsert({
-    ...userProfile,
-  }, { transaction });
+  const [result] = await db.UserProfile.upsert(
+    {
+      ...userProfile,
+    },
+    { transaction },
+  );
 
   return result.toJSON();
 };
@@ -13,7 +16,7 @@ exports.updateProfile = async (userId, userProfile = {}, transaction) => {
     where: {
       id: userId,
     },
-    transaction
+    transaction,
   });
 
   return result;
@@ -34,15 +37,27 @@ exports.getBySub = async (sub) => {
   );
 };
 
+exports.getAllByEmail = async (emails) => {
+  return await db.UserProfile.findAll({
+    where: {
+      email: {
+        [Op.in]: emails,
+      },
+    },
+    raw: true,
+  });
+};
+
 exports.delete = async (sub, transaction) => {
   const data = await db.UserProfile.findByPk(sub);
 
   if (data) {
     await db.UserProfile.destroy({
+      attributes: ['id', 'email', 'name'],
       where: {
         id: sub,
       },
-      transaction
+      transaction,
     });
   }
 

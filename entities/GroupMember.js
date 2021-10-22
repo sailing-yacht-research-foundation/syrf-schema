@@ -33,14 +33,10 @@ module.exports = (sequelize) => {
       },
       userId: {
         type: DataTypes.UUID,
-        allowNull: false,
+        allowNull: true,
       },
       joinDate: {
         type: DataTypes.DATE,
-      },
-      invitationId: {
-        type: DataTypes.UUID,
-        allowNull: true,
       },
       isAdmin: {
         type: DataTypes.BOOLEAN,
