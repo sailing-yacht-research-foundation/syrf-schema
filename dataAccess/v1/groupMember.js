@@ -16,25 +16,6 @@ const include = [
   ...includeMeta,
 ];
 
-exports.getAll = async (paging, groupId) => {
-  const where = paging.query
-    ? {
-        '$member.name$': {
-          [db.Op.like]: `%${paging.query}%`,
-        },
-        groupId,
-      }
-    : {
-        groupId,
-      };
-
-  const result = await db.GroupMember.findAllWithPaging(
-    { where, include },
-    paging,
-  );
-  return result;
-};
-
 exports.getById = async (id) => {
   const result = await db.GroupMember.findByPk(id, {
     include,
@@ -82,4 +63,72 @@ exports.delete = async (id, transaction) => {
   }
 
   return data?.toJSON();
+};
+
+exports.getGroupsByUserId = async (paging, { userId, status }) => {
+  const where = paging.query
+    ? {
+        '$group.groupName$': {
+          [db.Op.like]: `%${paging.query}%`,
+        },
+        userId,
+        status,
+      }
+    : {
+        userId,
+        status,
+      };
+
+  const result = await db.GroupMember.findAllWithPaging(
+    {
+      where,
+      attributes: ['id', 'status', 'joinDate', 'isAdmin'],
+      include: [
+        {
+          as: 'group',
+          model: db.Group,
+          attributes: [
+            'id',
+            'groupName',
+            'groupType',
+            'description',
+            'visibility',
+          ],
+        },
+      ],
+    },
+    paging,
+  );
+  return result;
+};
+
+exports.getUsersByGroupId = async (paging, { groupId, status }) => {
+  const where = paging.query
+    ? {
+        '$member.name$': {
+          [db.Op.like]: `%${paging.query}%`,
+        },
+        groupId,
+        status,
+      }
+    : {
+        groupId,
+        status,
+      };
+
+  const result = await db.GroupMember.findAllWithPaging(
+    {
+      attributes: ['id', 'status', 'joinDate', 'isAdmin'],
+      where,
+      include: [
+        {
+          as: 'member',
+          model: db.UserProfile,
+          attributes: ['id', 'name', 'email'],
+        },
+      ],
+    },
+    paging,
+  );
+  return result;
 };
