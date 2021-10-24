@@ -96,6 +96,16 @@ exports.delete = async (id, transaction) => {
   return data?.toJSON();
 };
 
+exports.deleteByGroup = async (groupId, transaction) => {
+  const result = await db.GroupMember.destroy({
+    where: {
+      groupId,
+    },
+    transaction,
+  });
+  return result;
+};
+
 exports.getGroupsByUserId = async (paging, { userId, status }) => {
   const where = paging.query
     ? {
