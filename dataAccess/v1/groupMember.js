@@ -176,3 +176,25 @@ exports.getGroupAdmins = async (groupId) => {
 
   return result;
 };
+
+exports.getGroupSize = async (groupId) => {
+  const groupSize = await db.GroupMember.count({
+    where: {
+      groupId,
+      status: groupMemberStatus.accepted,
+    },
+  });
+
+  return groupSize;
+};
+
+exports.getAllGroupsOfUser = async (userId) => {
+  const where = { userId };
+
+  const result = await db.GroupMember.findAll({
+    where,
+    attributes: ['id', 'groupId', 'status', 'joinDate', 'isAdmin'],
+    raw: true,
+  });
+  return result;
+};
