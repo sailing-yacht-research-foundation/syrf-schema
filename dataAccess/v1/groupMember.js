@@ -1,4 +1,5 @@
 const uuid = require('uuid');
+const { groupMemberStatus } = require('../../enums');
 const db = require('../../index');
 const { Op } = require('../../index');
 
@@ -160,5 +161,18 @@ exports.getUsersByGroupId = async (paging, { groupId, status }) => {
     },
     paging,
   );
+  return result;
+};
+
+exports.getGroupAdmins = async (groupId) => {
+  const result = await db.GroupMember.findAll({
+    where: {
+      groupId,
+      status: groupMemberStatus.accepted,
+      isAdmin: true,
+    },
+    attributes: ['id', 'userId', 'isAdmin', 'status'],
+  });
+
   return result;
 };
