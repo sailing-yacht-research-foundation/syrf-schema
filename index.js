@@ -63,6 +63,9 @@ db.CompetitionPointTrack = require('./entities/CompetitionPointTrack')(
 );
 db.CompetitionUnitWind = require('./entities/CompetitionUnitWind')(sequelize);
 
+db.Group = require('./entities/Group')(sequelize);
+db.GroupMember = require('./entities/GroupMember')(sequelize);
+
 for (const key in db) {
   if (Object.hasOwnProperty.call(db, key)) {
     if (db[key].prototype instanceof ModelBase) {

@@ -113,6 +113,24 @@ const defaultKMLOptions = {
   heading: 0,
 };
 
+const groupVisibilities = {
+  public: 'PUBLIC',
+  private: 'PRIVATE',
+  moderated: 'MODERATED',
+};
+
+const groupMemberStatus = {
+  invited: 'INVITED',
+  requested: 'REQUESTED',
+  accepted: 'ACCEPTED',
+  declined: 'DECLINED',
+};
+
+const groupTypes = {
+  organization: 'ORGANIZATION',
+  committee: 'COMMITTEE',
+  team: 'TEAM',
+};
 
 module.exports = {
   competitionUnitStatus,
@@ -123,5 +141,8 @@ module.exports = {
   searchIndex,
   raceSetupType,
   openCompetitionConfig,
-  defaultKMLOptions
+  defaultKMLOptions,
+  groupVisibilities,
+  groupMemberStatus,
+  groupTypes,
 };
