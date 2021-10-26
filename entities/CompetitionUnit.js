@@ -30,6 +30,11 @@ class CompetitionUnit extends ModelBase {
       foreignKey: 'userProfileId',
       constraints: false,
     });
+    this.hasMany(models.VesselParticipantCrewTrackJson, {
+      as: 'trackJsons',
+      foreignKey: 'competitionUnitId',
+      constraints: false,
+    });
   }
 }
 

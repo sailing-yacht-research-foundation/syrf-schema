@@ -38,6 +38,12 @@ class TrackHistory extends ModelBase {
       foreignKey: 'calendarEventId',
       constraints: false,
     });
+    this.belongsTo(models.VesselParticipantCrewTrackJson, {
+      as: 'trackJson',
+      foreignKey: 'crewId',
+      targetKey: 'vesselParticipantCrewId',
+      constraints: false,
+    });
   }
 }
 
