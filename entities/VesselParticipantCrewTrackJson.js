@@ -1,6 +1,26 @@
-const { DataTypes, Model } = require('sequelize');
-
-class VesselParticipantCrewTrackJson extends Model {}
+const { DataTypes } = require('sequelize');
+const ModelBase = require('../ModelBase');
+class VesselParticipantCrewTrackJson extends ModelBase {
+  static associateBase() {}
+  static associate(models) {
+    this.belongsTo(models.VesselParticipantCrew, {
+      as: 'crew',
+      constraints: false,
+      foreignKey: 'vesselParticipantCrewId',
+    });
+    this.belongsTo(models.CompetitionUnit, {
+      as: 'competition',
+      constraints: false,
+      foreignKey: 'competitionUnitId',
+    });
+    this.belongsTo(models.TrackHistory, {
+      as: 'trackHistory',
+      foreignKey: 'vesselParticipantCrewId',
+      targetKey: 'crewId',
+      constraints: false,
+    });
+  }
+}
 
 module.exports = (sequelize) => {
   VesselParticipantCrewTrackJson.init(
@@ -22,6 +42,11 @@ module.exports = (sequelize) => {
       storageKey: {
         type: DataTypes.STRING,
         allowNull: false,
+      },
+      totalTraveledDistance: {
+        type: DataTypes.DOUBLE,
+        allowNull: false,
+        defaultValue: 0,
       },
     },
     {

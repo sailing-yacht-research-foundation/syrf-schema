@@ -19,6 +19,11 @@ class VesselParticipantCrew extends ModelBase {
       foreignKey: 'crewId',
       constraints: false,
     });
+    this.hasMany(models.VesselParticipantCrewTrackJson, {
+      as: 'trackJsons',
+      foreignKey: 'vesselParticipantCrewId',
+      constraints: false,
+    });
   }
 }
 
