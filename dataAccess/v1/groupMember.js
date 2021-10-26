@@ -218,3 +218,19 @@ exports.getAllGroupsOfUser = async (userId) => {
   });
   return result;
 };
+
+exports.update = async ({ id, status, userId }, data = {}, transaction) => {
+  const [updateCount] = await db.GroupMember.update(
+    { ...data },
+    {
+      where: {
+        id,
+        status,
+        userId,
+      },
+      transaction,
+    },
+  );
+
+  return updateCount;
+};
