@@ -55,6 +55,11 @@ module.exports = (sequelize) => {
         type: DataTypes.GEOMETRY('POINT', 4326),
         allowNull: false,
       },
+      traveledDistance: {
+        type: DataTypes.DOUBLE,
+        allowNull: false,
+        defaultValue: 0,
+      },
     },
     {
       modelName: 'VesselParticipantLeg',

@@ -31,6 +31,11 @@ module.exports = (sequelize) => {
         type: DataTypes.STRING,
         allowNull: false,
       },
+      totalTraveledDistance: {
+        type: DataTypes.DOUBLE,
+        allowNull: false,
+        defaultValue: 0,
+      },
     },
     {
       modelName: 'VesselParticipantTrackJson',
