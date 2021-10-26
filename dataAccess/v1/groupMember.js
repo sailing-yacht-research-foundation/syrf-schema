@@ -220,17 +220,14 @@ exports.getAllGroupsOfUser = async (userId) => {
 };
 
 exports.update = async ({ id, status, userId }, data = {}, transaction) => {
-  const [updateCount] = await db.GroupMember.update(
-    { ...data },
-    {
-      where: {
-        id,
-        status,
-        userId,
-      },
-      transaction,
+  const [updateCount] = await db.GroupMember.update(data, {
+    where: {
+      id,
+      status,
+      userId,
     },
-  );
+    transaction,
+  });
 
   return updateCount;
 };
