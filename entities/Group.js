@@ -5,9 +5,8 @@ const ModelBase = require('../ModelBase');
 class Group extends ModelBase {
   static associateBase() {}
   static associate(models) {
-    this.belongsToMany(models.UserProfile, {
-      as: 'members',
-      through: models.VesselParticipantCrew,
+    this.hasMany(models.GroupMember, {
+      as: 'groupMember',
       foreignKey: 'groupId',
       constraints: false,
     });
