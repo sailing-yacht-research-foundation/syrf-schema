@@ -1,6 +1,6 @@
 const uuid = require('uuid');
-const db = require('../../models');
-const { includeMeta, excludeMeta } = require('../../utils');
+const db = require('../../index');
+const { includeMeta, excludeMeta } = require('../../utils/utils');
 const { competitionUnitStatus } = require('../../enums');
 
 const courseInclude = [
