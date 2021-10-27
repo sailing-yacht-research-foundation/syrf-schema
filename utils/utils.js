@@ -66,30 +66,6 @@ exports.validateSqlDataAuth = ({ editors = [], ownerId = '' } = {}, userId) => {
   return result;
 };
 
-/**
- * @typedef {import('express').Request} Request
- * @typedef {import('express').Response} Response
- * @typedef {import('express').NextFunction} NextFunction
- *
- */
-
-/**
- * @param {Request} req
- * @param {Response} res
- * @param {NextFunction} next
- */
-const callBackType = (req, res, next) => { };
-
-/**
- * @param {callBackType} fn
- */
-exports.asyncHandler = (fn) =>
-  function (...args) {
-    const fnReturn = fn(...args);
-    const next = args[args.length - 1];
-    return Promise.resolve(fnReturn).catch(next);
-  };
-
 exports.includeMeta = [
   {
     model: db.UserProfile,
@@ -119,25 +95,25 @@ exports.getRaceTimeBuffer = (time, buffer = 60000) => {
  */
 exports.createTransaction = async () => {
   return await db.sequelize.transaction();
-}
+};
 
 exports.useTransaction =
   (fc) =>
-    async (...args) => {
-      if (args.length > 0 && args[args.length - 1] instanceof Transaction) {
-        return await fc(...args);
-      } else {
-        const tran = await db.sequelize.transaction();
-        try {
-          const result = await fc(...[...args, tran]);
-          await tran.commit();
-          return result;
-        } catch (error) {
-          await tran.rollback();
-          throw error;
-        }
+  async (...args) => {
+    if (args.length > 0 && args[args.length - 1] instanceof Transaction) {
+      return await fc(...args);
+    } else {
+      const tran = await db.sequelize.transaction();
+      try {
+        const result = await fc(...[...args, tran]);
+        await tran.commit();
+        return result;
+      } catch (error) {
+        await tran.rollback();
+        throw error;
       }
-    };
+    }
+  };
 
 exports.getCourseCenterPoint = (geometries = []) => {
   if (geometries.length < 1) return null;
