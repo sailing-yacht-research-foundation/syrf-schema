@@ -24,18 +24,22 @@ module.exports = {
             },
             ipAddress: {
               type: Sequelize.DataTypes.STRING,
+              allowNull: false,
             },
             replyPort: {
               type: Sequelize.DataTypes.INTEGER,
             },
             expiredAt: {
               type: Sequelize.DataTypes.DATE,
+              allowNull: false,
             },
             userProfileId: {
               type: Sequelize.DataTypes.UUID,
+              allowNull: false,
             },
             competitionUnitId: {
               type: Sequelize.DataTypes.UUID,
+              allowNull: false,
             },
             createdAt: {
               type: Sequelize.DataTypes.DATE,
