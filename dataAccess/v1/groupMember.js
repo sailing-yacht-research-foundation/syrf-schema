@@ -116,6 +116,17 @@ exports.deleteByUserId = async (userId, transaction) => {
   return result;
 };
 
+exports.deleteStaleInvitation = async (transaction) => {
+  const deletedInvitations = await db.GroupMember.destroy({
+    where: {
+      userId: { [Op.eq]: null },
+      status: groupMemberStatus.invited,
+    },
+    transaction,
+  });
+  return deletedInvitations;
+};
+
 exports.getGroupsByUserId = async (paging, { userId, status }) => {
   const where = paging.query
     ? {
