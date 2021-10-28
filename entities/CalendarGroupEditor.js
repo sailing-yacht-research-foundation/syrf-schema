@@ -4,15 +4,15 @@ const ModelBase = require('../ModelBase');
 class CalendarGroupEditor extends ModelBase {
   static associateBase() {}
   static associate(models) {
-    this.belongsTo(models.CalendarEvent, {
+    this.belongsTo(models.CalenderEvent, {
       as: 'calendarEvent',
       constraints: false,
       foreignKey: 'calendarEventId',
     });
-    this.belongsTo(models.Participant, {
-      as: 'participant',
+    this.belongsTo(models.Group, {
+      as: 'group',
       constraints: false,
-      foreignKey: 'participantId',
+      foreignKey: 'groupId',
     });
   }
 }
