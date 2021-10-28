@@ -112,10 +112,10 @@ class ModelBase extends Model {
     let params = {
       limit: pagingSize,
       offset: pagingSize * (pageQuery - 1),
+      ...attribute,
       order: Array.isArray(customSort)
         ? [...customSort, ...paginationSorts]
         : paginationSorts,
-      ...attribute,
     };
 
     if (filters.length > 0) params.where = { [Op.and]: conditions };
