@@ -1,4 +1,10 @@
 const uuid = require('uuid');
+const competitionUnitDAL = require('./competitionUnit');
+const vesselParticipantDAL = require('./vesselParticipant');
+const vesselParticipantGroupDAL = require('./vesselParticipantGroup');
+const participantDAL = require('./participant');
+const courseDAL = require('./course');
+
 const db = require('../../index');
 const { conversionValues } = require('../../enums');
 const { includeMeta } = require('../../utils/utils');
@@ -11,6 +17,28 @@ const include = [
     through: {
       attributes: [],
     },
+  },
+  {
+    model: db.Group,
+    as: 'groupEditors',
+    attributes: ['id', 'groupName'],
+    through: {
+      attributes: [],
+    },
+    include: [
+      {
+        model: db.GroupMember,
+        as: 'groupMember',
+        attributes: ['id', 'userId'],
+        include: [
+          {
+            as: 'member',
+            model: db.UserProfile,
+            attributes: ['name'],
+          },
+        ],
+      },
+    ],
   },
   {
     model: db.UserProfile,
@@ -32,7 +60,7 @@ exports.upsert = async (id, data = {}, transaction) => {
   );
 
   await result.setEditors((data.editors || []).map((t) => t.id));
-  
+
   return result?.toJSON();
 };
 
@@ -103,6 +131,10 @@ exports.getAll = async (paging, params = {}) => {
     ];
   }
 
+  if (typeof params?.private === 'boolean') {
+    where.isPrivate = params?.private;
+  }
+
   const result = await db.CalenderEvent.findAllWithPaging(
     {
       attributes,
@@ -135,6 +167,7 @@ exports.getAll = async (paging, params = {}) => {
 };
 
 exports.getById = async (id, transaction) => {
+  if (!id) return null;
   const result = await db.CalenderEvent.findByPk(id, {
     include,
     transaction,
@@ -142,11 +175,83 @@ exports.getById = async (id, transaction) => {
 
   let data = result?.toJSON();
   if (data) {
-    const { location, ...otherData } = data;
+    const { location, editors, groupEditors, ...otherData } = data;
+    let editorsFromGroup = [];
+    groupEditors.forEach((group) => {
+      editorsFromGroup = [
+        ...editorsFromGroup,
+        ...group.groupMember.map((row) => {
+          return {
+            id: row.userId,
+            name: row.member.name,
+          };
+        }),
+      ];
+    });
     data = {
       ...otherData,
       lon: location?.coordinates?.[0],
       lat: location?.coordinates?.[1],
+      editors: [...editors, ...editorsFromGroup],
+    };
+  }
+  return data;
+};
+
+exports.getCompetitionUnitsById = async (id, transaction) => {
+  if (!id) return null;
+  const result = await db.CompetitionUnit.findAll({
+    where: {
+      calendarEventId: id,
+    },
+    raw: true,
+    transaction,
+    attributes: ['id', 'name'],
+  });
+
+  return result;
+};
+
+exports.getParticipantsById = async (id, transaction) => {
+  if (!id) return null;
+  const result = await db.Participant.findAll({
+    where: {
+      calendarEventId: id,
+    },
+    raw: true,
+    attributes: ['id', 'publicName'],
+    transaction,
+  });
+
+  return result;
+};
+
+exports.getAdminsById = async (id) => {
+  if (!id) return null;
+  const result = await db.CalenderEvent.findByPk(id, {
+    include,
+    attributes: ['id', 'name'],
+  });
+
+  let data = result?.toJSON();
+  if (data) {
+    // Combining editors from groupEditors with regular editors
+    const { editors, groupEditors, ...otherData } = data;
+    let editorsFromGroup = [];
+    groupEditors.forEach((group) => {
+      editorsFromGroup = [
+        ...editorsFromGroup,
+        ...group.groupMember.map((row) => {
+          return {
+            id: row.userId,
+            name: row.member.name,
+          };
+        }),
+      ];
+    });
+    data = {
+      ...otherData,
+      editors: [...editors, ...editorsFromGroup],
     };
   }
   return data;
@@ -155,18 +260,75 @@ exports.getById = async (id, transaction) => {
 exports.delete = async (id, transaction) => {
   const data = await db.CalenderEvent.findByPk(id, {
     include,
+    transaction,
   });
 
-  if (data) {
-    await db.CalenderEvent.destroy(
+  if (!data) return data;
+
+  let param = {
+    where: {
+      calendarEventId: id,
+    },
+    attributes: ['id'],
+    raw: true,
+    transaction,
+  };
+  const [races, vpgs, participants, courses] = await Promise.all([
+    db.CompetitionUnit.findAll(param),
+    db.VesselParticipantGroup.findAll(param),
+    db.Participant.findAll(param),
+    db.Course.findAll(param),
+  ]);
+
+  const vps = await db.VesselParticipant.findAll({
+    where: {
+      vesselParticipantGroupId: {
+        [db.Op.in]: vpgs.map((t) => t.id),
+      },
+    },
+    attributes: ['id'],
+    raw: true,
+    transaction,
+  });
+
+  await competitionUnitDAL.delete(
+    races.map((t) => t.id),
+    transaction,
+  );
+  await Promise.all([
+    vesselParticipantGroupDAL.delete(
+      vpgs.map((t) => t.id),
+      transaction,
+    ),
+    vesselParticipantDAL.delete(
+      vps.map((t) => t.id),
+      transaction,
+    ),
+    participantDAL.delete(
+      participants.map((t) => t.id),
+      transaction,
+    ),
+    courseDAL.delete(
+      courses.map((t) => t.id),
+      transaction,
+    ),
+    db.CalenderEvent.destroy(
       {
         where: {
           id: id,
         },
       },
-      { transaction },
-    );
-  }
+      transaction,
+    ),
+    db.Vessel.destroy(
+      {
+        where: {
+          scope: id,
+        },
+      },
+      transaction,
+    ),
+  ]);
 
   return data?.toJSON();
 };
