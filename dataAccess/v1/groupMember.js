@@ -1,4 +1,5 @@
 const uuid = require('uuid');
+const { addDays } = require('date-fns');
 const { groupMemberStatus } = require('../../enums');
 const db = require('../../index');
 const { Op } = require('../../index');
@@ -117,10 +118,14 @@ exports.deleteByUserId = async (userId, transaction) => {
 };
 
 exports.deleteStaleInvitation = async (transaction) => {
+  const checkDate = addDays(new Date(), -2);
   const deletedInvitations = await db.GroupMember.destroy({
     where: {
       userId: { [Op.eq]: null },
       status: groupMemberStatus.invited,
+      createdAt: {
+        [Op.lt]: checkDate.toISOString(),
+      },
     },
     transaction,
   });
