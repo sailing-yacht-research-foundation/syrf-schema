@@ -231,3 +231,25 @@ exports.update = async ({ id, status, userId }, data = {}, transaction) => {
 
   return updateCount;
 };
+
+exports.addGroupMemberAsEditors = async (
+  groupId,
+  calendarEventId,
+  transaction,
+) => {
+  // Fetch all user id of the group
+  const users = await db.GroupMember.findAll({
+    where: { groupId },
+    attributes: ['userId'],
+    raw: true,
+  });
+  const data = users.map((row) => {
+    return { UserProfileId: row.userId, CalendarEventId: calendarEventId };
+  });
+  const result = await db.CalendarEditor.bulkCreate(data, {
+    ignoreDuplicates: true,
+    validate: true,
+    transaction,
+  });
+  return result;
+};
