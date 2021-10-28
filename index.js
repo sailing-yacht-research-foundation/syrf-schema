@@ -68,6 +68,8 @@ db.ExpeditionSubscription = require('./entities/ExpeditionSubscription')(
 
 db.Group = require('./entities/Group')(sequelize);
 db.GroupMember = require('./entities/GroupMember')(sequelize);
+db.CalendarEditor = require('./entities/CalendarEditor')(sequelize);
+db.CalendarGroupEditor = require('./entities/CalendarGroupEditor')(sequelize);
 
 for (const key in db) {
   if (Object.hasOwnProperty.call(db, key)) {

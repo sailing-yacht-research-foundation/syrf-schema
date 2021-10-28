@@ -1,5 +1,6 @@
 const uuid = require('uuid');
-const { groupMemberStatus } = require('../../enums');
+const { addDays } = require('date-fns');
+const { groupMemberStatus, miscOptionsValue } = require('../../enums');
 const db = require('../../index');
 const { Op } = require('../../index');
 
@@ -116,6 +117,24 @@ exports.deleteByUserId = async (userId, transaction) => {
   return result;
 };
 
+exports.deleteStaleInvitation = async (transaction) => {
+  const checkDate = addDays(
+    new Date(),
+    miscOptionsValue.staleInvitationDuration,
+  );
+  const deletedInvitations = await db.GroupMember.destroy({
+    where: {
+      userId: { [Op.eq]: null },
+      status: groupMemberStatus.invited,
+      createdAt: {
+        [Op.lt]: checkDate.toISOString(),
+      },
+    },
+    transaction,
+  });
+  return deletedInvitations;
+};
+
 exports.getGroupsByUserId = async (paging, { userId, status }) => {
   const where = paging.query
     ? {
@@ -230,4 +249,26 @@ exports.update = async ({ id, status, userId }, data = {}, transaction) => {
   });
 
   return updateCount;
+};
+
+exports.addGroupMemberAsEditors = async (
+  groupId,
+  calendarEventId,
+  transaction,
+) => {
+  // Fetch all user id of the group
+  const users = await db.GroupMember.findAll({
+    where: { groupId },
+    attributes: ['userId'],
+    raw: true,
+  });
+  const data = users.map((row) => {
+    return { UserProfileId: row.userId, CalendarEventId: calendarEventId };
+  });
+  const result = await db.CalendarEditor.bulkCreate(data, {
+    ignoreDuplicates: true,
+    validate: true,
+    transaction,
+  });
+  return result;
 };

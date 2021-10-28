@@ -14,6 +14,13 @@ class CalendarEvent extends ModelBase {
       as: 'editors',
       constraints: false,
     });
+    this.belongsToMany(models.Group, {
+      through: 'CalendarGroupEditors',
+      as: 'groupEditors',
+      constraints: false,
+      foreignKey: 'calendarEventId',
+      otherKey: 'groupId',
+    });
 
     this.belongsTo(models.UserProfile, {
       as: 'owner',
