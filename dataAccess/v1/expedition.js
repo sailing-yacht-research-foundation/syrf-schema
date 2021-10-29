@@ -1,6 +1,6 @@
 const uuid = require('uuid');
 const db = require('../../index');
-const { includeMeta, excludeMeta } = require('../../utils/utils');
+const { includeMeta } = require('../../utils/utils');
 const { competitionUnitStatus } = require('../../enums');
 
 const courseInclude = [
@@ -90,9 +90,7 @@ const include = [
   {
     model: db.CompetitionUnit,
     as: 'competitionUnit',
-    attributes: {
-      exclude: excludeMeta,
-    },
+    attributes: ['id', 'name', 'status', 'calendarEventId', 'courseId'],
   },
   ...includeMeta,
 ];
