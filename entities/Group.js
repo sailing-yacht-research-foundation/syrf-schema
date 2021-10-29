@@ -10,6 +10,14 @@ class Group extends ModelBase {
       foreignKey: 'groupId',
       constraints: false,
     });
+
+    this.belongsToMany(models.CalenderEvent, {
+      through: 'CalendarEditors',
+      as: 'calendarEvents',
+      constraints: false,
+      foreignKey: 'groupId',
+      otherKey: 'calendarEventId',
+    });
   }
 }
 

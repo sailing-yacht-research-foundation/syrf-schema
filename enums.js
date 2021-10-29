@@ -133,6 +133,10 @@ const groupTypes = {
   team: 'TEAM',
 };
 
+const miscOptionsValue = {
+  staleInvitationDuration: -2, // in days
+};
+
 module.exports = {
   competitionUnitStatus,
   conversionValues,
@@ -146,4 +150,5 @@ module.exports = {
   groupVisibilities,
   groupMemberStatus,
   groupTypes,
+  miscOptionsValue,
 };

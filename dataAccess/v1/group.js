@@ -63,3 +63,13 @@ exports.bulkDelete = async (idList, transaction) => {
   });
   return delCount;
 };
+
+exports.addGroupAsAdmin = async (groupId, calendarEventId, transaction) => {
+  await db.CalendarGroupEditor.create(
+    {
+      groupId,
+      calendarEventId,
+    },
+    { transaction },
+  );
+};
