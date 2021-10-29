@@ -90,9 +90,7 @@ const include = [
   {
     model: db.CompetitionUnit,
     as: 'competitionUnit',
-    attributes: {
-      exclude: excludeMeta,
-    },
+    attributes: ['id', 'name', 'status', 'calendarEventId', 'courseId'],
   },
   ...includeMeta,
 ];
