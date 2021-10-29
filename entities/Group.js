@@ -12,7 +12,7 @@ class Group extends ModelBase {
     });
 
     this.belongsToMany(models.CalenderEvent, {
-      through: 'CalendarEditors',
+      through: 'CalendarGroupEditors',
       as: 'calendarEvents',
       constraints: false,
       foreignKey: 'groupId',
