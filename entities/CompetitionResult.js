@@ -24,7 +24,7 @@ module.exports = (sequelize) => {
         allowNull: false,
       },
       time: {
-        type: DataTypes.INTEGER,
+        type: DataTypes.BIGINT,
         allowNull: false,
       },
       rank: {
