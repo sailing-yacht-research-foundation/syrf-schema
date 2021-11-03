@@ -25,17 +25,6 @@ module.exports = {
           Sequelize.GEOMETRY('POINT', 4326),
           { transaction },
         );
-        // TODO: Add this in next migration file
-        // await db.sequelize.query(
-        //   'UPDATE "CalendarEvents" SET "location" = ST_SetSRID(ST_MakePoint("lon", "lat"), 4326)',
-        //   { transaction },
-        // );
-        // await queryInterface.removeColumn('CalendarEvents', 'lon', {
-        //   transaction,
-        // });
-        // await queryInterface.removeColumn('CalendarEvents', 'lat', {
-        //   transaction,
-        // });
         await queryInterface.addIndex('CalendarEvents', ['location'], {
           unique: false,
           type: 'SPATIAL',
@@ -69,13 +58,6 @@ module.exports = {
       await queryInterface.removeColumn('CalendarEvents', 'isOpen', {
         transaction,
       });
-      // TODO: Add this in next migration file
-      // await queryInterface.addColumn('CalendarEvents', 'lon', Sequelize.FLOAT, {
-      //   transaction,
-      // });
-      // await queryInterface.addColumn('CalendarEvents', 'lat', Sequelize.FLOAT, {
-      //   transaction,
-      // });
       await queryInterface.removeColumn('CalendarEvents', 'location', {
         transaction,
       });
