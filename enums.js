@@ -137,6 +137,10 @@ const miscOptionsValue = {
   staleInvitationDuration: -2, // in days
 };
 
+const bullQueues = {
+  raceStart: 'race_start',
+};
+
 module.exports = {
   competitionUnitStatus,
   conversionValues,
@@ -151,4 +155,5 @@ module.exports = {
   groupMemberStatus,
   groupTypes,
   miscOptionsValue,
+  bullQueues,
 };
