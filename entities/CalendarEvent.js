@@ -57,13 +57,10 @@ module.exports = (sequelize) => {
       locationName: {
         type: DataTypes.STRING,
       },
-      lon: {
-        type: DataTypes.FLOAT,
-      },
-      lat: {
-        type: DataTypes.FLOAT,
-      },
       location: {
+        type: DataTypes.GEOMETRY('POINT', 4326),
+      },
+      endLocation: {
         type: DataTypes.GEOMETRY('POINT', 4326),
       },
       externalUrl: {
