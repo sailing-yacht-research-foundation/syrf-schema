@@ -100,30 +100,41 @@ exports.getByCompetitionId = async (competitionUnitId) => {
   return result?.toJSON();
 };
 
-exports.delete = async (id) => {
-  const data = await db.VesselParticipantGroup.findByPk(id, {
-    include,
-  });
+exports.delete = async (id, transaction) => {
+  let data = null;
+  let isMultiple = Array.isArray(id);
 
-  if (data) {
-    await Promise.all([
-      db.VesselParticipantGroup.destroy({
-        where: {
-          id: id,
-        },
-      }),
-      db.CompetitionUnit.update(
-        { vesselParticipantGroupId: null },
-        {
-          where: {
-            vesselParticipantGroupId: id,
-          },
-        },
-      ),
-    ]);
+  if (!isMultiple) {
+    data = await db.VesselParticipantGroup.findByPk(id, {
+      include,
+      transaction,
+    });
+    id = [id];
   }
 
-  return data?.toJSON();
+  const [count] = await Promise.all([
+    db.VesselParticipantGroup.destroy({
+      where: {
+        id: {
+          [Op.in]: id,
+        },
+      },
+      transaction,
+    }),
+    db.CompetitionUnit.update(
+      { vesselParticipantGroupId: null },
+      {
+        where: {
+          vesselParticipantGroupId: {
+            [Op.in]: id,
+          },
+        },
+        transaction,
+      },
+    ),
+  ]);
+
+  return !isMultiple ? data?.toJSON() : count;
 };
 
 exports.clear = async () => {

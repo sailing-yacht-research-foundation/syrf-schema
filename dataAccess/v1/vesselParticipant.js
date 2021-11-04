@@ -225,27 +225,58 @@ exports.getById = async (id) => {
   return result?.toJSON();
 };
 
-exports.delete = async (id) => {
-  const data = await db.VesselParticipant.findByPk(id, {
-    include,
-  });
+exports.delete = async (id, transaction) => {
+  let data = null;
+  let isMultiple = Array.isArray(id);
 
-  if (data) {
-    await Promise.all([
-      db.VesselParticipant.destroy({
-        where: {
-          id: id,
-        },
-      }),
-      db.VesselParticipantCrew.destroy({
-        where: {
-          vesselParticipantId: id,
-        },
-      }),
-    ]);
+  if (!isMultiple) {
+    data = await db.VesselParticipant.findByPk(id, {
+      include,
+      transaction,
+    });
+    id = [id];
   }
 
-  return data?.toJSON();
+  let vpc = await db.VesselParticipantCrew.findAll({
+    where: {
+      vesselParticipantId: {
+        [db.Op.in]: id,
+      },
+    },
+    attributes: ['id'],
+    transaction,
+  });
+
+  const vpcParam = {
+    where: {
+      vesselParticipantCrewId: {
+        [db.Op.in]: vpc.map((t) => t.id),
+      },
+    },
+    transaction,
+  };
+
+  const [count] = await Promise.all([
+    await db.VesselParticipant.destroy({
+      where: {
+        id: {
+          [db.Op.in]: id,
+        },
+      },
+    }),
+    db.VesselParticipantCrew.destroy({
+      where: {
+        vesselParticipantId: {
+          [db.Op.in]: id,
+        },
+      },
+      transaction,
+    }),
+    db.VesselParticipantCrewTrack.destroy(vpcParam),
+    db.VesselParticipantCrewTrackJson.destroy(vpcParam),
+  ]);
+
+  return !isMultiple ? data?.toJSON() : count;
 };
 
 exports.clear = async () => {
