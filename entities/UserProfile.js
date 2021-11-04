@@ -72,6 +72,12 @@ module.exports = (sequelize) => {
       avatar: {
         type: DataTypes.STRING,
       },
+      acceptEulaVersion: {
+        type: DataTypes.STRING,
+      },
+      acceptEulaTimestamp: {
+        type: DataTypes.DATE,
+      },
     },
     {
       modelName: 'UserProfile',
