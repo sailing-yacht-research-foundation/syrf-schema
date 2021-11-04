@@ -17,6 +17,31 @@ const include = [
   },
 ];
 
+exports.getAll = async (paging, groupId) => {
+  let where = {
+    groupId,
+  };
+
+  if (paging.query) {
+    where['$member.name$'] = {
+      [db.Op.iLike]: `%${paging.query}%`,
+    };
+  }
+
+  const result = await db.GroupMember.findAllWithPaging(
+    {
+      where,
+      include: {
+        as: 'member',
+        model: db.UserProfile,
+        attributes: ['id', 'name'],
+      },
+    },
+    paging,
+  );
+  return result;
+};
+
 exports.getById = async (id) => {
   const result = await db.GroupMember.findByPk(id, {
     include,
