@@ -1,4 +1,5 @@
 const uuid = require('uuid');
+const { QueryTypes } = require('sequelize');
 const { addDays } = require('date-fns');
 const { groupMemberStatus, miscOptionsValue } = require('../../enums');
 const db = require('../../index');
@@ -250,6 +251,31 @@ exports.getGroupSize = async (groupId) => {
   });
 
   return groupSize;
+};
+
+exports.getGroupMemberSummaries = async (
+  groupIds,
+  numberOfMemberToFetch = 5,
+) => {
+  const replacements = {
+    groupIds,
+    status: groupMemberStatus.accepted,
+    numberOfMemberToFetch,
+  };
+  const result = await db.sequelize.query(
+    `SELECT "numberedMember"."id", "groupId", "userId", "isAdmin", "UserProfiles"."avatar", "UserProfiles"."name" 
+      FROM ( 
+        SELECT "id", "groupId", "userId", "isAdmin", ROW_NUMBER ( ) OVER ( PARTITION BY "groupId" ORDER BY "joinDate" ASC ) AS "numbering" 
+        FROM "GroupMembers" WHERE "status" = :status
+      ) AS "numberedMember"
+      JOIN "UserProfiles" ON ( "numberedMember"."userId" = "UserProfiles"."id" ) 
+      WHERE "groupId" IN (:groupIds) AND "numbering" <= :numberOfMemberToFetch`,
+    {
+      type: QueryTypes.SELECT,
+      replacements,
+    },
+  );
+  return result;
 };
 
 exports.getAllGroupsOfUser = async (userId) => {
