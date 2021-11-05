@@ -78,6 +78,12 @@ module.exports = (sequelize) => {
       acceptEulaTimestamp: {
         type: DataTypes.DATE,
       },
+      acceptPrivacyPolicyVersion: {
+        type: DataTypes.STRING,
+      },
+      acceptPrivacyPolicyTimestamp: {
+        type: DataTypes.DATE,
+      },
     },
     {
       modelName: 'UserProfile',

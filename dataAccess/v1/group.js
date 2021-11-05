@@ -15,7 +15,22 @@ exports.getAll = async (paging, { visibilities }) => {
     };
   }
 
-  const result = await db.Group.findAllWithPaging({ where }, paging);
+  const result = await db.Group.findAllWithPaging(
+    {
+      attributes: {
+        include: [
+          [
+            db.sequelize.literal(
+              `(SELECT COUNT(*) FROM "GroupMembers" AS "member" WHERE "Group"."id" = "member"."groupId")`,
+            ),
+            'memberCount',
+          ],
+        ],
+      },
+      where,
+    },
+    paging,
+  );
   return result;
 };
 
