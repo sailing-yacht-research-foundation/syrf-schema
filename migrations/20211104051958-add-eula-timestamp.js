@@ -20,6 +20,22 @@ module.exports = {
           { transaction },
         );
       }
+      if (!tableInfo.acceptPrivacyPolicyVersion) {
+        await queryInterface.addColumn(
+          'UserProfiles',
+          'acceptPrivacyPolicyVersion',
+          Sequelize.STRING,
+          { transaction },
+        );
+      }
+      if (!tableInfo.acceptPrivacyPolicyTimestamp) {
+        await queryInterface.addColumn(
+          'UserProfiles',
+          'acceptPrivacyPolicyTimestamp',
+          Sequelize.STRING,
+          { transaction },
+        );
+      }
     });
   },
 
@@ -35,6 +51,24 @@ module.exports = {
         await queryInterface.removeColumn(
           'UserProfiles',
           'acceptEulaTimestamp',
+          {
+            transaction,
+          },
+        );
+      }
+      if (tableInfo.acceptPrivacyPolicyVersion) {
+        await queryInterface.removeColumn(
+          'UserProfiles',
+          'acceptPrivacyPolicyVersion',
+          {
+            transaction,
+          },
+        );
+      }
+      if (tableInfo.acceptPrivacyPolicyTimestamp) {
+        await queryInterface.removeColumn(
+          'UserProfiles',
+          'acceptPrivacyPolicyTimestamp',
           {
             transaction,
           },
