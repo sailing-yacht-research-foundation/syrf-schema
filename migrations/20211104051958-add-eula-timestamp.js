@@ -32,7 +32,7 @@ module.exports = {
         await queryInterface.addColumn(
           'UserProfiles',
           'acceptPrivacyPolicyTimestamp',
-          Sequelize.STRING,
+          Sequelize.DATE,
           { transaction },
         );
       }
