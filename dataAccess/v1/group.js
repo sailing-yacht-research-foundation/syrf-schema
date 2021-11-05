@@ -2,7 +2,7 @@ const uuid = require('uuid');
 const db = require('../../index');
 const { Op } = require('../../index');
 
-exports.getAll = async (paging, { visibilities }) => {
+exports.getAll = async (paging, { visibilities, userId }) => {
   let where = {
     visibility: {
       [Op.in]: visibilities,
@@ -27,6 +27,17 @@ exports.getAll = async (paging, { visibilities }) => {
           ],
         ],
       },
+      include: [
+        {
+          as: 'groupMember',
+          model: db.GroupMember,
+          attributes: ['status', 'isAdmin'],
+          required: false,
+          where: {
+            userId,
+          },
+        },
+      ],
       where,
     },
     paging,
