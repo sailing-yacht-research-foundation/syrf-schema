@@ -178,7 +178,24 @@ exports.getGroupsByUserId = async (paging, { userId, status }) => {
   const result = await db.GroupMember.findAllWithPaging(
     {
       where,
-      attributes: ['id', 'status', 'joinDate', 'isAdmin'],
+      attributes: {
+        include: [
+          [
+            db.sequelize.literal(
+              `(SELECT COUNT(*) FROM "GroupMembers" AS "member" WHERE "GroupMember"."groupId" = "member"."groupId" AND "status" = :status)`,
+            ),
+            'memberCount',
+          ],
+        ],
+        exclude: [
+          'invitorId',
+          'createdAt',
+          'updatedAt',
+          'groupId',
+          'userId',
+          'email',
+        ],
+      },
       include: [
         {
           as: 'group',
@@ -192,6 +209,9 @@ exports.getGroupsByUserId = async (paging, { userId, status }) => {
           ],
         },
       ],
+      replacements: {
+        status,
+      },
     },
     paging,
   );
