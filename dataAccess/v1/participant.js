@@ -1,10 +1,7 @@
 const uuid = require('uuid');
 const { errorCodes, statusCodes } = require('../../enums');
 const db = require('../../index');
-const {
-  includeMeta,
-  ValidationError,
-} = require('../../utils/utils');
+const { includeMeta, ValidationError } = require('../../utils/utils');
 
 const include = [
   {
@@ -156,20 +153,56 @@ exports.getByUserId = async (id, pagination) => {
 };
 
 exports.delete = async (id, transaction) => {
-  const data = await db.Participant.findByPk(id, {
-    include,
-  });
-
-  if (data) {
-    await db.Participant.destroy({
-      where: {
-        id: id,
-      },
-      transaction
+  let data = null;
+  let isMultiple = Array.isArray(id);
+  if (!isMultiple) {
+    data = await db.Participant.findByPk(id, {
+      include,
+      transaction,
     });
+    id = [id];
   }
 
-  return data?.toJSON();
+  let vpc = await db.VesselParticipantCrew.findAll({
+    where: {
+      participantId: {
+        [db.Op.in]: id,
+      },
+    },
+    attributes: ['id'],
+    transaction,
+  });
+
+  const vpcParam = {
+    where: {
+      vesselParticipantCrewId: {
+        [db.Op.in]: vpc.map((t) => t.id),
+      },
+    },
+    transaction,
+  };
+
+  const [count] = await Promise.all([
+    await db.Participant.destroy({
+      where: {
+        id: {
+          [db.Op.in]: id,
+        },
+      },
+    }),
+    db.VesselParticipantCrew.destroy({
+      where: {
+        participantId: {
+          [db.Op.in]: id,
+        },
+      },
+      transaction,
+    }),
+    db.VesselParticipantCrewTrack.destroy(vpcParam),
+    db.VesselParticipantCrewTrackJson.destroy(vpcParam),
+  ]);
+
+  return !isMultiple ? data?.toJSON() : count;
 };
 
 exports.getEvent = async (id) => {

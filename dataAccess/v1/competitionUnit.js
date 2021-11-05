@@ -37,10 +37,13 @@ const include = [
 exports.upsert = async (id, data = {}, transaction) => {
   if (!id) id = uuid.v4();
 
-  const [result] = await db.CompetitionUnit.upsert({
-    ...data,
-    id,
-  }, { transaction });
+  const [result] = await db.CompetitionUnit.upsert(
+    {
+      ...data,
+      id,
+    },
+    { transaction },
+  );
 
   return result?.toJSON();
 };
@@ -139,20 +142,51 @@ exports.getById = async (id, includeDetail = true) => {
   return result?.toJSON();
 };
 
-exports.delete = async (id) => {
-  const data = await db.CompetitionUnit.findByPk(id, {
-    include,
-  });
+exports.delete = async (id, transaction) => {
+  let data = null;
+  let isMultiple = Array.isArray(id);
 
-  if (data) {
-    await db.CompetitionUnit.destroy({
-      where: {
-        id: id,
-      },
+  if (!isMultiple) {
+    data = await db.CompetitionUnit.findByPk(id, {
+      include,
+      transaction,
     });
+    id = [id];
   }
 
-  return data?.toJSON();
+  let param = {
+    where: {
+      competitionUnitId: {
+        [Op.in]: id,
+      },
+    },
+    transaction,
+  };
+
+  const [count] = await Promise.all([
+    db.CompetitionUnit.destroy({
+      where: {
+        id: {
+          [Op.in]: id,
+        },
+      },
+      transaction,
+    }),
+    db.VesselParticipantCrewTrack.destroy(param),
+    db.VesselParticipantCrewTrackJson.destroy(param),
+    db.TrackHistory.destroy(param),
+    db.CompetitionResult.destroy(param),
+    db.CompetitionLeg.destroy(param),
+    db.CompetitionPointTrack.destroy(param),
+    db.CompetitionPointTrackJson.destroy(param),
+    db.CompetitionUnitWind.destroy(param),
+    db.SlicedWeather.destroy(param),
+    db.VesselParticipantLeg.destroy(param),
+    db.VesselParticipantTrackJson.destroy(param),
+    db.VesselParticipantTrack.destroy(param),
+  ]);
+
+  return !isMultiple ? data?.toJSON() : count;
 };
 
 exports.setStart = async (id) => {
@@ -216,7 +250,11 @@ exports.getOnGoingRacesWithCourse = async () => {
   return result;
 };
 
-exports.updateCountryCity = async (competitionUnitIds, data = null, transaction) => {
+exports.updateCountryCity = async (
+  competitionUnitIds,
+  data = null,
+  transaction,
+) => {
   await db.CompetitionUnit.update(
     {
       country: data?.country,
@@ -224,13 +262,13 @@ exports.updateCountryCity = async (competitionUnitIds, data = null, transaction)
       approximateStartLocation: !data
         ? null
         : {
-          crs: {
-            type: 'name',
-            properties: { name: 'EPSG:4326' },
+            crs: {
+              type: 'name',
+              properties: { name: 'EPSG:4326' },
+            },
+            type: 'Point',
+            coordinates: data.centerPoint,
           },
-          type: 'Point',
-          coordinates: data.centerPoint,
-        },
     },
     {
       where: {
@@ -238,7 +276,7 @@ exports.updateCountryCity = async (competitionUnitIds, data = null, transaction)
           [Op.in]: competitionUnitIds,
         },
       },
-      transaction
+      transaction,
     },
   );
 };
@@ -255,7 +293,7 @@ exports.addOpenGraphImage = async (competitionUnitIds, data, transaction) => {
           [Op.in]: competitionUnitIds,
         },
       },
-      transaction
+      transaction,
     },
   );
 };

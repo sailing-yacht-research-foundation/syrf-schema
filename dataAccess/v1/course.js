@@ -162,27 +162,63 @@ const setTimedGeometries = (geometries = [], courseId, meta, transaction) => {
   );
 };
 
-const clearGeometries = (courseId, transaction) => {
-  return Promise.all([
+const clearGeometries = async (
+  courseId,
+  clearPoint = true,
+  transaction = null,
+) => {
+  courseId = Array.isArray(courseId) ? courseId : [courseId];
+  const queryParam = {
+    where: {
+      courseId: { [db.Op.in]: courseId },
+    },
+    attributes: ['id'],
+    transaction,
+  };
+
+  const geometryIds = !clearPoint
+    ? []
+    : (
+        await Promise.all([
+          db.CourseSequencedGeometry.findAll(queryParam),
+          db.CourseUnsequencedTimedGeometry.findAll(queryParam),
+          db.CourseUnsequencedUntimedGeometry.findAll(queryParam),
+        ])
+      )
+        .flat(1)
+        .map((t) => t.id);
+
+  const task = [
     db.CourseSequencedGeometry.destroy({
       where: {
-        courseId: courseId,
+        courseId: { [db.Op.in]: courseId },
       },
       transaction,
     }),
     db.CourseUnsequencedTimedGeometry.destroy({
       where: {
-        courseId: courseId,
+        courseId: { [db.Op.in]: courseId },
       },
       transaction,
     }),
     db.CourseUnsequencedUntimedGeometry.destroy({
       where: {
-        courseId: courseId,
+        courseId: { [db.Op.in]: courseId },
       },
       transaction,
     }),
-  ]);
+  ];
+
+  task.push(
+    db.CoursePoint.destroy({
+      where: {
+        geometryId: {
+          [db.Op.in]: geometryIds,
+        },
+      },
+    }),
+  );
+  return await Promise.all(task);
 };
 
 exports.upsert = async (id, data = {}, transaction) => {
@@ -381,23 +417,40 @@ exports.getByCompetitionId = async (competitionUnitId, transaction) => {
 };
 
 exports.delete = async (id, transaction) => {
-  const data = await db.Course.findByPk(id, {
-    include,
-  });
+  let data = null;
+  let isMultiple = Array.isArray(id);
 
-  if (data) {
-    await Promise.all([
-      db.Course.destroy({
+  if (!isMultiple) {
+    data = await await db.Course.findByPk(id, {
+      include,
+      transaction,
+    });
+    id = [id];
+  }
+  const [count] = await Promise.all([
+    db.Course.destroy({
+      where: {
+        id: {
+          [db.Op.in]: id,
+        },
+      },
+      transaction,
+    }),
+    db.CompetitionUnit.update(
+      { courseId: null },
+      {
         where: {
-          id: id,
+          courseId: {
+            [db.Op.in]: id,
+          },
         },
         transaction,
-      }),
-      clearGeometries(id, transaction),
-    ]);
-  }
+      },
+    ),
+    clearGeometries(id, true, transaction),
+  ]);
 
-  return data?.toJSON();
+  return !isMultiple ? data?.toJSON() : count;
 };
 
 exports.clear = async () => {
