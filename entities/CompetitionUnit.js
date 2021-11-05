@@ -105,6 +105,12 @@ module.exports = (sequelize) => {
       openGraphImage: {
         type: DataTypes.STRING,
       },
+      scrapedOriginalId: {
+        type: DataTypes.STRING,
+      },
+      scrapedUrl: {
+        type: DataTypes.STRING,
+      },
     },
     {
       modelName: 'CompetitionUnit',

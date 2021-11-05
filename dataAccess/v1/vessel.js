@@ -92,3 +92,12 @@ exports.getAllForEvent = async (userId, eventId, paging = {}) => {
 
   return result;
 };
+
+exports.getVesselByVesselIdAndSource = async (vesselId, source) => {
+  return await db.Vessel.findOne({
+    where: {
+      vesselId,
+      source,
+    },
+  });
+}

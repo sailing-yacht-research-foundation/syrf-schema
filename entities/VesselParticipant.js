@@ -60,6 +60,9 @@ module.exports = (sequelize) => {
       vesselParticipantGroupId: {
         type: DataTypes.UUID,
       },
+      handicap: {
+        type: DataTypes.JSON,
+      },
     },
     {
       modelName: 'VesselParticipant',

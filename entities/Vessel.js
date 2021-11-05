@@ -42,6 +42,21 @@ module.exports = (sequelize) => {
         type: DataTypes.BOOLEAN,
         defaultValue: false,
       },
+      model: {
+        type: DataTypes.STRING,
+      },
+      widthInMeters: {
+        type: DataTypes.FLOAT,
+      },
+      draftInMeters: {
+        type: DataTypes.FLOAT,
+      },
+      handicap: {
+        type: DataTypes.JSON,
+      },
+      source: {
+        type: DataTypes.STRING,
+      },
     },
     {
       modelName: 'Vessel',

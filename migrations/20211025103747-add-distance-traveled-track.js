@@ -13,7 +13,7 @@ module.exports = {
         'VesselParticipantTrackJsons',
       );
 
-      if (!vpTrack.totalDistanceTraveled) {
+      if (!vpTrack.totalTraveledDistance) {
         await queryInterface.addColumn(
           'VesselParticipantTrackJsons',
           'totalTraveledDistance',
@@ -30,7 +30,7 @@ module.exports = {
         'VesselParticipantCrewTrackJsons',
       );
 
-      if (!crewTrack.totalDistanceTraveled) {
+      if (!crewTrack.totalTraveledDistance) {
         await queryInterface.addColumn(
           'VesselParticipantCrewTrackJsons',
           'totalTraveledDistance',
