@@ -71,6 +71,9 @@ db.GroupMember = require('./entities/GroupMember')(sequelize);
 db.CalendarEditor = require('./entities/CalendarEditor')(sequelize);
 db.CalendarGroupEditor = require('./entities/CalendarGroupEditor')(sequelize);
 
+db.ScrapedFailedUrl = require('./entities/ScrapedFailedUrl')(sequelize);
+db.ScrapedSuccessfulUrl = require('./entities/ScrapedSuccessfulUrl')(sequelize);
+
 for (const key in db) {
   if (Object.hasOwnProperty.call(db, key)) {
     if (db[key].prototype instanceof ModelBase) {

@@ -10,9 +10,10 @@ const conversionValues = {
 };
 
 const geometryType = {
-  POLYLINE: 'Polyline',
+  POLYLINE: 'Polyline', // Not a valid geometry type to be deprecated
   POINT: 'Point',
   POLYGON: 'Polygon',
+  LINESTRING: 'LineString',
 };
 
 const errorCodes = {

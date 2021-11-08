@@ -82,6 +82,92 @@ module.exports = {
           { transaction },
         );
       }
+
+      let failedUrlTable;
+      try {
+        failedUrlTable = await queryInterface.describeTable(
+          'ScrapedFailedUrls',
+        );
+      } catch (err) {
+        failedUrlTable = null;
+      }
+
+      if (!failedUrlTable) {
+        await queryInterface.createTable(
+          'ScrapedFailedUrls',
+          {
+            id: {
+              type: Sequelize.UUID,
+              defaultValue: Sequelize.UUIDV1,
+              allowNull: false,
+              primaryKey: true,
+            },
+            url: {
+              type: Sequelize.STRING,
+              allowNull: false,
+            },
+            error: {
+              type: Sequelize.TEXT,
+              allowNull: false,
+            },
+            source: {
+              type: Sequelize.STRING,
+              allowNull: false,
+            },
+            createdAt: {
+              type: Sequelize.DATE,
+              allowNull: false,
+              defaultValue: Sequelize.NOW,
+            },
+          },
+          {
+            transaction,
+          },
+        );
+      }
+
+      let successfulUrlTable;
+      try {
+        successfulUrlTable = await queryInterface.describeTable(
+          'ScrapedSuccessfulUrls',
+        );
+      } catch (err) {
+        successfulUrlTable = null;
+      }
+
+      if (!successfulUrlTable) {
+        await queryInterface.createTable(
+          'ScrapedSuccessfulUrls',
+          {
+            id: {
+              type: Sequelize.UUID,
+              defaultValue: Sequelize.UUIDV1,
+              allowNull: false,
+              primaryKey: true,
+            },
+            url: {
+              type: Sequelize.STRING,
+              allowNull: false,
+            },
+            originalId: {
+              type: Sequelize.STRING,
+              allowNull: false,
+            },
+            source: {
+              type: Sequelize.STRING,
+              allowNull: false,
+            },
+            createdAt: {
+              type: Sequelize.DATE,
+              allowNull: false,
+              defaultValue: Sequelize.NOW,
+            },
+          },
+          {
+            transaction,
+          },
+        );
+      }
     });
   },
 
@@ -115,9 +201,35 @@ module.exports = {
         transaction,
       });
 
-      await queryInterface.removeColumn('CompetitionUnits', 'scapedUrl', {
+      await queryInterface.removeColumn('CompetitionUnits', 'scrapedUrl', {
         transaction,
       });
+
+      let failedUrlTable;
+      try {
+        failedUrlTable = await queryInterface.describeTable('ScrapedFailedUrls');
+      } catch (err) {
+        failedUrlTable = null;
+      }
+
+      if (failedUrlTable?.id) {
+        await queryInterface.dropTable('ScrapedFailedUrls', {
+          transaction,
+        });
+      }
+
+      let successfulUrlTable;
+      try {
+        successfulUrlTable = await queryInterface.describeTable('ScrapedSuccessfulUrls');
+      } catch (err) {
+        successfulUrlTable = null;
+      }
+
+      if (successfulUrlTable?.id) {
+        await queryInterface.dropTable('ScrapedSuccessfulUrls', {
+          transaction,
+        });
+      }
     });
   }
 };

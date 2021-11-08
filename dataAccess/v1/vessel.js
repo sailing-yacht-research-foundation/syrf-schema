@@ -93,11 +93,31 @@ exports.getAllForEvent = async (userId, eventId, paging = {}) => {
   return result;
 };
 
-exports.getVesselByVesselIdAndSource = async (vesselId, source) => {
-  return await db.Vessel.findOne({
-    where: {
-      vesselId,
-      source,
-    },
+exports.getVesselsByVesselIdsAndSource = async (vesselIds, source) => {
+  const where = {
+    source,
+  }
+  if (vesselIds instanceof Array) {
+    where.vesselId = {
+      [db.Op.in]: vesselIds
+    };
+  } else {
+    where.vesselId = vesselIds;
+  }
+  return await db.Vessel.findAll({
+    attributes: ['id', 'vesselId'],
+    where,
   });
 }
+
+exports.bulkCreate = async (data, transaction) => {
+  if (data.length === 0) {
+    return [];
+  }
+  const result = await db.Vessel.bulkCreate(data, {
+    ignoreDuplicates: true,
+    validate: true,
+    transaction,
+  });
+  return result;
+};

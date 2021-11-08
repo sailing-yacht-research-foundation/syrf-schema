@@ -383,20 +383,25 @@ exports.getByParticipantAndId = async (
   )?.toJSON();
 };
 
-exports.addParticipant = async (vesselParticipantId, participantIds = []) => {
+exports.addParticipant = async (vesselParticipantId, participantIds = [], transaction) => {
   return await db.VesselParticipantCrew.bulkCreate(
     participantIds.map((t) => ({
       vesselParticipantId,
       participantId: t,
-    })),
+    })), {
+      transaction,
+    }
   );
 };
 
-exports.removeParticipant = async (vesselParticipantId, participantId) => {
-  return await db.VesselParticipantCrew.destroy({
-    where: {
-      vesselParticipantId,
-      participantId,
-    },
+exports.bulkCreate = async (data, transaction) => {
+  if (data.length === 0) {
+    return [];
+  }
+  const result = await db.VesselParticipant.bulkCreate(data, {
+    ignoreDuplicates: true,
+    validate: true,
+    transaction,
   });
+  return result;
 };
