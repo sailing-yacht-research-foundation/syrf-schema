@@ -140,6 +140,7 @@ const miscOptionsValue = {
 
 const bullQueues = {
   raceStart: 'race_start',
+  expeditionSubsExpiration: 'expedition_subs_expiration',
 };
 
 module.exports = {
