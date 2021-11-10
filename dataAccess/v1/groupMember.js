@@ -210,7 +210,7 @@ exports.getGroupsByUserId = async (paging, { userId, status }) => {
         },
       ],
       replacements: {
-        status,
+        status: groupMemberStatus.accepted,
       },
     },
     paging,
