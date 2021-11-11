@@ -33,7 +33,7 @@ module.exports = (sequelize) => {
       },
       averageCourseDerivedTWA: {
         type: DataTypes.DOUBLE,
-        allowNull: false,
+        allowNull: true,
       },
       averageCourseTWA: {
         type: DataTypes.DOUBLE,
