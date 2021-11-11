@@ -168,6 +168,18 @@ exports.getById = async (id) => {
   return result?.toJSON();
 };
 
+exports.getByCompetitionUnitId = async (competitionUnitId, userProfileId) => {
+  const result = await db.ExpeditionSubscription.findOne({
+    where: {
+      competitionUnitId,
+      userProfileId,
+    },
+    include,
+  });
+
+  return result?.toJSON();
+};
+
 exports.getCompetitionUnitById = async (id) => {
   const result = await db.CompetitionUnit.findByPk(id, {
     include: [
