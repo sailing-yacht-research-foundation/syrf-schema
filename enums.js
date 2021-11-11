@@ -141,6 +141,8 @@ const miscOptionsValue = {
 const bullQueues = {
   raceStart: 'race_start',
   expeditionSubsExpiration: 'expedition_subs_expiration',
+  openGraph: 'open_graph',
+  closestCity: 'closest_city',
 };
 
 module.exports = {
