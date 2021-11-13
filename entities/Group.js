@@ -47,6 +47,9 @@ module.exports = (sequelize) => {
       createdById: {
         type: DataTypes.UUID,
       },
+      groupImage: {
+        type: DataTypes.STRING,
+      },
     },
     {
       modelName: 'Group',
