@@ -6,7 +6,7 @@ const participantDAL = require('./participant');
 const courseDAL = require('./course');
 
 const db = require('../../index');
-const { conversionValues } = require('../../enums');
+const { conversionValues, groupMemberStatus } = require('../../enums');
 const { includeMeta } = require('../../utils/utils');
 
 const include = [
@@ -37,6 +37,9 @@ const include = [
             attributes: ['name'],
           },
         ],
+        where: {
+          status: groupMemberStatus.accepted,
+        },
       },
     ],
   },
@@ -244,7 +247,7 @@ exports.getAdminsById = async (id) => {
         ...group.groupMember.map((row) => {
           return {
             id: row.userId,
-            name: row.member.name,
+            name: row.member?.name,
           };
         }),
       ];

@@ -99,3 +99,18 @@ exports.addGroupAsAdmin = async (groupId, calendarEventId, transaction) => {
     { transaction },
   );
 };
+
+exports.removeGroupFromAdmin = async (
+  groupId,
+  calendarEventId,
+  transaction,
+) => {
+  const deletedCount = await db.CalendarGroupEditor.destroy({
+    where: {
+      groupId,
+      calendarEventId,
+    },
+    transaction,
+  });
+  return deletedCount;
+};
