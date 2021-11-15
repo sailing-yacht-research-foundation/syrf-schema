@@ -329,7 +329,7 @@ exports.addGroupMemberAsEditors = async (
 ) => {
   // Fetch all user id of the group
   const users = await db.GroupMember.findAll({
-    where: { groupId },
+    where: { groupId, status: groupMemberStatus.accepted },
     attributes: ['userId'],
     raw: true,
   });
