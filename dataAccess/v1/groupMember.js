@@ -35,7 +35,7 @@ exports.getAll = async (paging, groupId) => {
       include: {
         as: 'member',
         model: db.UserProfile,
-        attributes: ['id', 'name'],
+        attributes: ['id', 'name', 'avatar'],
       },
     },
     paging,
