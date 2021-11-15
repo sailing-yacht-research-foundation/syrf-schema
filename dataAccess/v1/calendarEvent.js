@@ -352,3 +352,15 @@ exports.addOpenGraph = async (id, openGraphImage) => {
     },
   );
 };
+
+exports.addUsersAsEditor = async (id, users, transaction) => {
+  const data = users.map((userId) => {
+    return { UserProfileId: userId, CalendarEventId: id };
+  });
+  const result = await db.CalendarEditor.bulkCreate(data, {
+    ignoreDuplicates: true,
+    validate: true,
+    transaction,
+  });
+  return result;
+};
