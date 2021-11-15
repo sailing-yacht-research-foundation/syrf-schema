@@ -343,3 +343,18 @@ exports.addGroupMemberAsEditors = async (
   });
   return result;
 };
+
+exports.updateUserlessInvitations = async (userId, email, transaction) => {
+  const [updateCount] = await db.GroupMember.update(
+    { userId },
+    {
+      where: {
+        email,
+        userId: { [Op.eq]: null },
+      },
+      transaction,
+    },
+  );
+
+  return updateCount;
+};
