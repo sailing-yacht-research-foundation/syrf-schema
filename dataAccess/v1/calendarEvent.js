@@ -13,7 +13,7 @@ const include = [
   {
     model: db.UserProfile,
     as: 'editors',
-    attributes: ['id', 'name'],
+    attributes: ['id', 'name', 'avatar'],
     through: {
       attributes: [],
     },
@@ -21,7 +21,7 @@ const include = [
   {
     model: db.Group,
     as: 'groupEditors',
-    attributes: ['id', 'groupName'],
+    attributes: ['id', 'groupName', 'groupImage'],
     through: {
       attributes: [],
     },
@@ -376,4 +376,35 @@ exports.removeUsersFromEditor = async (id, users, transaction) => {
     transaction,
   });
   return deleteCount;
+};
+
+exports.getEventEditors = async (id) => {
+  const individualEditors = await db.CalendarEditor.findAll({
+    where: {
+      CalendarEventId: id,
+    },
+    include: [
+      {
+        model: db.UserProfile,
+        as: 'user',
+        attributes: ['id', 'name', 'avatar'],
+      },
+    ],
+  });
+  const groupEditors = await db.CalendarGroupEditor.findAll({
+    where: {
+      calendarEventId: id,
+    },
+    include: [
+      {
+        model: db.Group,
+        as: 'group',
+        attributes: ['id', 'groupName', 'groupImage'],
+      },
+    ],
+  });
+  return {
+    individualEditors,
+    groupEditors,
+  };
 };
