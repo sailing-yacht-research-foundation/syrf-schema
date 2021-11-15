@@ -1,4 +1,5 @@
 const uuid = require('uuid');
+const { groupVisibilities, groupMemberStatus } = require('../../enums');
 const db = require('../../index');
 const { Op } = require('../../index');
 
@@ -113,4 +114,44 @@ exports.removeGroupFromAdmin = async (
     transaction,
   });
   return deletedCount;
+};
+
+// Need to limit the groups to private and moderated only
+exports.getUserGroupsForInput = async (paging, userId) => {
+  let where = {
+    visibility: {
+      [db.Op.in]: [groupVisibilities.private, groupVisibilities.moderated],
+    },
+  };
+  if (paging.query) {
+    where.groupName = { [db.Op.iLike]: `%${paging.query}%` };
+  }
+
+  const result = await db.Group.findAllWithPaging(
+    {
+      where,
+      attributes: [
+        'id',
+        'groupName',
+        'groupImage',
+        'visibility',
+        'groupType',
+        'updatedAt',
+      ],
+      include: [
+        {
+          as: 'groupMember',
+          model: db.GroupMember,
+          attributes: ['status', 'isAdmin'],
+          required: true,
+          where: {
+            userId,
+            status: groupMemberStatus.accepted,
+          },
+        },
+      ],
+    },
+    paging,
+  );
+  return result;
 };
