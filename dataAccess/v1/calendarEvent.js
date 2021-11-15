@@ -364,3 +364,16 @@ exports.addUsersAsEditor = async (id, users, transaction) => {
   });
   return result;
 };
+
+exports.removeUsersFromEditor = async (id, users, transaction) => {
+  const deleteCount = await db.CalendarEditor.destroy({
+    where: {
+      CalendarEventId: id,
+      UserProfileId: {
+        [db.Op.in]: users,
+      },
+    },
+    transaction,
+  });
+  return deleteCount;
+};

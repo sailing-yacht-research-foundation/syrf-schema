@@ -60,6 +60,17 @@ exports.getAllByEmail = async (emails) => {
   });
 };
 
+exports.getAllById = async (ids) => {
+  return await db.UserProfile.findAll({
+    where: {
+      id: {
+        [Op.in]: ids,
+      },
+    },
+    raw: true,
+  });
+};
+
 exports.delete = async (sub, transaction) => {
   const data = await db.UserProfile.findByPk(sub);
 
