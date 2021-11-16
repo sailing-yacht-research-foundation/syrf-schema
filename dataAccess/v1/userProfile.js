@@ -1,3 +1,4 @@
+const { userSignupType } = require('../../enums');
 const db = require('../../index');
 const { Op } = require('../../index');
 exports.upsert = async (userProfile = {}, transaction) => {
@@ -22,6 +23,17 @@ exports.updateProfile = async (userId, userProfile = {}, transaction) => {
   return result;
 };
 
+exports.acceptEula = async (data, userId) => {
+  const [updateCount] = await db.UserProfile.update(data, {
+    where: {
+      id: userId,
+      signupType: userSignupType.REGISTERED,
+    },
+  });
+
+  return updateCount;
+};
+
 exports.getById = async (sub) => {
   return await db.UserProfile.findByPk(sub, {
     raw: true,
@@ -42,6 +54,17 @@ exports.getAllByEmail = async (emails) => {
     where: {
       email: {
         [Op.in]: emails,
+      },
+    },
+    raw: true,
+  });
+};
+
+exports.getAllById = async (ids) => {
+  return await db.UserProfile.findAll({
+    where: {
+      id: {
+        [Op.in]: ids,
       },
     },
     raw: true,

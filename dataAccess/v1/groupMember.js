@@ -35,7 +35,7 @@ exports.getAll = async (paging, groupId) => {
       include: {
         as: 'member',
         model: db.UserProfile,
-        attributes: ['id', 'name'],
+        attributes: ['id', 'name', 'avatar'],
       },
     },
     paging,
@@ -329,7 +329,7 @@ exports.addGroupMemberAsEditors = async (
 ) => {
   // Fetch all user id of the group
   const users = await db.GroupMember.findAll({
-    where: { groupId },
+    where: { groupId, status: groupMemberStatus.accepted },
     attributes: ['userId'],
     raw: true,
   });
@@ -342,4 +342,19 @@ exports.addGroupMemberAsEditors = async (
     transaction,
   });
   return result;
+};
+
+exports.updateUserlessInvitations = async (userId, email, transaction) => {
+  const [updateCount] = await db.GroupMember.update(
+    { userId },
+    {
+      where: {
+        email,
+        userId: { [Op.eq]: null },
+      },
+      transaction,
+    },
+  );
+
+  return updateCount;
 };
