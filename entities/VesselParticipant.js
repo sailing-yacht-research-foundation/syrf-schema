@@ -63,6 +63,10 @@ module.exports = (sequelize) => {
       handicap: {
         type: DataTypes.JSON,
       },
+      isCommittee: {
+        type: DataTypes.BOOLEAN,
+        defaultValue: false,
+      },
     },
     {
       modelName: 'VesselParticipant',
