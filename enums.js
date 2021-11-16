@@ -4,6 +4,11 @@ const competitionUnitStatus = {
   COMPLETED: 'COMPLETED',
 };
 
+const userSignupType = {
+  UNREGISTERED: 'unregistered',
+  REGISTERED: 'registered',
+};
+
 const conversionValues = {
   milesToMeters: 1609.344,
   nauticalMilesToMeters: 1852,
@@ -145,6 +150,7 @@ const bullQueues = {
 
 module.exports = {
   competitionUnitStatus,
+  userSignupType,
   conversionValues,
   geometryType,
   errorCodes,
