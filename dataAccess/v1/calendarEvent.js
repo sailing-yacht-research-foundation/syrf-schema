@@ -408,3 +408,108 @@ exports.getEventEditors = async (id) => {
     groupEditors,
   };
 };
+
+exports.getUserEvents = async (paging, userId) => {
+  let where = {
+    [db.Op.and]: [
+      {
+        [db.Op.or]: [
+          { ownerId: userId },
+          db.sequelize.where(db.sequelize.literal(`"editors"."id"`), {
+            [db.Op.ne]: null,
+          }),
+          db.sequelize.where(
+            db.sequelize.literal(`"groupEditors->groupMember"."userId"`),
+            {
+              [db.Op.ne]: null,
+            },
+          ),
+        ],
+      },
+    ],
+  };
+  let order = [];
+  if (paging.query) {
+    where[db.Op.or] = [
+      {
+        name: {
+          [db.Op.iLike]: `%${paging.query}%`,
+        },
+      },
+      {
+        locationName: {
+          [db.Op.iLike]: `%${paging.query}%`,
+        },
+      },
+    ];
+  }
+
+  const result = await db.CalenderEvent.findAllWithPaging(
+    {
+      include: [
+        {
+          model: db.UserProfile,
+          as: 'editors',
+          attributes: ['id', 'name', 'avatar'],
+          through: {
+            attributes: [],
+          },
+          where: {
+            id: userId,
+          },
+          required: false,
+        },
+        {
+          model: db.Group,
+          as: 'groupEditors',
+          attributes: ['id', 'groupName', 'groupImage'],
+          through: {
+            attributes: [],
+          },
+          include: [
+            {
+              model: db.GroupMember,
+              as: 'groupMember',
+              attributes: ['id', 'userId'],
+              where: {
+                userId,
+              },
+            },
+          ],
+          required: false,
+        },
+      ],
+      replacements: {
+        userId,
+      },
+      where,
+      order,
+      limit: 10,
+      offset: 0,
+      // Note: This line here is the key for this query to work without having to use aggregate subquery in attributes. For future reference so we don't waste time looking for ways to query with paging
+      // Reference: https://stackoverflow.com/questions/43729254/sequelize-limit-and-offset-incorrect-placement-in-query
+      subQuery: false,
+      logging: console.log,
+    },
+    paging,
+  );
+  const { count, rows, page, size } = result;
+
+  const formattedRows = [];
+  rows.forEach((row) => {
+    const plainData = row.get({ plain: true });
+    const { location, ...otherData } = plainData;
+    formattedRows.push({
+      ...otherData,
+      lon: location?.coordinates?.[0],
+      lat: location?.coordinates?.[1],
+    });
+  });
+
+  return {
+    count,
+    rows: formattedRows,
+    page,
+    size,
+  };
+};
