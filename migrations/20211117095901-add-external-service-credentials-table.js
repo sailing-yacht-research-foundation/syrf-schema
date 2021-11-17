@@ -14,36 +14,50 @@ module.exports = {
     }
 
     if (!tableInfo) {
-      await queryInterface.createTable('ExternalServiceCredentials', {
-        id: {
-          type: Sequelize.DataTypes.UUID,
-          allowNull: false,
-          primaryKey: true,
+      await queryInterface.createTable(
+        'ExternalServiceCredentials',
+        {
+          id: {
+            type: Sequelize.DataTypes.UUID,
+            allowNull: false,
+            primaryKey: true,
+          },
+          userProfileId: {
+            type: Sequelize.DataTypes.UUID,
+            allowNull: false,
+          },
+          source: {
+            type: Sequelize.DataTypes.ENUM(
+              Object.values(externalServiceSources),
+            ),
+            allowNull: false,
+          },
+          userId: {
+            type: Sequelize.DataTypes.STRING,
+            allowNull: false,
+          },
+          password: {
+            type: Sequelize.DataTypes.STRING,
+            allowNull: false,
+          },
+          createdAt: {
+            type: Sequelize.DataTypes.DATE,
+            allowNull: false,
+          },
+          updatedAt: {
+            type: Sequelize.DataTypes.DATE,
+            allowNull: false,
+          },
         },
-        userProfileId: {
-          type: Sequelize.DataTypes.UUID,
-          allowNull: false,
+        {
+          uniqueKeys: {
+            uniqueUserCredentials: {
+              customIndex: true,
+              fields: ['userProfileId', 'source', 'userId'],
+            },
+          },
         },
-        source: {
-          type: Sequelize.DataTypes.ENUM(Object.values(externalServiceSources)),
-        },
-        userId: {
-          type: Sequelize.DataTypes.STRING,
-          allowNull: false,
-        },
-        password: {
-          type: Sequelize.DataTypes.STRING,
-          allowNull: false,
-        },
-        createdAt: {
-          type: Sequelize.DataTypes.DATE,
-          allowNull: false,
-        },
-        updatedAt: {
-          type: Sequelize.DataTypes.DATE,
-          allowNull: false,
-        },
-      });
+      );
     }
   },
 

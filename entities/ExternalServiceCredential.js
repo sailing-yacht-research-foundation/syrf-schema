@@ -28,6 +28,7 @@ module.exports = (sequelize) => {
       },
       source: {
         type: DataTypes.ENUM(Object.values(externalServiceSources)),
+        allowNull: false,
       },
       userId: {
         type: DataTypes.STRING,
@@ -39,6 +40,12 @@ module.exports = (sequelize) => {
       },
     },
     {
+      indexes: [
+        {
+          unique: true,
+          fields: ['userProfileId', 'source', 'userId'],
+        },
+      ],
       modelName: 'ExternalServiceCredential',
       sequelize,
     },
