@@ -23,18 +23,18 @@ module.exports = (sequelize) => {
         primaryKey: true,
       },
       userProfileId: {
-        type: Sequelize.DataTypes.UUID,
+        type: DataTypes.UUID,
         allowNull: false,
       },
       source: {
-        type: Sequelize.DataTypes.ENUM(Object.values(externalServiceSources)),
+        type: DataTypes.ENUM(Object.values(externalServiceSources)),
       },
       userId: {
-        type: Sequelize.DataTypes.STRING,
+        type: DataTypes.STRING,
         allowNull: false,
       },
       password: {
-        type: Sequelize.DataTypes.STRING,
+        type: DataTypes.STRING,
         allowNull: false,
       },
     },
