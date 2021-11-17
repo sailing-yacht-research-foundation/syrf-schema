@@ -150,6 +150,10 @@ const bullQueues = {
   closestCity: 'closest_city',
 };
 
+const externalServiceSources = {
+  yachtscoring: 'YACHTSCORING',
+};
+
 module.exports = {
   competitionUnitStatus,
   userSignupType,
@@ -166,4 +170,5 @@ module.exports = {
   groupTypes,
   miscOptionsValue,
   bullQueues,
+  externalServiceSources,
 };
