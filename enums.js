@@ -148,6 +148,11 @@ const bullQueues = {
   expeditionSubsExpiration: 'expedition_subs_expiration',
   openGraph: 'open_graph',
   closestCity: 'closest_city',
+  yachtScoringTestCredentials: 'yachtscoring_test_credentials',
+};
+
+const externalServiceSources = {
+  yachtscoring: 'YACHTSCORING',
 };
 
 const redisKeyPrefixes = {
@@ -176,4 +181,5 @@ module.exports = {
   miscOptionsValue,
   bullQueues,
   redisKeyPrefixes,
+  externalServiceSources,
 };
