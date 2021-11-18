@@ -150,6 +150,15 @@ const bullQueues = {
   closestCity: 'closest_city',
 };
 
+const redisKeyPrefixes = {
+  LIVE_VIEWERS: 'live-viewers-',
+  EXPEDITION_PING: 'expedition_ping-',
+  DEV_TOKEN: 'devtoken-',
+  PHONE_VERIFY_CODE: 'phone_verify_code_',
+  PHONE_VERIFY_LOCK: 'phone_verify_lock_',
+  PHONE_VERIFY_ATTEMP: 'phone_verify_attempt_',
+};
+
 module.exports = {
   competitionUnitStatus,
   userSignupType,
@@ -166,4 +175,5 @@ module.exports = {
   groupTypes,
   miscOptionsValue,
   bullQueues,
+  redisKeyPrefixes,
 };
