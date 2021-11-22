@@ -43,6 +43,9 @@ module.exports = (sequelize) => {
       calendarEventId: {
         type: DataTypes.UUID,
       },
+      userProfileId: {
+        type: DataTypes.UUID,
+      },
     },
     {
       modelName: 'Participant',
