@@ -41,7 +41,7 @@ module.exports = (sequelize) => {
         type: DataTypes.STRING,
       },
       calendarEventId: {
-        type: DataTypes.STRING,
+        type: DataTypes.UUID,
       },
     },
     {
