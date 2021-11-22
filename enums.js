@@ -149,6 +149,7 @@ const bullQueues = {
   openGraph: 'open_graph',
   closestCity: 'closest_city',
   yachtScoringTestCredentials: 'yachtscoring_test_credentials',
+  courseEdit: 'course_edit',
 };
 
 const externalServiceSources = {
