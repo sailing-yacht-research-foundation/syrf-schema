@@ -40,6 +40,12 @@ module.exports = (sequelize) => {
       trackerUrl: {
         type: DataTypes.STRING,
       },
+      calendarEventId: {
+        type: DataTypes.UUID,
+      },
+      userProfileId: {
+        type: DataTypes.UUID,
+      },
     },
     {
       modelName: 'Participant',
