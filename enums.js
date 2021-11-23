@@ -107,6 +107,7 @@ const raceSetupType = {
   START: 'START',
   STOP: 'STOP',
   COMPETITION_UNIT_SYNC: 'COMPETITION_UNIT_SYNC',
+  RESETUP: 'RESETUP',
 };
 
 const openCompetitionConfig = {
