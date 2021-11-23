@@ -8,7 +8,7 @@ const { includeMeta } = require('../../utils/utils');
 const include = [
   {
     as: 'calendarEvent',
-    model: db.CalenderEvent,
+    model: db.CalendarEvent,
     attributes: ['id', 'name', 'isPrivate', 'isOpen'],
     include: [
       {
@@ -120,7 +120,7 @@ exports.getAll = async (paging, params) => {
       include: [
         {
           as: 'calendarEvent',
-          model: db.CalenderEvent,
+          model: db.CalendarEvent,
           where: eventWhere,
           attributes: ['id', 'name', 'isPrivate'],
         },

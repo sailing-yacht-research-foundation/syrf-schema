@@ -73,7 +73,7 @@ exports.validateParticipantByCUId = async (userId, competitionUnitId) => {
         include: [
           {
             as: 'event',
-            model: db.CalenderEvent,
+            model: db.CalendarEvent,
             attributes: ['id'],
           },
         ],

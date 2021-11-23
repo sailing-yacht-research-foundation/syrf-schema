@@ -69,7 +69,7 @@ exports.getEvent = async (id) => {
   const result = await db.MarkTracker.findByPk(id, {
     include: [
       {
-        model: db.CalenderEvent,
+        model: db.CalendarEvent,
         as: 'event',
       },
     ],

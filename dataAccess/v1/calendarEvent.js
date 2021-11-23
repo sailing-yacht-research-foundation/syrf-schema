@@ -54,7 +54,7 @@ const include = [
 exports.upsert = async (id, data = {}, transaction) => {
   if (!id) id = uuid.v4();
 
-  const [result] = await db.CalenderEvent.upsert(
+  const [result] = await db.CalendarEvent.upsert(
     {
       ...data,
       id,
@@ -138,7 +138,7 @@ exports.getAll = async (paging, params = {}) => {
     where.isPrivate = params?.private;
   }
 
-  const result = await db.CalenderEvent.findAllWithPaging(
+  const result = await db.CalendarEvent.findAllWithPaging(
     {
       attributes,
       where,
@@ -171,7 +171,7 @@ exports.getAll = async (paging, params = {}) => {
 
 exports.getById = async (id, transaction) => {
   if (!id) return null;
-  const result = await db.CalenderEvent.findByPk(id, {
+  const result = await db.CalendarEvent.findByPk(id, {
     include,
     transaction,
   });
@@ -231,7 +231,7 @@ exports.getParticipantsById = async (id, transaction) => {
 
 exports.getAdminsById = async (id) => {
   if (!id) return null;
-  const result = await db.CalenderEvent.findByPk(id, {
+  const result = await db.CalendarEvent.findByPk(id, {
     include,
     attributes: ['id', 'name', 'isOpen'],
   });
@@ -261,7 +261,7 @@ exports.getAdminsById = async (id) => {
 };
 
 exports.delete = async (id, transaction) => {
-  const data = await db.CalenderEvent.findByPk(id, {
+  const data = await db.CalendarEvent.findByPk(id, {
     include,
     transaction,
   });
@@ -315,7 +315,7 @@ exports.delete = async (id, transaction) => {
       courses.map((t) => t.id),
       transaction,
     ),
-    db.CalenderEvent.destroy(
+    db.CalendarEvent.destroy(
       {
         where: {
           id: id,
@@ -337,13 +337,13 @@ exports.delete = async (id, transaction) => {
 };
 
 exports.getMyEvents = async (id, pagination) => {
-  const result = await db.CalenderEvent.findAllWithPaging({}, pagination);
+  const result = await db.CalendarEvent.findAllWithPaging({}, pagination);
 
   return result?.toJSON();
 };
 
 exports.addOpenGraph = async (id, openGraphImage) => {
-  await db.CalenderEvent.update(
+  await db.CalendarEvent.update(
     { openGraphImage },
     {
       where: {
@@ -444,7 +444,7 @@ exports.getUserEvents = async (paging, userId) => {
     ];
   }
 
-  const result = await db.CalenderEvent.findAllWithPaging(
+  const result = await db.CalendarEvent.findAllWithPaging(
     {
       include: [
         {
@@ -512,3 +512,20 @@ exports.getUserEvents = async (paging, userId) => {
     size,
   };
 };
+
+exports.getByScrapedOriginalIdAndSource = async (originalIds, source) => {
+  const where = {
+    source,
+  }
+  if (originalIds instanceof Array) {
+    where.scrapedOriginalId = {
+      [db.Op.in]: originalIds
+    };
+  } else {
+    where.scrapedOriginalId = originalIds;
+  }
+  return await db.CalendarEvent.findAll({
+    attributes: ['id', 'scrapedOriginalId'],
+    where,
+  });
+}

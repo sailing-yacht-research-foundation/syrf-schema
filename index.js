@@ -24,7 +24,8 @@ db.VesselParticipantCrew = require('./entities/VesselParticipantCrew')(
 db.VesselParticipantGroup = require('./entities/VesselParticipantGroup')(
   sequelize,
 );
-db.CalenderEvent = require('./entities/CalendarEvent')(sequelize);
+db.CalenderEvent = require('./entities/CalendarEvent')(sequelize);  // Typo. Deprecated. Will be deleted once all reference to it has been removed
+db.CalendarEvent = require('./entities/CalendarEvent')(sequelize);
 db.CompetitionUnit = require('./entities/CompetitionUnit')(sequelize);
 db.Course = require('./entities/Course')(sequelize);
 db.CourseSequencedGeometry = require('./entities/CourseSequencedGeometry')(
