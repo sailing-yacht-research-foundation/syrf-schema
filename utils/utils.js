@@ -120,8 +120,10 @@ exports.getCourseCenterPoint = (geometries = []) => {
 
   let centerPoint = null;
 
-  let { geometryType, coordinates } = geometries[0];
-  coordinates = coordinates.map((t) => (!Array.isArray(t) ? t.position : t)); //adjust coordinates to use array
+  let { geometryType, coordinates, points } = geometries[0];
+  coordinates = (coordinates || points).map((t) =>
+    !Array.isArray(t) ? t.position : t,
+  ); //adjust coordinates to use array
 
   // CourseSequencedGeometry created on LDS has different structure from geojson.io (and turf formatting),
   // such as: Point is nested in another array, also simple line is treated as polyline
@@ -160,6 +162,6 @@ exports.getCourseCenterPoint = (geometries = []) => {
  */
 exports.logPromiseAllSettledErrors = (results = []) => {
   results.forEach((element) => {
-    if (element.status === 'rejected') console.log(element.reason);
+    if (element.status === 'rejected') console.log(element.reason?.message);
   });
 };
