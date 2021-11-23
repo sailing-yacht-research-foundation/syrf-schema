@@ -11,7 +11,7 @@ class Group extends ModelBase {
       constraints: false,
     });
 
-    this.belongsToMany(models.CalenderEvent, {
+    this.belongsToMany(models.CalendarEvent, {
       through: 'CalendarGroupEditors',
       as: 'calendarEvents',
       constraints: false,

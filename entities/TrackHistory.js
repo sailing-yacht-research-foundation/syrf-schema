@@ -33,7 +33,7 @@ class TrackHistory extends ModelBase {
       foreignKey: 'vesselParticipantGroupId',
       constraints: false,
     });
-    this.belongsTo(models.CalenderEvent, {
+    this.belongsTo(models.CalendarEvent, {
       as: 'event',
       foreignKey: 'calendarEventId',
       constraints: false,

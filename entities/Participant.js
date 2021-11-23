@@ -14,7 +14,7 @@ class Participant extends ModelBase {
       foreignKey: 'participantId',
       constraints: false,
     });
-    this.belongsTo(models.CalenderEvent, {
+    this.belongsTo(models.CalendarEvent, {
       as: 'event',
       foreignKey: 'calendarEventId',
       constraints: false,

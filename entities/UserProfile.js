@@ -10,7 +10,7 @@ class UserProfile extends ModelBase {
       constraints: false,
     });
 
-    this.belongsToMany(models.CalenderEvent, {
+    this.belongsToMany(models.CalendarEvent, {
       through: 'CalendarEditors',
       as: 'calendarEditors',
       constraints: false,

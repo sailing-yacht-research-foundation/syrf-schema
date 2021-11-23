@@ -4,7 +4,7 @@ const ModelBase = require('../ModelBase');
 
 class CompetitionUnit extends ModelBase {
   static associate(models) {
-    this.belongsTo(models.CalenderEvent, {
+    this.belongsTo(models.CalendarEvent, {
       as: 'calendarEvent',
       foreignKey: 'calendarEventId',
       constraints: false,
