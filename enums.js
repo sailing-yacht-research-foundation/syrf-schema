@@ -166,6 +166,14 @@ const redisKeyPrefixes = {
   PHONE_VERIFY_ATTEMP: 'phone_verify_attempt_',
 };
 
+const vesselEvents = {
+  rounding: 'VesselPointRounding',
+  insideCrossing: 'VesselLineInsideCrossing',
+  outsideCrossing: 'VesselLineOutsideCrossing',
+  polygonEnter: 'VesselPolygonEntered',
+  polygonExit: 'VesselPolygonExited',
+};
+
 module.exports = {
   competitionUnitStatus,
   userSignupType,
@@ -184,4 +192,5 @@ module.exports = {
   bullQueues,
   redisKeyPrefixes,
   externalServiceSources,
+  vesselEvents,
 };
