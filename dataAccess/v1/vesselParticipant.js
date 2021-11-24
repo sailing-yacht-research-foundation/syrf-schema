@@ -23,7 +23,7 @@ const include = [
     attributes: ['id', 'vesselParticipantGroupId'],
     include: [
       {
-        model: db.CalenderEvent,
+        model: db.CalendarEvent,
         attributes: ['id', 'name'],
         as: 'event',
         include: [
@@ -357,7 +357,7 @@ exports.getByParticipantAndId = async (
           attributes: ['id', 'vesselParticipantGroupId'],
           include: [
             {
-              model: db.CalenderEvent,
+              model: db.CalendarEvent,
               attributes: ['id', 'name'],
               as: 'event',
               include: [

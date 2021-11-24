@@ -11,7 +11,7 @@ exports.getCurrent = async (userId) => {
     },
     include: [
       {
-        model: db.CalenderEvent,
+        model: db.CalendarEvent,
         as: 'calendarEvent',
         required: true,
         where: {
@@ -75,7 +75,7 @@ exports.getUnstoppedCU = async (userId) => {
     },
     include: [
       {
-        model: db.CalenderEvent,
+        model: db.CalendarEvent,
         as: 'calendarEvent',
         attributes: [],
         required: true,

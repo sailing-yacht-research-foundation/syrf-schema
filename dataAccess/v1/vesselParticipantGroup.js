@@ -22,7 +22,7 @@ const include = [
     ],
   },
   {
-    model: db.CalenderEvent,
+    model: db.CalendarEvent,
     attributes: ['id', 'name', 'isOpen'],
     as: 'event',
     include: [

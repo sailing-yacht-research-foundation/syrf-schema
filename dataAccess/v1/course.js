@@ -82,7 +82,7 @@ const include = [
     ],
   },
   {
-    model: db.CalenderEvent,
+    model: db.CalendarEvent,
     attributes: ['id', 'name'],
     as: 'event',
     include: [
@@ -299,7 +299,7 @@ exports.getAll = async (paging, calendarEventId) => {
       include: [
         {
           as: 'event',
-          model: db.CalenderEvent,
+          model: db.CalendarEvent,
           attributes: ['id', 'name'],
         },
       ],

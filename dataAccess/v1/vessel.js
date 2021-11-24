@@ -93,7 +93,7 @@ exports.getAllForEvent = async (userId, eventId, paging = {}) => {
   return result;
 };
 
-exports.getVesselsByVesselIdsAndSource = async (vesselIds, source) => {
+exports.getByVesselIdAndSource = async (vesselIds, source) => {
   const where = {
     source,
   }

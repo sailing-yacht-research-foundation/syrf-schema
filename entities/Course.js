@@ -3,7 +3,7 @@ const ModelBase = require('../ModelBase');
 
 class Course extends ModelBase {
   static associate(models) {
-    this.belongsTo(models.CalenderEvent, {
+    this.belongsTo(models.CalendarEvent, {
       as: 'event',
       foreignKey: 'calendarEventId',
       constraints: false,

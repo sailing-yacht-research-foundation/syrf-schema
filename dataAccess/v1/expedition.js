@@ -64,7 +64,7 @@ const courseInclude = [
     ],
   },
   {
-    model: db.CalenderEvent,
+    model: db.CalendarEvent,
     attributes: ['id', 'name'],
     as: 'event',
     include: [
@@ -184,7 +184,7 @@ exports.getCompetitionUnitById = async (id) => {
   const result = await db.CompetitionUnit.findByPk(id, {
     include: [
       {
-        model: db.CalenderEvent,
+        model: db.CalendarEvent,
         as: 'calendarEvent',
         attributes: ['id', 'name', 'isPrivate', 'ownerId'],
       },

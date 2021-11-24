@@ -11,7 +11,7 @@ const include = [
   },
   {
     as: 'event',
-    model: db.CalenderEvent,
+    model: db.CalendarEvent,
     attributes: ['id', 'name', 'isOpen'],
     include: [
       {
@@ -141,7 +141,7 @@ exports.getByUserId = async (id, pagination) => {
       },
       include: [
         {
-          model: db.CalenderEvent,
+          model: db.CalendarEvent,
           as: 'event',
         },
       ],
@@ -209,7 +209,7 @@ exports.getEvent = async (id) => {
   const result = await db.Participant.findByPk(id, {
     include: [
       {
-        model: db.CalenderEvent,
+        model: db.CalendarEvent,
         as: 'event',
       },
     ],
@@ -283,7 +283,7 @@ exports.getByUserAndEvent = async (userProfileId, calendarEventId) => {
     },
     include: [
       {
-        model: db.CalenderEvent,
+        model: db.CalendarEvent,
         as: 'event',
       },
     ],

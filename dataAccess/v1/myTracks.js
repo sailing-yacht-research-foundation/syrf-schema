@@ -5,7 +5,7 @@ const excludeMeta = ['ownerId', 'createdById', 'updatedById', 'developerId'];
 
 exports.getMyTracks = async (userId, isPrivate, pagination) => {
   let calendarEvent = {
-    model: db.CalenderEvent,
+    model: db.CalendarEvent,
     as: 'event',
     required: true,
     attributes: {
