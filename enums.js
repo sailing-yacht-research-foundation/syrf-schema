@@ -107,6 +107,7 @@ const raceSetupType = {
   START: 'START',
   STOP: 'STOP',
   COMPETITION_UNIT_SYNC: 'COMPETITION_UNIT_SYNC',
+  RESETUP: 'RESETUP',
 };
 
 const openCompetitionConfig = {
@@ -149,6 +150,7 @@ const bullQueues = {
   openGraph: 'open_graph',
   closestCity: 'closest_city',
   yachtScoringTestCredentials: 'yachtscoring_test_credentials',
+  courseEdit: 'course_edit',
 };
 
 const externalServiceSources = {
