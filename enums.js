@@ -174,6 +174,16 @@ const vesselEvents = {
   polygonExit: 'VesselPolygonExited',
 };
 
+const vesselSides = {
+  PORT: 'port', // left side of vessel
+  STARBOARD: 'starboard', // right side of vessel
+};
+
+const expeditionBoatSide = {
+  PORT: 'P', // left side of vessel
+  STARBOARD: 'S', // right side of vessel
+};
+
 module.exports = {
   competitionUnitStatus,
   userSignupType,
@@ -193,4 +203,6 @@ module.exports = {
   redisKeyPrefixes,
   externalServiceSources,
   vesselEvents,
+  vesselSides,
+  expeditionBoatSide,
 };
