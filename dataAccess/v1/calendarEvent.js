@@ -424,6 +424,9 @@ exports.getUserEvents = async (paging, userId) => {
               [db.Op.ne]: null,
             },
           ),
+          db.sequelize.where(db.sequelize.literal(`"participants"."id"`), {
+            [db.Op.ne]: null,
+          }),
         ],
       },
     ],
@@ -478,6 +481,16 @@ exports.getUserEvents = async (paging, userId) => {
           ],
           required: false,
         },
+        // Participating in events
+        {
+          model: db.Participant,
+          as: 'participants',
+          attributes: ['id'],
+          where: {
+            userProfileId: userId,
+          },
+          required: false,
+        },
       ],
       replacements: {
         userId,
@@ -516,10 +529,10 @@ exports.getUserEvents = async (paging, userId) => {
 exports.getByScrapedOriginalIdAndSource = async (originalIds, source) => {
   const where = {
     source,
-  }
+  };
   if (originalIds instanceof Array) {
     where.scrapedOriginalId = {
-      [db.Op.in]: originalIds
+      [db.Op.in]: originalIds,
     };
   } else {
     where.scrapedOriginalId = originalIds;
@@ -528,4 +541,4 @@ exports.getByScrapedOriginalIdAndSource = async (originalIds, source) => {
     attributes: ['id', 'scrapedOriginalId'],
     where,
   });
-}
+};
