@@ -179,7 +179,7 @@ const boatSides = {
   STARBOARD: 'starboard', // right side of vessel
 };
 
-const expeditionBoatSide = {
+const expeditionBoatSides = {
   PORT: 'P', // left side of vessel
   STARBOARD: 'S', // right side of vessel
 };
@@ -204,5 +204,5 @@ module.exports = {
   externalServiceSources,
   vesselEvents,
   boatSides,
-  expeditionBoatSide,
+  expeditionBoatSides,
 };
