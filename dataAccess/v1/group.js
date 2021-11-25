@@ -64,6 +64,17 @@ exports.upsert = async (id, data = {}, transaction) => {
   return result?.toJSON();
 };
 
+exports.update = async (id, data = {}, transaction) => {
+  const [updateCount] = await db.Group.update(data, {
+    where: {
+      id,
+    },
+    transaction,
+  });
+
+  return updateCount;
+};
+
 exports.delete = async (id, transaction) => {
   const data = await db.Group.findByPk(id);
 
