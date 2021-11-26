@@ -9,12 +9,12 @@ const include = [
   {
     as: 'group',
     model: db.Group,
-    attributes: ['id', 'groupName', 'groupType'],
+    attributes: ['id', 'groupName', 'groupType', 'groupImage', 'visibility'],
   },
   {
     as: 'member',
     model: db.UserProfile,
-    attributes: ['id', 'name', 'email'],
+    attributes: ['id', 'name', 'email', 'avatar'],
   },
 ];
 
