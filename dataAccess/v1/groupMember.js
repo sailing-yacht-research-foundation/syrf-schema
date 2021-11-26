@@ -203,6 +203,7 @@ exports.getGroupsByUserId = async (paging, { userId, status }) => {
           attributes: [
             'id',
             'groupName',
+            'groupImage',
             'groupType',
             'description',
             'visibility',
@@ -240,7 +241,7 @@ exports.getUsersByGroupId = async (paging, { groupId, status }) => {
         {
           as: 'member',
           model: db.UserProfile,
-          attributes: ['id', 'name', 'email'],
+          attributes: ['id', 'name', 'email', 'avatar'],
         },
       ],
     },
@@ -277,6 +278,9 @@ exports.getGroupMemberSummaries = async (
   groupIds,
   numberOfMemberToFetch = 5,
 ) => {
+  if (groupIds.length === 0) {
+    return [];
+  }
   const replacements = {
     groupIds,
     status: groupMemberStatus.accepted,
