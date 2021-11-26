@@ -85,6 +85,13 @@ exports.delete = async (id, transaction) => {
       },
       transaction,
     });
+
+    await db.CalendarGroupEditor.destroy({
+      where: {
+        groupId: id,
+      },
+      transaction,
+    });
   }
 
   return data?.toJSON();
@@ -94,6 +101,15 @@ exports.bulkDelete = async (idList, transaction) => {
   const delCount = await db.Group.destroy({
     where: {
       id: {
+        [Op.in]: idList,
+      },
+    },
+    transaction,
+  });
+
+  await db.CalendarGroupEditor.destroy({
+    where: {
+      groupId: {
         [Op.in]: idList,
       },
     },
