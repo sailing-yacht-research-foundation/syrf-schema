@@ -48,6 +48,9 @@ module.exports = (sequelize) => {
         allowNull: false,
         defaultValue: 0,
       },
+      firstPosition: {
+        type: DataTypes.GEOMETRY('POINT', 4326),
+      },
     },
     {
       modelName: 'VesselParticipantCrewTrackJson',
