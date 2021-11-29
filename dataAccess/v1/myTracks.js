@@ -42,6 +42,7 @@ exports.getMyTracks = async (userId, isPrivate, pagination) => {
           include: [
             {
               model: db.Vessel,
+              paranoid: false,
               as: 'vessel',
               attributes: ['id', 'globalId', 'publicName'],
             },
@@ -67,12 +68,77 @@ exports.getMyTracks = async (userId, isPrivate, pagination) => {
             ],
           },
         },
+        {
+          model: db.VesselParticipantCrewTrackJson,
+          as: 'trackJson',
+          attributes: ['id', 'totalTraveledDistance', 'firstPosition'],
+          required: false,
+          where: {
+            competitionUnitId: {
+              [db.Op.eq]: db.sequelize.col('TrackHistory.competitionUnitId'),
+            },
+          },
+        },
       ],
     },
     pagination,
   );
 
   return result;
+};
+
+exports.getById = async (id) => {
+  const result = await db.TrackHistory.findByPk(id, {
+    include: [
+      {
+        model: db.CalenderEvent,
+        as: 'event',
+        required: true,
+        include: [
+          {
+            model: db.UserProfile,
+            as: 'editors',
+            attributes: ['id', 'name'],
+            through: {
+              attributes: [],
+            },
+          },
+        ],
+      },
+      {
+        model: db.VesselParticipantGroup,
+        as: 'group',
+        attributes: ['id', 'vesselParticipantGroupId'],
+      },
+      {
+        model: db.VesselParticipant,
+        as: 'vesselParticipant',
+        attributes: ['id'],
+        include: [
+          {
+            model: db.Vessel,
+            paranoid: false,
+            as: 'vessel',
+            attributes: ['id', 'globalId', 'publicName'],
+          },
+        ],
+      },
+      {
+        model: db.Participant,
+        as: 'participant',
+        attributes: ['id', 'publicName'],
+      },
+      {
+        model: db.CompetitionUnit,
+        as: 'competitionUnit',
+        attributes: {
+          exclude: ['boundingBox', 'createdById', 'updatedById', 'developerId'],
+        },
+      },
+    ],
+  });
+
+  return result?.toJSON();
 };
 
 exports.getTracksByTrackId = async (trackId, timeFrom, timeTo) => {
@@ -98,13 +164,18 @@ exports.getTracksByTrackId = async (trackId, timeFrom, timeTo) => {
   return result;
 };
 
-exports.getTracksGeoJson = async (trackId) => {
-  if (!trackId) return '';
+exports.getTracksGeoJson = async (trackId, userId) => {
+  if (!trackId || !userId) return null;
 
-  const track = await db.TrackHistory.findByPk(trackId);
+  const track = await db.TrackHistory.findOne({
+    where: {
+      id: trackId,
+      userProfileId: userId,
+    },
+  });
 
   if (!track) {
-    return '';
+    return null;
   }
 
   const result = await db.VesselParticipantCrewTrackJson.findOne({
@@ -113,12 +184,17 @@ exports.getTracksGeoJson = async (trackId) => {
       competitionUnitId: track.competitionUnitId,
     },
     attributes: {
-      exclude: ['id', 'vesselParticipantCrewId', 'competitionUnitId'],
+      exclude: ['id'],
     },
     raw: true,
   });
 
-  return result ? result.storageKey : '';
+  return result
+    ? {
+        storageKey: result.storageKey,
+        vesselParticipantCrewId: result.vesselParticipantCrewId,
+      }
+    : null;
 };
 
 exports.getTrackTime = async (id) => {
