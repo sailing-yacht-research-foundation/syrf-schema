@@ -6,7 +6,7 @@ class UserFollower extends ModelBase {
   static associateBase() {}
   static associate(models) {
     this.belongsTo(models.UserProfile, {
-      as: 'user',
+      as: 'following',
       constraints: false,
       foreignKey: 'userId',
     });
