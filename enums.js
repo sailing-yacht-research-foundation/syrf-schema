@@ -190,6 +190,7 @@ const participantEditTypes = {
   VASSEL_PARTICIPANT_REMOVED: 'vessel-participant-removed',
   CREW_ADDED: 'crew-added',
   CREW_REMOVED: 'crew-removed',
+  NEW_PARTIICPANT_JOINED: 'new-participant-joined', // this is for new participant joined open regatta using /open-competitions/:id/join
 };
 
 module.exports = {
