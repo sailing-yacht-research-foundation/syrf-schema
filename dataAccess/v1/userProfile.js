@@ -94,3 +94,49 @@ exports.clear = async () => {
     force: true,
   });
 };
+
+exports.searchByEmailPhone = async ({ email, phone }, userId) => {
+  let where = Object.assign(
+    {},
+    email
+      ? {
+          email,
+        }
+      : {},
+    phone
+      ? {
+          phone_number: phone,
+        }
+      : {},
+    {
+      [Op.or]: [
+        {
+          isPrivate: false,
+        },
+        {
+          isPrivate: true,
+          ['$follower.followerId$']: {
+            [Op.ne]: null,
+          },
+        },
+      ],
+    },
+  );
+
+  const result = await db.UserProfile.findOne({
+    include: [
+      {
+        as: 'follower',
+        model: db.UserFollower,
+        attributes: ['followerId'],
+        required: false,
+        where: {
+          followerId: userId,
+        },
+      },
+    ],
+    where,
+    subQuery: false,
+  });
+  return result;
+};
