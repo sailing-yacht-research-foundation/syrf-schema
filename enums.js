@@ -134,6 +134,11 @@ const groupMemberStatus = {
   declined: 'DECLINED',
 };
 
+const followerStatus = {
+  accepted: 'ACCEPTED',
+  requested: 'REQUESTED',
+};
+
 const groupTypes = {
   organization: 'ORGANIZATION',
   committee: 'COMMITTEE',
@@ -197,6 +202,7 @@ module.exports = {
   defaultKMLOptions,
   groupVisibilities,
   groupMemberStatus,
+  followerStatus,
   groupTypes,
   miscOptionsValue,
   bullQueues,
