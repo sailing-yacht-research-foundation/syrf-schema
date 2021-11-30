@@ -105,7 +105,7 @@ exports.searchByEmailPhone = async ({ email, phone }, userId) => {
       : {},
     phone
       ? {
-          phone_number: phone,
+          phone_number: `+${phone.trim()}`,
         }
       : {},
     {
