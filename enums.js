@@ -151,6 +151,7 @@ const bullQueues = {
   closestCity: 'closest_city',
   yachtScoringTestCredentials: 'yachtscoring_test_credentials',
   courseEdit: 'course_edit',
+  participantEdit: 'participant_edit',
 };
 
 const externalServiceSources = {
@@ -184,6 +185,13 @@ const expeditionBoatSides = {
   STARBOARD: 'S', // right side of vessel
 };
 
+const participantEditTypes = {
+  VASSEL_PARTICIPANT_ADDED: 'vessel-participant-added',
+  VASSEL_PARTICIPANT_REMOVED: 'vessel-participant-removed',
+  CREW_ADDED: 'crew-added',
+  CREW_REMOVED: 'crew-removed',
+};
+
 module.exports = {
   competitionUnitStatus,
   userSignupType,
@@ -205,4 +213,5 @@ module.exports = {
   vesselEvents,
   boatSides,
   expeditionBoatSides,
+  participantEditTypes,
 };
