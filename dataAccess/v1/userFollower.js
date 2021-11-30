@@ -87,12 +87,13 @@ exports.insert = async ({ userId, followerId, status }, transaction) => {
   return result;
 };
 
-exports.update = async ({ id, status }, transaction) => {
+exports.update = async ({ userId, followerId, status }, transaction) => {
   const [updateCount] = await db.UserFollower.update(
     { status },
     {
       where: {
-        id,
+        userId,
+        followerId,
       },
       transaction,
     },
@@ -101,10 +102,11 @@ exports.update = async ({ id, status }, transaction) => {
   return updateCount;
 };
 
-exports.delete = async (id, transaction) => {
+exports.delete = async ({ userId, followerId }, transaction) => {
   const deleteCount = await db.UserFollower.destroy({
     where: {
-      id,
+      userId,
+      followerId,
     },
     transaction,
   });
