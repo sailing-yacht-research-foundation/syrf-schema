@@ -66,6 +66,26 @@ module.exports = {
           { transaction },
         );
       }
+      if (!userTable.bio) {
+        await queryInterface.addColumn(
+          userTableName,
+          'bio',
+          {
+            type: Sequelize.STRING,
+          },
+          { transaction },
+        );
+      }
+      if (!userTable.sailingNumber) {
+        await queryInterface.addColumn(
+          userTableName,
+          'sailingNumber',
+          {
+            type: Sequelize.STRING,
+          },
+          { transaction },
+        );
+      }
     });
   },
 
@@ -87,6 +107,16 @@ module.exports = {
       const userTable = await queryInterface.describeTable(userTableName);
       if (userTable.isPrivate) {
         await queryInterface.removeColumn(userTableName, 'isPrivate', {
+          transaction,
+        });
+      }
+      if (userTable.bio) {
+        await queryInterface.removeColumn(userTableName, 'bio', {
+          transaction,
+        });
+      }
+      if (userTable.sailingNumber) {
+        await queryInterface.removeColumn(userTableName, 'sailingNumber', {
           transaction,
         });
       }

@@ -100,6 +100,12 @@ module.exports = (sequelize) => {
         type: DataTypes.BOOLEAN,
         defaultValue: false,
       },
+      bio: {
+        type: DataTypes.STRING,
+      },
+      sailingNumber: {
+        type: DataTypes.STRING,
+      },
     },
     {
       modelName: 'UserProfile',
