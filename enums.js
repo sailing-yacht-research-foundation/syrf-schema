@@ -151,6 +151,7 @@ const bullQueues = {
   closestCity: 'closest_city',
   yachtScoringTestCredentials: 'yachtscoring_test_credentials',
   courseEdit: 'course_edit',
+  participantEdit: 'participant_edit',
 };
 
 const externalServiceSources = {
@@ -184,6 +185,14 @@ const expeditionBoatSides = {
   STARBOARD: 'S', // right side of vessel
 };
 
+const participantEditTypes = {
+  VESSEL_PARTICIPANT_ADDED: 'vessel-participant-added',
+  VESSEL_PARTICIPANT_REMOVED: 'vessel-participant-removed',
+  CREW_ADDED: 'crew-added',
+  CREW_REMOVED: 'crew-removed',
+  NEW_PARTICIPANT_JOINED: 'new-participant-joined', // this is for new participant joined open regatta using /open-competitions/:id/join
+};
+
 module.exports = {
   competitionUnitStatus,
   userSignupType,
@@ -205,4 +214,5 @@ module.exports = {
   vesselEvents,
   boatSides,
   expeditionBoatSides,
+  participantEditTypes,
 };
