@@ -186,11 +186,11 @@ const expeditionBoatSides = {
 };
 
 const participantEditTypes = {
-  VASSEL_PARTICIPANT_ADDED: 'vessel-participant-added',
-  VASSEL_PARTICIPANT_REMOVED: 'vessel-participant-removed',
+  VESSEL_PARTICIPANT_ADDED: 'vessel-participant-added',
+  VESSEL_PARTICIPANT_REMOVED: 'vessel-participant-removed',
   CREW_ADDED: 'crew-added',
   CREW_REMOVED: 'crew-removed',
-  NEW_PARTIICPANT_JOINED: 'new-participant-joined', // this is for new participant joined open regatta using /open-competitions/:id/join
+  NEW_PARTICIPANT_JOINED: 'new-participant-joined', // this is for new participant joined open regatta using /open-competitions/:id/join
 };
 
 module.exports = {
