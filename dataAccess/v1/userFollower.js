@@ -113,3 +113,22 @@ exports.delete = async ({ userId, followerId }, transaction) => {
 
   return deleteCount;
 };
+
+// For deleting all user follow and following, when user delete their account
+exports.deleteUserReference = async (userId, transaction) => {
+  const deleteCount = await db.UserFollower.destroy({
+    where: {
+      [Op.or]: [
+        {
+          userId,
+        },
+        {
+          followerId: userId,
+        },
+      ],
+    },
+    transaction,
+  });
+
+  return deleteCount;
+};
