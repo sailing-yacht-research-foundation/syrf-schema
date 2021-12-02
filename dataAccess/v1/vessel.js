@@ -58,7 +58,7 @@ exports.delete = async (id, transaction) => {
       where: {
         id: id,
       },
-      transaction
+      transaction,
     });
   }
 
@@ -96,10 +96,10 @@ exports.getAllForEvent = async (userId, eventId, paging = {}) => {
 exports.getByVesselIdAndSource = async (vesselIds, source) => {
   const where = {
     source,
-  }
+  };
   if (vesselIds instanceof Array) {
     where.vesselId = {
-      [db.Op.in]: vesselIds
+      [db.Op.in]: vesselIds,
     };
   } else {
     where.vesselId = vesselIds;
@@ -108,7 +108,7 @@ exports.getByVesselIdAndSource = async (vesselIds, source) => {
     attributes: ['id', 'vesselId'],
     where,
   });
-}
+};
 
 exports.bulkCreate = async (data, transaction) => {
   if (data.length === 0) {
