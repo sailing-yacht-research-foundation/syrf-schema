@@ -1,14 +1,13 @@
 const uuid = require('uuid');
-const { competitionUnitStatus } = require('../../enums');
-const db = require('../../models');
-const { Op } = require('../../models');
-const { conversionValues } = require('../../enums');
+const { competitionUnitStatus, conversionValues } = require('../../enums');
+const db = require('../../index');
+const { Op } = require('../../index');
 const { includeMeta } = require('../../utils/utils');
 
 const include = [
   {
     as: 'calendarEvent',
-    model: db.CalenderEvent,
+    model: db.CalendarEvent,
     attributes: ['id', 'name', 'isPrivate', 'isOpen'],
     include: [
       {
@@ -109,7 +108,7 @@ exports.getAll = async (paging, params) => {
 
   let eventInclude = {
     as: 'calendarEvent',
-    model: db.CalenderEvent,
+    model: db.CalendarEvent,
     required: false,
     where: {},
     attributes: ['id', 'name', 'isPrivate'],
