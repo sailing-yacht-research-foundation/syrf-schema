@@ -1,14 +1,14 @@
 const uuid = require('uuid');
 const { competitionUnitStatus } = require('../../enums');
-const db = require('../../index');
-const { Op } = require('../../index');
+const db = require('../../models');
+const { Op } = require('../../models');
 const { conversionValues } = require('../../enums');
 const { includeMeta } = require('../../utils/utils');
 
 const include = [
   {
     as: 'calendarEvent',
-    model: db.CalendarEvent,
+    model: db.CalenderEvent,
     attributes: ['id', 'name', 'isPrivate', 'isOpen'],
     include: [
       {
@@ -83,7 +83,6 @@ exports.getAll = async (paging, params) => {
     };
     where = {
       ...where,
-      isCompleted: false,
       [db.Op.and]: [
         db.Sequelize.where(
           db.Sequelize.fn(
@@ -108,26 +107,32 @@ exports.getAll = async (paging, params) => {
     ];
   }
 
-  let eventWhere = {};
+  let eventInclude = {
+    as: 'calendarEvent',
+    model: db.CalenderEvent,
+    required: false,
+    where: {},
+    attributes: ['id', 'name', 'isPrivate'],
+  };
+
   if (params.isOpen) {
-    eventWhere.isOpen = params.isOpen;
+    eventInclude.where.isOpen = params.isOpen;
+    eventInclude.required = true;
   }
+
+  if (typeof params.isPrivate === 'boolean') {
+    eventInclude.where.isPrivate = params.isPrivate;
+    eventInclude.required = true;
+  }
+
   const result = await db.CompetitionUnit.findAllWithPaging(
     {
       attributes,
       where,
       replacements,
-      include: [
-        {
-          as: 'calendarEvent',
-          model: db.CalendarEvent,
-          where: eventWhere,
-          attributes: ['id', 'name', 'isPrivate'],
-        },
-      ],
-      order,
+      include: [eventInclude],
     },
-    paging,
+    { ...paging, customSort: order },
   );
   return result;
 };
@@ -276,7 +281,7 @@ exports.updateCountryCity = async (
           [Op.in]: competitionUnitIds,
         },
       },
-      transaction,
+      transaction: transaction,
     },
   );
 };
