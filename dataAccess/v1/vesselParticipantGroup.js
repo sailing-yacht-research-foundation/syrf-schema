@@ -18,6 +18,7 @@ const include = [
         as: 'vessel',
         model: db.Vessel,
         attributes: ['id', 'publicName'],
+        paranoid: false,
       },
     ],
   },
@@ -60,10 +61,15 @@ exports.upsert = async (id, data = {}, transaction) => {
   return result?.toJSON();
 };
 
-exports.getAll = async (paging, calendarEventId) => {
+exports.getAll = async (paging, params) => {
   let where = {};
 
-  if (calendarEventId) where.calendarEventId = calendarEventId;
+  if (params.calendarEventId) {
+    where.calendarEventId = params.calendarEventId;
+  } else {
+    if (params.userId) where.createdById = params.userId;
+    else where = alwaysFalseWhere(where);
+  }
 
   const result = await db.VesselParticipantGroup.findAllWithPaging(
     {
