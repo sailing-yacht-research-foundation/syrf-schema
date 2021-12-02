@@ -44,6 +44,20 @@ module.exports = (sequelize) => {
     {
       modelName: 'UserFollower',
       sequelize,
+      indexes: [
+        {
+          fields: ['userId', 'followerId'],
+          unique: true,
+        },
+        {
+          fields: ['userId', 'followerId', 'status'],
+          unique: false,
+        },
+        {
+          fields: ['followerId', 'status'],
+          unique: false,
+        },
+      ],
     },
   );
   return UserFollower;
