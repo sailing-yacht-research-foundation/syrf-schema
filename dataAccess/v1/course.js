@@ -279,7 +279,7 @@ exports.upsert = async (id, data = {}, transaction) => {
   };
 };
 
-exports.getAll = async (paging, calendarEventId) => {
+exports.getAll = async (paging, params) => {
   let where = {};
 
   if (params.calendarEventId) {
