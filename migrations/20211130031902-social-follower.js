@@ -51,6 +51,14 @@ module.exports = {
             transaction,
           },
         );
+        await queryInterface.addIndex(
+          followerTableName,
+          ['userId', 'followerId'],
+          {
+            unique: true,
+            transaction,
+          },
+        );
       }
 
       const userTable = await queryInterface.describeTable(userTableName);
