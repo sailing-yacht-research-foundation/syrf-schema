@@ -1,6 +1,6 @@
 const uuid = require('uuid');
 const db = require('../../index');
-const { includeMeta, getMeta } = require('../../utils/utils');
+const { includeMeta, getMeta, alwaysFalseWhere } = require('../../utils/utils');
 const { geometryType } = require('../../enums');
 
 const include = [
@@ -291,7 +291,12 @@ exports.upsert = async (id, data = {}, transaction) => {
 exports.getAll = async (paging, calendarEventId) => {
   let where = {};
 
-  if (calendarEventId) where.calendarEventId = calendarEventId;
+  if (params.calendarEventId) {
+    where.calendarEventId = params.calendarEventId;
+  } else {
+    if (params.userId) where.createdById = params.userId;
+    else where = alwaysFalseWhere(where);
+  }
 
   const result = await db.Course.findAllWithPaging(
     {
