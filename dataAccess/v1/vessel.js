@@ -1,6 +1,6 @@
 const uuid = require('uuid');
 const db = require('../../index');
-const { includeMeta } = require('../../utils/utils');
+const { includeMeta, alwaysFalseWhere } = require('../../utils/utils');
 
 const include = [...includeMeta];
 
@@ -22,8 +22,13 @@ exports.upsert = async (id, data = {}, transaction = undefined) => {
   return result?.toJSON();
 };
 
-exports.getAll = async (paging = {}) => {
+exports.getAll = async (paging = {}, params) => {
   let where = {};
+
+  if (paging?.filters?.findIndex((t) => t.field === 'scope') < 0) {
+    if (params.userId) where.createdById = params.userId;
+    else where = alwaysFalseWhere(where);
+  }
 
   if (paging.query) {
     where.publicName = {
@@ -70,6 +75,7 @@ exports.getAllForEvent = async (userId, eventId, paging = {}) => {
     [db.Op.or]: [
       {
         createdById: userId,
+        bulkCreated: false,
       },
       {
         scope: eventId,
