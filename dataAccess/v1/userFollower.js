@@ -1,6 +1,9 @@
 const { followerStatus } = require('../../enums');
 const db = require('../../index');
 const { Op } = require('../../index');
+const { addHours } = require('date-fns');
+
+const VELOCITY_TIME_OFFSET = -48;
 
 exports.getFollowers = async (paging, { userId, status }) => {
   let where = {
@@ -154,12 +157,11 @@ exports.getFollowSummary = async (userId) => {
 };
 
 exports.getTopCountryUser = async (paging, { locale, userId }) => {
-  let where = {
-    locale,
+  let where = Object.assign({}, locale ? { locale } : {}, {
     ['$follower.followerId$']: {
       [Op.eq]: null, // Only show top user not followed yet
     },
-  };
+  });
 
   const result = await db.UserProfile.findAllWithPaging(
     {
@@ -191,6 +193,51 @@ exports.getTopCountryUser = async (paging, { locale, userId }) => {
     {
       ...paging,
       customSort: [[db.sequelize.literal('"followerCount"'), 'DESC']],
+    },
+  );
+  return result;
+};
+
+exports.getTopVelocityUser = async (paging, { locale, userId }) => {
+  let where = Object.assign({}, locale ? { locale } : {}, {
+    ['$follower.followerId$']: {
+      [Op.eq]: null, // Only show top gaining follower that user not followed / request (if private) to follow yet
+    },
+  });
+  const checkDate = addHours(new Date(), parseInt(VELOCITY_TIME_OFFSET));
+  const result = await db.UserProfile.findAllWithPaging(
+    {
+      attributes: [
+        'id',
+        'name',
+        'avatar',
+        [
+          db.sequelize.literal(
+            `(SELECT COUNT(*) FROM "UserFollowers" AS "folDB" WHERE "UserProfile"."id" = "folDB"."userId" AND "folDB"."status" = '${
+              followerStatus.accepted
+            }' AND "folDB"."updatedAt" >= '${checkDate.toISOString()}')`,
+          ),
+          'followerGained',
+        ],
+      ],
+      include: [
+        {
+          as: 'follower',
+          model: db.UserFollower,
+          attributes: [],
+          required: false,
+          where: {
+            followerId: userId,
+          },
+        },
+      ],
+      where,
+      subQuery: false,
+      logging: console.log,
+    },
+    {
+      ...paging,
+      customSort: [[db.sequelize.literal('"followerGained"'), 'DESC']],
     },
   );
   return result;
