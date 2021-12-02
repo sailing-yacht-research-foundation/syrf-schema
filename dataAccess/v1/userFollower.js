@@ -152,3 +152,46 @@ exports.getFollowSummary = async (userId) => {
     followingCount,
   };
 };
+
+exports.getTopCountryUser = async (paging, { locale, userId }) => {
+  let where = {
+    locale,
+    ['$follower.followerId$']: {
+      [Op.eq]: null, // Only show top user not followed yet
+    },
+  };
+
+  const result = await db.UserProfile.findAllWithPaging(
+    {
+      attributes: [
+        'id',
+        'name',
+        'avatar',
+        [
+          db.sequelize.literal(
+            `(SELECT COUNT(*) FROM "UserFollowers" AS "folDB" WHERE "UserProfile"."id" = "folDB"."userId" AND "folDB"."status" = '${followerStatus.accepted}')`,
+          ),
+          'followerCount',
+        ],
+      ],
+      include: [
+        {
+          as: 'follower',
+          model: db.UserFollower,
+          attributes: [],
+          required: false,
+          where: {
+            followerId: userId,
+          },
+        },
+      ],
+      where,
+      subQuery: false,
+    },
+    {
+      ...paging,
+      customSort: [[db.sequelize.literal('"followerCount"'), 'DESC']],
+    },
+  );
+  return result;
+};
