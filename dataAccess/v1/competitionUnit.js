@@ -1,8 +1,19 @@
 const uuid = require('uuid');
-const { competitionUnitStatus, conversionValues } = require('../../enums');
+const {
+  competitionUnitStatus,
+  conversionValues,
+  statusCodes,
+  errorCodes,
+} = require('../../enums');
+const calendarEventDAL = require('../../dataAccess/v1/calendarEvent');
 const db = require('../../index');
 const { Op } = require('../../index');
-const { includeMeta } = require('../../utils/utils');
+const {
+  includeMeta,
+  validateSqlDataAuth,
+  alwaysFalseWhere,
+  ValidationError,
+} = require('../../utils/utils');
 
 const include = [
   {
@@ -58,7 +69,12 @@ exports.getAll = async (paging, params) => {
     };
   }
 
-  if (params.calendarEventId) where.calendarEventId = params.calendarEventId;
+  if (params.calendarEventId) {
+    where.calendarEventId = params.calendarEventId;
+  } else {
+    if (params.userId) where.createdById = params.userId;
+    else where = alwaysFalseWhere(where);
+  }
 
   if (params.position) {
     // Query by locations

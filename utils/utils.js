@@ -165,3 +165,14 @@ exports.logPromiseAllSettledErrors = (results = []) => {
     if (element.status === 'rejected') console.log(element.reason?.message);
   });
 };
+
+/**
+ *
+ * @param {object} results
+ */
+exports.alwaysFalseWhere = (where = {}) => {
+  return {
+    [db.Op.and]: db.Sequelize.literal('1=0'),
+    ...where,
+  };
+};
