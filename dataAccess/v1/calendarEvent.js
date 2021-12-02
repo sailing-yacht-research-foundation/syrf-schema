@@ -233,7 +233,7 @@ exports.getAdminsById = async (id) => {
   if (!id) return null;
   const result = await db.CalendarEvent.findByPk(id, {
     include,
-    attributes: ['id', 'name', 'isOpen'],
+    attributes: ['id', 'name', 'isOpen', 'ownerId'],
   });
 
   let data = result?.toJSON();
