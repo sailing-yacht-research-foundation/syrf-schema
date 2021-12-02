@@ -1,3 +1,4 @@
+const { followerStatus } = require('../../enums');
 const db = require('../../index');
 const { Op } = require('../../index');
 
@@ -131,4 +132,23 @@ exports.deleteUserReference = async (userId, transaction) => {
   });
 
   return deleteCount;
+};
+
+exports.getFollowSummary = async (userId) => {
+  const followingCount = await db.UserFollower.count({
+    where: {
+      followerId: userId,
+      status: followerStatus.accepted,
+    },
+  });
+  const followerCount = await db.UserFollower.count({
+    where: {
+      userId,
+      status: followerStatus.accepted,
+    },
+  });
+  return {
+    followerCount,
+    followingCount,
+  };
 };
