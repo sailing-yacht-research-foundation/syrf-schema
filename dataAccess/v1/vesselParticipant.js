@@ -8,6 +8,7 @@ const include = [
     model: db.Vessel,
     as: 'vessel',
     attributes: ['id', 'publicName', 'orcJsonPolars'],
+    paranoid: false,
   },
   {
     model: db.UserProfile,
@@ -104,6 +105,7 @@ exports.getAll = async (paging, vpgId) => {
             'globalId',
             'lengthInMeters',
           ],
+          paranoid: false,
         },
         {
           model: db.VesselParticipantGroup,
@@ -147,6 +149,7 @@ exports.getAllByEvent = async (eventId, pagination) => {
             'globalId',
             'lengthInMeters',
           ],
+          paranoid: false,
         },
         {
           model: db.VesselParticipantGroup,
@@ -210,6 +213,7 @@ exports.getAllByVpg = async (vpgId) => {
         model: db.Vessel,
         as: 'vessel',
         attributes: ['id', 'publicName'],
+        paranoid: false,
       },
     ],
   });
@@ -383,15 +387,34 @@ exports.getByParticipantAndId = async (
   )?.toJSON();
 };
 
-exports.addParticipant = async (vesselParticipantId, participantIds = [], transaction) => {
+exports.addParticipant = async (
+  vesselParticipantId,
+  participantIds = [],
+  transaction,
+) => {
   return await db.VesselParticipantCrew.bulkCreate(
     participantIds.map((t) => ({
       vesselParticipantId,
       participantId: t,
-    })), {
+    })),
+    {
       transaction,
-    }
+    },
   );
+};
+
+exports.removeParticipant = async (
+  vesselParticipantId,
+  participantId,
+  transaction,
+) => {
+  return await db.VesselParticipantCrew.destroy({
+    where: {
+      vesselParticipantId,
+      participantId,
+    },
+    transaction,
+  });
 };
 
 exports.bulkCreate = async (data, transaction) => {
