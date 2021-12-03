@@ -281,7 +281,6 @@ exports.delete = async (id, transaction) => {
       },
       transaction,
     }),
-    db.VesselParticipantCrewTrack.destroy(vpcParam),
     db.VesselParticipantCrewTrackJson.destroy(vpcParam),
   ]);
 
