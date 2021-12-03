@@ -51,6 +51,12 @@ module.exports = (sequelize) => {
       firstPosition: {
         type: DataTypes.GEOMETRY('POINT', 4326),
       },
+      startTime: {
+        type: DataTypes.DATE,
+      },
+      endTime: {
+        type: DataTypes.DATE,
+      },
     },
     {
       modelName: 'VesselParticipantCrewTrackJson',
