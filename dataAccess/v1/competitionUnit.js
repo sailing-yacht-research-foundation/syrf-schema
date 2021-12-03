@@ -1,19 +1,8 @@
 const uuid = require('uuid');
-const {
-  competitionUnitStatus,
-  conversionValues,
-  statusCodes,
-  errorCodes,
-} = require('../../enums');
-const calendarEventDAL = require('../../dataAccess/v1/calendarEvent');
+const { competitionUnitStatus, conversionValues } = require('../../enums');
 const db = require('../../index');
 const { Op } = require('../../index');
-const {
-  includeMeta,
-  validateSqlDataAuth,
-  alwaysFalseWhere,
-  ValidationError,
-} = require('../../utils/utils');
+const { includeMeta, emptyPagingResponse } = require('../../utils/utils');
 
 const include = [
   {
@@ -71,9 +60,12 @@ exports.getAll = async (paging, params) => {
 
   if (params.calendarEventId) {
     where.calendarEventId = params.calendarEventId;
-  } else {
+  }
+
+  // only allow list events without createdBy id if listing by position or by event
+  if (!params.calendarEventId && !params.position) {
     if (params.userId) where.createdById = params.userId;
-    else where = alwaysFalseWhere(where);
+    else return emptyPagingResponse(paging);
   }
 
   if (params.position) {

@@ -1,6 +1,6 @@
 const uuid = require('uuid');
 const db = require('../../index');
-const { includeMeta, alwaysFalseWhere } = require('../../utils/utils');
+const { includeMeta, emptyPagingResponse } = require('../../utils/utils');
 
 const include = [...includeMeta];
 
@@ -27,7 +27,7 @@ exports.getAll = async (paging = {}, params) => {
 
   if (paging?.filters?.findIndex((t) => t.field === 'scope') < 0) {
     if (params.userId) where.createdById = params.userId;
-    else where = alwaysFalseWhere(where);
+    else return emptyPagingResponse(paging);
   }
 
   if (paging.query) {

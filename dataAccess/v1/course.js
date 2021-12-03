@@ -1,6 +1,10 @@
 const uuid = require('uuid');
 const db = require('../../index');
-const { includeMeta, getMeta, alwaysFalseWhere } = require('../../utils/utils');
+const {
+  includeMeta,
+  getMeta,
+  emptyPagingResponse,
+} = require('../../utils/utils');
 const { geometryType } = require('../../enums');
 
 const include = [
@@ -286,7 +290,7 @@ exports.getAll = async (paging, params) => {
     where.calendarEventId = params.calendarEventId;
   } else {
     if (params.userId) where.createdById = params.userId;
-    else where = alwaysFalseWhere(where);
+    else return emptyPagingResponse(paging);
   }
 
   const result = await db.Course.findAllWithPaging(

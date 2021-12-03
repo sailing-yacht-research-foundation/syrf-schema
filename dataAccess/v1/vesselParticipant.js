@@ -1,7 +1,7 @@
 const uuid = require('uuid');
 const { Op } = require('../../index');
 const db = require('../../index');
-const { includeMeta, alwaysFalseWhere } = require('../../utils/utils');
+const { includeMeta, emptyPagingResponse } = require('../../utils/utils');
 
 const include = [
   {
@@ -93,7 +93,7 @@ exports.getAll = async (paging, params) => {
     where.vesselParticipantGroupId = params.vesselParticipantGroupId;
   } else {
     if (params.userId) where.createdById = params.userId;
-    else where = alwaysFalseWhere(where);
+    else return emptyPagingResponse(paging);
   }
 
   const result = await db.VesselParticipant.findAllWithPaging(
