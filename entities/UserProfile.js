@@ -16,6 +16,18 @@ class UserProfile extends ModelBase {
       constraints: false,
     });
 
+    this.hasMany(models.UserFollower, {
+      as: 'follower',
+      constraints: false,
+      foreignKey: 'userId',
+    });
+
+    this.hasMany(models.UserFollower, {
+      as: 'following',
+      constraints: false,
+      foreignKey: 'followerId',
+    });
+
     this.hasMany(models.TrackHistory, {
       as: 'tracks',
       foreignKey: 'userProfileId',
@@ -83,6 +95,16 @@ module.exports = (sequelize) => {
       },
       acceptPrivacyPolicyTimestamp: {
         type: DataTypes.DATE,
+      },
+      isPrivate: {
+        type: DataTypes.BOOLEAN,
+        defaultValue: false,
+      },
+      bio: {
+        type: DataTypes.STRING,
+      },
+      sailingNumber: {
+        type: DataTypes.STRING,
       },
     },
     {

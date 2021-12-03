@@ -70,6 +70,7 @@ db.Group = require('./entities/Group')(sequelize);
 db.GroupMember = require('./entities/GroupMember')(sequelize);
 db.CalendarEditor = require('./entities/CalendarEditor')(sequelize);
 db.CalendarGroupEditor = require('./entities/CalendarGroupEditor')(sequelize);
+db.UserFollower = require('./entities/UserFollower')(sequelize);
 
 db.ScrapedFailedUrl = require('./entities/ScrapedFailedUrl')(sequelize);
 db.ScrapedSuccessfulUrl = require('./entities/ScrapedSuccessfulUrl')(sequelize);
@@ -97,6 +98,6 @@ db.sync = async (force = false) => {
     force: force,
   });
 };
-db.CalenderEvent = db.CalendarEvent;  // Typo. Deprecated. Will be deleted once all reference to it has been removed
+db.CalenderEvent = db.CalendarEvent; // Typo. Deprecated. Will be deleted once all reference to it has been removed
 
 module.exports = db;
