@@ -4,7 +4,7 @@ const db = require('../../index');
 const {
   includeMeta,
   ValidationError,
-  alwaysFalseWhere,
+  emptyPagingResponse,
 } = require('../../utils/utils');
 
 const include = [
@@ -119,7 +119,7 @@ exports.getAll = async (paging, params) => {
     ];
   } else {
     if (params.userId) where.createdById = params.userId;
-    else where = alwaysFalseWhere(where);
+    else return emptyPagingResponse(paging);
   }
 
   let attributes = {

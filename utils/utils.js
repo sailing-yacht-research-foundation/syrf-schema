@@ -166,17 +166,6 @@ exports.logPromiseAllSettledErrors = (results = []) => {
   });
 };
 
-/**
- *
- * @param {object} results
- */
-exports.alwaysFalseWhere = (where = {}) => {
-  return {
-    [db.Op.and]: db.Sequelize.literal('1=0'),
-    ...where,
-  };
-};
-
 exports.emptyPagingResponse = ({
   size,
   page,
