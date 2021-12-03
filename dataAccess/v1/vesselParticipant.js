@@ -1,13 +1,14 @@
 const uuid = require('uuid');
 const { Op } = require('../../index');
 const db = require('../../index');
-const { includeMeta } = require('../../utils/utils');
+const { includeMeta, emptyPagingResponse } = require('../../utils/utils');
 
 const include = [
   {
     model: db.Vessel,
     as: 'vessel',
     attributes: ['id', 'publicName', 'orcJsonPolars'],
+    paranoid: false,
   },
   {
     model: db.UserProfile,
@@ -79,7 +80,7 @@ exports.upsert = async (id, data = {}, transaction = undefined) => {
   return result?.toJSON();
 };
 
-exports.getAll = async (paging, vpgId) => {
+exports.getAll = async (paging, params) => {
   let where = {};
 
   if (paging.query) {
@@ -88,7 +89,12 @@ exports.getAll = async (paging, vpgId) => {
     };
   }
 
-  if (vpgId) where.vesselParticipantGroupId = vpgId;
+  if (params.vesselParticipantGroupId) {
+    where.vesselParticipantGroupId = params.vesselParticipantGroupId;
+  } else {
+    if (params.userId) where.createdById = params.userId;
+    else return emptyPagingResponse(paging);
+  }
 
   const result = await db.VesselParticipant.findAllWithPaging(
     {
@@ -104,6 +110,7 @@ exports.getAll = async (paging, vpgId) => {
             'globalId',
             'lengthInMeters',
           ],
+          paranoid: false,
         },
         {
           model: db.VesselParticipantGroup,
@@ -147,6 +154,7 @@ exports.getAllByEvent = async (eventId, pagination) => {
             'globalId',
             'lengthInMeters',
           ],
+          paranoid: false,
         },
         {
           model: db.VesselParticipantGroup,
@@ -210,6 +218,7 @@ exports.getAllByVpg = async (vpgId) => {
         model: db.Vessel,
         as: 'vessel',
         attributes: ['id', 'publicName'],
+        paranoid: false,
       },
     ],
   });
@@ -383,15 +392,34 @@ exports.getByParticipantAndId = async (
   )?.toJSON();
 };
 
-exports.addParticipant = async (vesselParticipantId, participantIds = [], transaction) => {
+exports.addParticipant = async (
+  vesselParticipantId,
+  participantIds = [],
+  transaction,
+) => {
   return await db.VesselParticipantCrew.bulkCreate(
     participantIds.map((t) => ({
       vesselParticipantId,
       participantId: t,
-    })), {
+    })),
+    {
       transaction,
-    }
+    },
   );
+};
+
+exports.removeParticipant = async (
+  vesselParticipantId,
+  participantId,
+  transaction,
+) => {
+  return await db.VesselParticipantCrew.destroy({
+    where: {
+      vesselParticipantId,
+      participantId,
+    },
+    transaction,
+  });
 };
 
 exports.bulkCreate = async (data, transaction) => {

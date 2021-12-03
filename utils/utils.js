@@ -165,3 +165,38 @@ exports.logPromiseAllSettledErrors = (results = []) => {
     if (element.status === 'rejected') console.log(element.reason?.message);
   });
 };
+
+exports.emptyPagingResponse = ({
+  size,
+  page,
+  sort,
+  srdir,
+  query,
+  draw,
+  filters = [],
+  multiSort = [],
+} = {}) => {
+  let pagingSize = Math.max(size, 1);
+  let sortQuery = sort;
+  let srdirQuery = srdir;
+
+  if (!sortQuery) sortQuery = 'updatedAt'; //default sort by latest update
+
+  if (srdirQuery) {
+    srdirQuery = srdirQuery < 0 ? 'DESC' : 'ASC';
+  } else {
+    srdirQuery = 'DESC';
+  }
+
+  return {
+    count: 0,
+    rows: [],
+    page,
+    size: pagingSize,
+    sort: sortQuery,
+    srdir: srdirQuery,
+    q: query,
+    draw: draw,
+    filters,
+  };
+};

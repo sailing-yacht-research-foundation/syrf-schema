@@ -7,7 +7,7 @@ const courseDAL = require('./course');
 
 const db = require('../../index');
 const { conversionValues, groupMemberStatus } = require('../../enums');
-const { includeMeta } = require('../../utils/utils');
+const { includeMeta, emptyPagingResponse } = require('../../utils/utils');
 
 const include = [
   {
@@ -86,6 +86,7 @@ exports.getAll = async (paging, params = {}) => {
       },
     ];
   }
+
   if (params.position) {
     // Query by locations
     const [lon, lat] = params.position;
@@ -132,6 +133,10 @@ exports.getAll = async (paging, params = {}) => {
         ),
       ],
     ];
+  } else {
+    // only allow list events without createdBy id if listing by position
+    if (params.userId) where.createdById = params.userId;
+    else return emptyPagingResponse(paging);
   }
 
   if (typeof params?.private === 'boolean') {
@@ -233,7 +238,7 @@ exports.getAdminsById = async (id) => {
   if (!id) return null;
   const result = await db.CalendarEvent.findByPk(id, {
     include,
-    attributes: ['id', 'name', 'isOpen'],
+    attributes: ['id', 'name', 'isOpen', 'ownerId'],
   });
 
   let data = result?.toJSON();

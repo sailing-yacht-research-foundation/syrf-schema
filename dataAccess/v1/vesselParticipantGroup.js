@@ -1,7 +1,7 @@
 const uuid = require('uuid');
 const { Op } = require('../../index');
 const db = require('../../index');
-const { includeMeta } = require('../../utils/utils');
+const { includeMeta, emptyPagingResponse } = require('../../utils/utils');
 
 const include = [
   {
@@ -18,6 +18,7 @@ const include = [
         as: 'vessel',
         model: db.Vessel,
         attributes: ['id', 'publicName'],
+        paranoid: false,
       },
     ],
   },
@@ -60,10 +61,15 @@ exports.upsert = async (id, data = {}, transaction) => {
   return result?.toJSON();
 };
 
-exports.getAll = async (paging, calendarEventId) => {
+exports.getAll = async (paging, params) => {
   let where = {};
 
-  if (calendarEventId) where.calendarEventId = calendarEventId;
+  if (params.calendarEventId) {
+    where.calendarEventId = params.calendarEventId;
+  } else {
+    if (params.userId) where.createdById = params.userId;
+    else return emptyPagingResponse(paging);
+  }
 
   const result = await db.VesselParticipantGroup.findAllWithPaging(
     {

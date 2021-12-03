@@ -1,7 +1,11 @@
 const uuid = require('uuid');
 const { errorCodes, statusCodes } = require('../../enums');
 const db = require('../../index');
-const { includeMeta, ValidationError } = require('../../utils/utils');
+const {
+  includeMeta,
+  ValidationError,
+  emptyPagingResponse,
+} = require('../../utils/utils');
 
 const include = [
   {
@@ -44,7 +48,7 @@ exports.upsert = async (id, data = {}, transaction = undefined) => {
   return result?.toJSON();
 };
 
-exports.getAll = async (paging, calendarEventId, assigned) => {
+exports.getAll = async (paging, params) => {
   let where = {};
 
   if (paging.query) {
@@ -68,10 +72,10 @@ exports.getAll = async (paging, calendarEventId, assigned) => {
       ],
     },
   ];
-  if (calendarEventId) {
-    where.calendarEventId = calendarEventId;
+  if (params.calendarEventId) {
+    where.calendarEventId = params.calendarEventId;
 
-    if (assigned === false) {
+    if (params.assigned === false) {
       where['$vesselParticipants.id$'] = {
         [db.Op.is]: null,
       };
@@ -80,7 +84,7 @@ exports.getAll = async (paging, calendarEventId, assigned) => {
     include = [
       {
         model: db.VesselParticipant,
-        required: assigned === true,
+        required: params.assigned === true,
         as: 'vesselParticipants',
         through: {
           attributes: [],
@@ -103,6 +107,7 @@ exports.getAll = async (paging, calendarEventId, assigned) => {
               'scope',
               'bulkCreated',
             ],
+            paranoid: false,
           },
           {
             model: db.VesselParticipantGroup,
@@ -112,6 +117,9 @@ exports.getAll = async (paging, calendarEventId, assigned) => {
         ],
       },
     ];
+  } else {
+    if (params.userId) where.createdById = params.userId;
+    else return emptyPagingResponse(paging);
   }
 
   let attributes = {
@@ -119,7 +127,7 @@ exports.getAll = async (paging, calendarEventId, assigned) => {
     include,
   };
 
-  if (assigned === false) attributes.subQuery = false;
+  if (params.assigned === false) attributes.subQuery = false;
 
   const result = await db.Participant.findAllWithPaging(attributes, paging);
   return result;
@@ -133,18 +141,28 @@ exports.getById = async (id) => {
   return result?.toJSON();
 };
 
-exports.getByUserId = async (id, pagination) => {
+exports.getByUserId = async (id, pagination, isPrivate = null) => {
+  let eventInclude = {
+    model: db.CalenderEvent,
+    as: 'event',
+    attributes: {
+      exclude: [...excludeMeta, 'ics'],
+    },
+  };
+
+  if (typeof isPrivate === 'boolean') {
+    eventInclude.where = {
+      isPrivate,
+    };
+    eventInclude.required = true;
+  }
+
   const result = await db.Participant.findAllWithPaging(
     {
       where: {
         userProfileId: id,
       },
-      include: [
-        {
-          model: db.CalendarEvent,
-          as: 'event',
-        },
-      ],
+      include: [eventInclude],
     },
     pagination,
   );
@@ -253,6 +271,7 @@ exports.getRaces = async (id, pagination) => {
                   model: db.Vessel,
                   as: 'vessel',
                   attributes: ['id', 'globalId', 'publicName'],
+                  paranoid: false,
                 },
                 {
                   model: db.Participant,

@@ -1,6 +1,6 @@
 const uuid = require('uuid');
 const db = require('../../index');
-const { includeMeta } = require('../../utils/utils');
+const { includeMeta, emptyPagingResponse } = require('../../utils/utils');
 
 const include = [...includeMeta];
 
@@ -22,8 +22,13 @@ exports.upsert = async (id, data = {}, transaction = undefined) => {
   return result?.toJSON();
 };
 
-exports.getAll = async (paging = {}) => {
+exports.getAll = async (paging = {}, params) => {
   let where = {};
+
+  if (paging?.filters?.findIndex((t) => t.field === 'scope') < 0) {
+    if (params.userId) where.createdById = params.userId;
+    else return emptyPagingResponse(paging);
+  }
 
   if (paging.query) {
     where.publicName = {
@@ -58,7 +63,7 @@ exports.delete = async (id, transaction) => {
       where: {
         id: id,
       },
-      transaction
+      transaction,
     });
   }
 
@@ -70,6 +75,7 @@ exports.getAllForEvent = async (userId, eventId, paging = {}) => {
     [db.Op.or]: [
       {
         createdById: userId,
+        bulkCreated: false,
       },
       {
         scope: eventId,
@@ -96,10 +102,10 @@ exports.getAllForEvent = async (userId, eventId, paging = {}) => {
 exports.getByVesselIdAndSource = async (vesselIds, source) => {
   const where = {
     source,
-  }
+  };
   if (vesselIds instanceof Array) {
     where.vesselId = {
-      [db.Op.in]: vesselIds
+      [db.Op.in]: vesselIds,
     };
   } else {
     where.vesselId = vesselIds;
@@ -108,7 +114,7 @@ exports.getByVesselIdAndSource = async (vesselIds, source) => {
     attributes: ['id', 'vesselId'],
     where,
   });
-}
+};
 
 exports.bulkCreate = async (data, transaction) => {
   if (data.length === 0) {

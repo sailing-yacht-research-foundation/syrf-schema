@@ -1,9 +1,8 @@
 const uuid = require('uuid');
-const { competitionUnitStatus } = require('../../enums');
+const { competitionUnitStatus, conversionValues } = require('../../enums');
 const db = require('../../index');
 const { Op } = require('../../index');
-const { conversionValues } = require('../../enums');
-const { includeMeta } = require('../../utils/utils');
+const { includeMeta, emptyPagingResponse } = require('../../utils/utils');
 
 const include = [
   {
@@ -59,7 +58,15 @@ exports.getAll = async (paging, params) => {
     };
   }
 
-  if (params.calendarEventId) where.calendarEventId = params.calendarEventId;
+  if (params.calendarEventId) {
+    where.calendarEventId = params.calendarEventId;
+  }
+
+  // only allow list events without createdBy id if listing by position or by event
+  if (!params.calendarEventId && !params.position) {
+    if (params.userId) where.createdById = params.userId;
+    else return emptyPagingResponse(paging);
+  }
 
   if (params.position) {
     // Query by locations
@@ -83,7 +90,6 @@ exports.getAll = async (paging, params) => {
     };
     where = {
       ...where,
-      isCompleted: false,
       [db.Op.and]: [
         db.Sequelize.where(
           db.Sequelize.fn(
@@ -108,26 +114,32 @@ exports.getAll = async (paging, params) => {
     ];
   }
 
-  let eventWhere = {};
+  let eventInclude = {
+    as: 'calendarEvent',
+    model: db.CalendarEvent,
+    required: false,
+    where: {},
+    attributes: ['id', 'name', 'isPrivate'],
+  };
+
   if (params.isOpen) {
-    eventWhere.isOpen = params.isOpen;
+    eventInclude.where.isOpen = params.isOpen;
+    eventInclude.required = true;
   }
+
+  if (typeof params.isPrivate === 'boolean') {
+    eventInclude.where.isPrivate = params.isPrivate;
+    eventInclude.required = true;
+  }
+
   const result = await db.CompetitionUnit.findAllWithPaging(
     {
       attributes,
       where,
       replacements,
-      include: [
-        {
-          as: 'calendarEvent',
-          model: db.CalendarEvent,
-          where: eventWhere,
-          attributes: ['id', 'name', 'isPrivate'],
-        },
-      ],
-      order,
+      include: [eventInclude],
     },
-    paging,
+    { ...paging, customSort: order },
   );
   return result;
 };
@@ -276,7 +288,7 @@ exports.updateCountryCity = async (
           [Op.in]: competitionUnitIds,
         },
       },
-      transaction,
+      transaction: transaction,
     },
   );
 };

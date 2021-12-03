@@ -1,6 +1,10 @@
 const uuid = require('uuid');
 const db = require('../../index');
-const { includeMeta, getMeta } = require('../../utils/utils');
+const {
+  includeMeta,
+  getMeta,
+  emptyPagingResponse,
+} = require('../../utils/utils');
 const { geometryType } = require('../../enums');
 
 const include = [
@@ -231,16 +235,7 @@ exports.upsert = async (id, data = {}, transaction) => {
       },
       { transaction },
     ),
-    db.CompetitionUnit.update(
-      { courseId: id },
-      {
-        where: {
-          id: data.competitionUnitId,
-        },
-        transaction,
-      },
-    ),
-    clearGeometries(id, transaction),
+    clearGeometries(id, false, transaction),
   ]);
 
   const task = [];
@@ -288,10 +283,15 @@ exports.upsert = async (id, data = {}, transaction) => {
   };
 };
 
-exports.getAll = async (paging, calendarEventId) => {
+exports.getAll = async (paging, params) => {
   let where = {};
 
-  if (calendarEventId) where.calendarEventId = calendarEventId;
+  if (params.calendarEventId) {
+    where.calendarEventId = params.calendarEventId;
+  } else {
+    if (params.userId) where.createdById = params.userId;
+    else return emptyPagingResponse(paging);
+  }
 
   const result = await db.Course.findAllWithPaging(
     {
@@ -340,7 +340,7 @@ const mapGeometryResponse = (obj = []) => {
       ...t,
       points: t.points.map((point) => ({
         ...point,
-        position: point.position.coordinates,
+        position: point?.position?.coordinates,
       })),
       coordinates,
     };
@@ -379,21 +379,7 @@ exports.getByCompetitionId = async (competitionUnitId, transaction) => {
         {
           model: db.Course,
           as: 'course',
-          include: [
-            {
-              as: 'courseSequencedGeometries',
-              model: db.CourseSequencedGeometry,
-            },
-            {
-              as: 'courseUnsequencedUntimedGeometry',
-              model: db.CourseUnsequencedUntimedGeometry,
-            },
-            {
-              as: 'courseUnsequencedTimedGeometry',
-              model: db.CourseUnsequencedTimedGeometry,
-            },
-            ...includeMeta,
-          ],
+          include: include,
         },
       ],
       transaction,
@@ -461,10 +447,19 @@ exports.clear = async () => {
   });
 };
 
-exports.clearPoints = async (geometryIds = [], transaction) => {
+exports.clearPointsByGeometries = async (geometryIds = [], transaction) => {
   await db.CoursePoint.destroy({
     where: {
       geometryId: { [db.Op.in]: geometryIds },
+    },
+    transaction,
+  });
+};
+
+exports.clearPoints = async (ids = [], transaction) => {
+  await db.CoursePoint.destroy({
+    where: {
+      id: { [db.Op.in]: ids },
     },
     transaction,
   });
@@ -474,7 +469,7 @@ exports.bulkInsertPoints = async (points = [], transaction) => {
   return await db.CoursePoint.bulkCreate(points, { transaction });
 };
 
-exports.getCourseCompetitionIds = async (courseId) => {
+exports.getCourseCompetitionIds = async (courseId, transaction) => {
   const result = await db.CompetitionUnit.findAll({
     where: {
       courseId,
@@ -483,8 +478,94 @@ exports.getCourseCompetitionIds = async (courseId) => {
       include: ['id'],
     },
     raw: true,
+    transaction,
   });
   return result.map((row) => {
     return row.id;
   });
+};
+
+exports.getPointById = async (pointId, transaction) => {
+  const result = await db.CoursePoint.findByPk(pointId, {
+    include: [
+      {
+        model: db.CourseSequencedGeometry,
+        as: 'sequenced',
+        attributes: ['id'],
+        include: [
+          {
+            model: db.Course,
+            as: 'course',
+            attributes: ['id', 'calendarEventId'],
+          },
+        ],
+      },
+      {
+        model: db.CourseUnsequencedTimedGeometry,
+        as: 'timed',
+        attributes: ['id'],
+        include: [
+          {
+            model: db.Course,
+            as: 'course',
+            attributes: ['id', 'calendarEventId'],
+          },
+        ],
+      },
+      {
+        model: db.CourseUnsequencedUntimedGeometry,
+        as: 'unsequenced',
+        attributes: ['id'],
+        include: [
+          {
+            model: db.Course,
+            as: 'course',
+            attributes: ['id', 'calendarEventId'],
+          },
+        ],
+      },
+    ],
+    transaction,
+  });
+  return result?.toJSON();
+};
+
+exports.updatePoint = async (
+  pointId,
+  {
+    position = [],
+    order,
+    properties,
+    markTrackerId,
+    updatedById,
+    updatedAt,
+  } = {},
+  transaction,
+) => {
+  const positionObj =
+    position?.length >= 2
+      ? {
+          type: 'Point',
+          coordinates: [position[0], position[1]],
+        }
+      : null;
+
+  const result = await db.CoursePoint.update(
+    {
+      position: positionObj,
+      order,
+      properties,
+      markTrackerId,
+      updatedById,
+      updatedAt,
+    },
+    {
+      where: {
+        id: pointId,
+      },
+      transaction,
+    },
+  );
+
+  return result;
 };
