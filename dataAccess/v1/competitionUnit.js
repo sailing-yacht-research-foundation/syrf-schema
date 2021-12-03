@@ -172,7 +172,6 @@ exports.delete = async (id, transaction) => {
       },
       transaction,
     }),
-    db.VesselParticipantCrewTrack.destroy(param),
     db.VesselParticipantCrewTrackJson.destroy(param),
     db.TrackHistory.destroy(param),
     db.CompetitionResult.destroy(param),

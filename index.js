@@ -45,8 +45,6 @@ db.VesselParticipantTrack = require('./entities/VesselParticipantTrack')(
 );
 db.VesselParticipantTrackJson =
   require('./entities/VesselParticipantTrackJson')(sequelize);
-db.VesselParticipantCrewTrack =
-  require('./entities/VesselParticipantCrewTrack')(sequelize);
 db.VesselParticipantCrewTrackJson =
   require('./entities/VesselParticipantCrewTrackJson')(sequelize);
 db.TrackHistory = require('./entities/TrackHistory')(sequelize);

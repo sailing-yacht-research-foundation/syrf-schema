@@ -202,14 +202,14 @@ exports.getTrackTime = async (id) => {
 
   const track = await db.TrackHistory.findByPk(id);
 
-  const result = await db.VesselParticipantCrewTrack.findAll({
+  const result = await db.VesselParticipantCrewTrackJson.findAll({
     where: {
       vesselParticipantCrewId: track.crewId,
       competitionUnitId: track.competitionUnitId,
     },
     attributes: [
-      [db.Sequelize.fn('min', db.Sequelize.col('pingTime')), 'startTime'],
-      [db.Sequelize.fn('max', db.Sequelize.col('pingTime')), 'endTime'],
+      [db.Sequelize.fn('min', db.Sequelize.col('startTime')), 'startTime'],
+      [db.Sequelize.fn('max', db.Sequelize.col('endTime')), 'endTime'],
     ],
   });
 

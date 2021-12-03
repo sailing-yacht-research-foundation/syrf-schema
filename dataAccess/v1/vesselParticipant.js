@@ -272,7 +272,6 @@ exports.delete = async (id, transaction) => {
       },
       transaction,
     }),
-    db.VesselParticipantCrewTrack.destroy(vpcParam),
     db.VesselParticipantCrewTrackJson.destroy(vpcParam),
   ]);
 
@@ -383,14 +382,19 @@ exports.getByParticipantAndId = async (
   )?.toJSON();
 };
 
-exports.addParticipant = async (vesselParticipantId, participantIds = [], transaction) => {
+exports.addParticipant = async (
+  vesselParticipantId,
+  participantIds = [],
+  transaction,
+) => {
   return await db.VesselParticipantCrew.bulkCreate(
     participantIds.map((t) => ({
       vesselParticipantId,
       participantId: t,
-    })), {
+    })),
+    {
       transaction,
-    }
+    },
   );
 };
 
