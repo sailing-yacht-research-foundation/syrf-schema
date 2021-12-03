@@ -200,3 +200,5 @@ exports.emptyPagingResponse = ({
     filters,
   };
 };
+
+exports.excludeMeta = ['ownerId', 'createdById', 'updatedById', 'developerId'];
