@@ -198,6 +198,10 @@ const participantEditTypes = {
   NEW_PARTICIPANT_JOINED: 'new-participant-joined', // this is for new participant joined open regatta using /open-competitions/:id/join
 };
 
+const redisCacheKeys = {
+  LATEST_EULA_VERSION: 'eula_version',
+};
+
 module.exports = {
   competitionUnitStatus,
   userSignupType,
@@ -221,4 +225,5 @@ module.exports = {
   boatSides,
   expeditionBoatSides,
   participantEditTypes,
+  redisCacheKeys,
 };
