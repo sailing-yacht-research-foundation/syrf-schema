@@ -164,6 +164,12 @@ const externalServiceSources = {
   yachtscoring: 'YACHTSCORING',
 };
 
+const validYachtScoringJobType = {
+  testCredentials: 'test-credentials',
+  getEvents: 'get-events',
+  importEventData: 'import-event-data',
+};
+
 const redisKeyPrefixes = {
   LIVE_VIEWERS: 'live-viewers-',
   EXPEDITION_PING: 'expedition_ping-',
@@ -218,6 +224,7 @@ module.exports = {
   bullQueues,
   redisKeyPrefixes,
   externalServiceSources,
+  validYachtScoringJobType,
   vesselEvents,
   boatSides,
   expeditionBoatSides,
