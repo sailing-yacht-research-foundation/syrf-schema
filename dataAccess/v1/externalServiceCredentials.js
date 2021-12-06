@@ -1,14 +1,18 @@
 const db = require('../../index');
 
-exports.getAll = async (paging, userProfileId) => {
-  let where = {
-    userProfileId,
-  };
+exports.getAll = async (paging, userProfileId, source = null) => {
+  let where = Object.assign(
+    {},
+    {
+      userProfileId,
+    },
+    source ? { source } : {},
+  );
 
   const result = await db.ExternalServiceCredential.findAllWithPaging(
     {
       attributes: {
-        exclude: ['password'],
+        exclude: ['userProfileId', 'password'],
       },
       where,
     },
