@@ -73,6 +73,10 @@ db.UserFollower = require('./entities/UserFollower')(sequelize);
 db.ScrapedFailedUrl = require('./entities/ScrapedFailedUrl')(sequelize);
 db.ScrapedSuccessfulUrl = require('./entities/ScrapedSuccessfulUrl')(sequelize);
 
+db.ExternalServiceCredential = require('./entities/ExternalServiceCredential')(
+  sequelize,
+);
+
 for (const key in db) {
   if (Object.hasOwnProperty.call(db, key)) {
     if (db[key].prototype instanceof ModelBase) {

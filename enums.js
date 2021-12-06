@@ -108,6 +108,7 @@ const raceSetupType = {
   STOP: 'STOP',
   COMPETITION_UNIT_SYNC: 'COMPETITION_UNIT_SYNC',
   RESETUP: 'RESETUP',
+  STOP_TRACKING: 'STOP_TRACKING',
 };
 
 const openCompetitionConfig = {
@@ -161,6 +162,12 @@ const bullQueues = {
 
 const externalServiceSources = {
   yachtscoring: 'YACHTSCORING',
+};
+
+const validYachtScoringJobType = {
+  testCredentials: 'test-credentials',
+  getEvents: 'get-events',
+  importEventData: 'import-event-data',
 };
 
 const redisKeyPrefixes = {
@@ -221,6 +228,7 @@ module.exports = {
   bullQueues,
   redisKeyPrefixes,
   externalServiceSources,
+  validYachtScoringJobType,
   vesselEvents,
   boatSides,
   expeditionBoatSides,
