@@ -207,6 +207,7 @@ const participantEditTypes = {
 
 const redisCacheKeys = {
   LATEST_EULA_VERSION: 'eula_version',
+  LATEST_PP_VERSION: 'pp_version',
 };
 
 module.exports = {
