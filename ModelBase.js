@@ -29,8 +29,8 @@ class ModelBase extends Model {
 
   /**
    * @param {FindOptions} attribute
-   * @param {Object} paging
-   * @returns
+   * @param {import('./types/pagination').PaginationRequest} paging
+   * @returns {import('./types/pagination').PaginationResponse<any>}
    */
   static async findAllWithPaging(
     attribute = {},
@@ -140,6 +140,7 @@ class ModelBase extends Model {
       q: query,
       draw: draw,
       filters,
+      multiSort,
     };
   }
 }

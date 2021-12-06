@@ -67,6 +67,12 @@ exports.upsert = async (id, data = {}, transaction) => {
   return result?.toJSON();
 };
 
+/**
+ *
+ * @param {import('../../types/pagination').PaginationRequest} paging
+ * @param {import('../../types/dataAccess').EventGetAllParams} params
+ * @returns
+ */
 exports.getAll = async (paging, params = {}) => {
   let where = {};
   let order = [];
@@ -152,7 +158,7 @@ exports.getAll = async (paging, params = {}) => {
     },
     paging,
   );
-  const { count, rows, page, size } = result;
+  const { rows } = result;
 
   // Formatting output from DataAccess to return virtually the same data structure as before (location -> lon, lat)
   const formattedRows = [];
@@ -167,10 +173,8 @@ exports.getAll = async (paging, params = {}) => {
   });
 
   return {
-    count,
+    ...result,
     rows: formattedRows,
-    page,
-    size,
   };
 };
 
@@ -234,11 +238,23 @@ exports.getParticipantsById = async (id, transaction) => {
   return result;
 };
 
-exports.getAdminsById = async (id) => {
+/**
+ * Get events admins/editors and owners
+ * @param {string} id CalendarEvent Id
+ * @param {import('../../types/dataAccess').EventGetAdminsByIdParams} params  optional parameters when querying the admins
+ * @returns
+ */
+exports.getAdminsById = async (id, params = {}) => {
   if (!id) return null;
   const result = await db.CalendarEvent.findByPk(id, {
     include,
-    attributes: ['id', 'name', 'isOpen', 'ownerId'],
+    attributes: [
+      ...(params.includeAttributes || []),
+      'id',
+      'name',
+      'isOpen',
+      'ownerId',
+    ],
   });
 
   let data = result?.toJSON();
