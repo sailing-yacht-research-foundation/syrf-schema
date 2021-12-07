@@ -348,6 +348,18 @@ exports.delete = async (id, transaction) => {
       courses.map((t) => t.id),
       transaction,
     ),
+    db.CalendarEditor.destroy({
+      where: {
+        CalendarEventId: id,
+      },
+      transaction,
+    }),
+    db.CalendarGroupEditor.destroy({
+      where: {
+        calendarEventId: id,
+      },
+      transaction,
+    }),
     db.CalendarEvent.destroy(
       {
         where: {
