@@ -67,6 +67,17 @@ exports.upsert = async (id, data = {}, transaction) => {
   return result?.toJSON();
 };
 
+exports.update = async (id, data, transaction) => {
+  const [updateCount] = await db.CalendarEvent.update(data, {
+    where: {
+      id,
+    },
+    transaction,
+  });
+
+  return updateCount;
+};
+
 /**
  *
  * @param {import('../../types/pagination').PaginationRequest} paging
