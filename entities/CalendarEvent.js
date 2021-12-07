@@ -126,6 +126,13 @@ module.exports = (sequelize) => {
         defaultValue: true,
         allowNull: false,
       },
+      allowRegistration: {
+        type: DataTypes.BOOLEAN,
+        defaultValue: false,
+        allowNull: false,
+        comment:
+          'Different from isOpen. This columns serve as open/close the self registration.',
+      },
       source: {
         type: DataTypes.STRING,
         allowNull: true,
