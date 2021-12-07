@@ -1,4 +1,5 @@
 const { DataTypes } = require('sequelize');
+const { calendarEventStatus } = require('../enums');
 const ModelBase = require('../ModelBase');
 
 class CalendarEvent extends ModelBase {
@@ -132,6 +133,9 @@ module.exports = (sequelize) => {
       scrapedOriginalId: {
         type: DataTypes.STRING,
         allowNull: true,
+      },
+      status: {
+        type: DataTypes.ENUM(Object.values(calendarEventStatus)),
       },
     },
     {
