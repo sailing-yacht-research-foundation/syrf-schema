@@ -59,6 +59,7 @@ exports.getMyTracks = async (userId, isPrivate, pagination) => {
         {
           model: db.CompetitionUnit,
           as: 'competitionUnit',
+          required: true,
           attributes: {
             exclude: [
               'boundingBox',
