@@ -1,5 +1,9 @@
 const uuid = require('uuid');
-const { competitionUnitStatus, conversionValues } = require('../../enums');
+const {
+  competitionUnitStatus,
+  conversionValues,
+  calendarEventStatus,
+} = require('../../enums');
 const db = require('../../index');
 const { Op } = require('../../index');
 const { includeMeta, emptyPagingResponse } = require('../../utils/utils');
@@ -121,8 +125,18 @@ exports.getAll = async (paging, params) => {
     where: {},
     attributes: ['id', 'name', 'isPrivate'],
   };
+  if (params.isDiscovery) {
+    // Only allow non draft to be discoverable
+    eventInclude.where.status = {
+      [db.Op.in]: [
+        calendarEventStatus.SCHEDULED,
+        calendarEventStatus.ONGOING,
+        calendarEventStatus.COMPLETED,
+      ],
+    };
+  }
 
-  if (params.isOpen) {
+  if (typeof params.isOpen === 'boolean') {
     eventInclude.where.isOpen = params.isOpen;
     eventInclude.required = true;
   }

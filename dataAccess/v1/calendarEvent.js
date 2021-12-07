@@ -115,8 +115,6 @@ exports.getAll = async (paging, params = {}) => {
     };
     where = {
       ...where,
-      isOpen: true,
-      // isCompleted: false, // TODO: Use end date for this
       [db.Op.and]: [
         db.Sequelize.where(
           db.Sequelize.fn(
@@ -147,6 +145,9 @@ exports.getAll = async (paging, params = {}) => {
 
   if (typeof params?.private === 'boolean') {
     where.isPrivate = params?.private;
+  }
+  if (typeof params?.isOpen === 'boolean') {
+    where.isOpen = params?.isOpen;
   }
 
   const result = await db.CalendarEvent.findAllWithPaging(
