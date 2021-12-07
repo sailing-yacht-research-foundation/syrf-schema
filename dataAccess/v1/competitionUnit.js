@@ -214,7 +214,7 @@ exports.delete = async (id, transaction) => {
   return !isMultiple ? data?.toJSON() : count;
 };
 
-exports.setStart = async (id) => {
+exports.setStart = async (id, transaction) => {
   const result = await db.CompetitionUnit.update(
     {
       status: competitionUnitStatus.ONGOING,
@@ -223,13 +223,14 @@ exports.setStart = async (id) => {
       where: {
         id,
       },
+      transaction,
     },
   );
 
   return result[0];
 };
 
-exports.setEnd = async (id) => {
+exports.setEnd = async (id, transaction) => {
   const result = await db.CompetitionUnit.update(
     {
       endTime: new Date(),
@@ -240,6 +241,7 @@ exports.setEnd = async (id) => {
       where: {
         id,
       },
+      transaction,
     },
   );
 
