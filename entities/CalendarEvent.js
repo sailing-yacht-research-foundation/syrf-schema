@@ -1,4 +1,5 @@
 const { DataTypes } = require('sequelize');
+const { calendarEventStatus } = require('../enums');
 const ModelBase = require('../ModelBase');
 
 class CalendarEvent extends ModelBase {
@@ -125,6 +126,13 @@ module.exports = (sequelize) => {
         defaultValue: true,
         allowNull: false,
       },
+      allowRegistration: {
+        type: DataTypes.BOOLEAN,
+        defaultValue: false,
+        allowNull: false,
+        comment:
+          'Different from isOpen. This columns serve as open/close the self registration.',
+      },
       source: {
         type: DataTypes.STRING,
         allowNull: true,
@@ -132,6 +140,11 @@ module.exports = (sequelize) => {
       scrapedOriginalId: {
         type: DataTypes.STRING,
         allowNull: true,
+      },
+      status: {
+        type: DataTypes.ENUM(Object.values(calendarEventStatus)),
+        defaultValue: calendarEventStatus.DRAFT,
+        allowNull: false,
       },
     },
     {

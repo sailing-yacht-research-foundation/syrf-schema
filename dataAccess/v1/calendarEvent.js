@@ -67,6 +67,17 @@ exports.upsert = async (id, data = {}, transaction) => {
   return result?.toJSON();
 };
 
+exports.update = async (id, data, transaction) => {
+  const [updateCount] = await db.CalendarEvent.update(data, {
+    where: {
+      id,
+    },
+    transaction,
+  });
+
+  return updateCount;
+};
+
 /**
  *
  * @param {import('../../types/pagination').PaginationRequest} paging
@@ -115,8 +126,6 @@ exports.getAll = async (paging, params = {}) => {
     };
     where = {
       ...where,
-      isOpen: true,
-      // isCompleted: false, // TODO: Use end date for this
       [db.Op.and]: [
         db.Sequelize.where(
           db.Sequelize.fn(
@@ -147,6 +156,9 @@ exports.getAll = async (paging, params = {}) => {
 
   if (typeof params?.private === 'boolean') {
     where.isPrivate = params?.private;
+  }
+  if (typeof params?.isOpen === 'boolean') {
+    where.isOpen = params?.isOpen;
   }
 
   const result = await db.CalendarEvent.findAllWithPaging(
@@ -218,7 +230,7 @@ exports.getCompetitionUnitsById = async (id, transaction) => {
     },
     raw: true,
     transaction,
-    attributes: ['id', 'name'],
+    attributes: ['id', 'name', 'startTime'],
   });
 
   return result;
@@ -254,6 +266,7 @@ exports.getAdminsById = async (id, params = {}) => {
       'name',
       'isOpen',
       'ownerId',
+      'status',
     ],
   });
 
@@ -367,6 +380,18 @@ exports.delete = async (id, transaction) => {
       courses.map((t) => t.id),
       transaction,
     ),
+    db.CalendarEditor.destroy({
+      where: {
+        CalendarEventId: id,
+      },
+      transaction,
+    }),
+    db.CalendarGroupEditor.destroy({
+      where: {
+        calendarEventId: id,
+      },
+      transaction,
+    }),
     db.CalendarEvent.destroy(
       {
         where: {

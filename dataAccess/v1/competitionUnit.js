@@ -8,7 +8,7 @@ const include = [
   {
     as: 'calendarEvent',
     model: db.CalendarEvent,
-    attributes: ['id', 'name', 'isPrivate', 'isOpen'],
+    attributes: ['id', 'name', 'isPrivate', 'isOpen', 'status'],
     include: [
       {
         model: db.UserProfile,
@@ -121,8 +121,14 @@ exports.getAll = async (paging, params) => {
     where: {},
     attributes: ['id', 'name', 'isPrivate'],
   };
+  if (params.status) {
+    where.status = params.status;
+  }
+  if (params.eventStatus) {
+    eventInclude.where.status = params.eventStatus;
+  }
 
-  if (params.isOpen) {
+  if (typeof params.isOpen === 'boolean') {
     eventInclude.where.isOpen = params.isOpen;
     eventInclude.required = true;
   }
@@ -200,7 +206,7 @@ exports.delete = async (id, transaction) => {
   return !isMultiple ? data?.toJSON() : count;
 };
 
-exports.setStart = async (id) => {
+exports.setStart = async (id, transaction) => {
   const result = await db.CompetitionUnit.update(
     {
       status: competitionUnitStatus.ONGOING,
@@ -209,13 +215,14 @@ exports.setStart = async (id) => {
       where: {
         id,
       },
+      transaction,
     },
   );
 
   return result[0];
 };
 
-exports.setEnd = async (id) => {
+exports.setEnd = async (id, transaction) => {
   const result = await db.CompetitionUnit.update(
     {
       endTime: new Date(),
@@ -226,6 +233,7 @@ exports.setEnd = async (id) => {
       where: {
         id,
       },
+      transaction,
     },
   );
 

@@ -4,6 +4,14 @@ const competitionUnitStatus = {
   COMPLETED: 'COMPLETED',
 };
 
+const calendarEventStatus = {
+  DRAFT: 'DRAFT',
+  SCHEDULED: 'SCHEDULED',
+  CANCELED: 'CANCELED',
+  ONGOING: 'ONGOING',
+  COMPLETED: 'COMPLETED',
+};
+
 const userSignupType = {
   UNREGISTERED: 'unregistered',
   REGISTERED: 'registered',
@@ -212,6 +220,7 @@ const redisCacheKeys = {
 
 module.exports = {
   competitionUnitStatus,
+  calendarEventStatus,
   userSignupType,
   conversionValues,
   geometryType,
