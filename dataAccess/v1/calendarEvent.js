@@ -298,6 +298,8 @@ exports.validateAdminsById = async (id, userId, params = {}) => {
     event,
   };
 
+  if (!event) return result;
+
   if (!userId) return result;
 
   if (Array.isArray(event.editors) && event.editors.length > 0) {
