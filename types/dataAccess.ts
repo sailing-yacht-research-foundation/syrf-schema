@@ -8,3 +8,9 @@ export interface EventGetAllParams {
   userId : string;
   private : boolean;
 }
+
+export interface EventValidateAdminsByIdReturn {
+  isOwner: boolean;
+  isEditor: boolean;
+  event: object;
+}

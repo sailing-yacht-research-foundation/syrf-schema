@@ -281,6 +281,37 @@ exports.getAdminsById = async (id, params = {}) => {
   return data;
 };
 
+/**
+ * Validate events admins/editors and owners
+ * @param {string} id CalendarEvent Id
+ * @param {string} userId User Id
+ * @param {import('../../types/dataAccess').EventGetAdminsByIdParams} params  optional parameters when querying the admins
+ * @returns {import('../../types/dataAccess').EventValidateAdminsByIdReturn}
+ */
+exports.validateAdminsById = async (id, userId, params = {}) => {
+  if (!id) return null;
+  const event = await exports.getAdminsById(id, params);
+
+  let result = {
+    isOwner: false,
+    isEditor: false,
+    event,
+  };
+
+  if (!event) return result;
+
+  if (!userId) return result;
+
+  if (Array.isArray(event.editors) && event.editors.length > 0) {
+    const idIndex = event.editors.findIndex((t) => t.id === userId);
+    result.isEditor = idIndex > -1;
+  }
+
+  result.isOwner = event.ownerId === userId || event.owner.id === userId;
+
+  return result;
+};
+
 exports.delete = async (id, transaction) => {
   const data = await db.CalendarEvent.findByPk(id, {
     include,
