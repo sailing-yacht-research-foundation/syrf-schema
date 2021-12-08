@@ -16,6 +16,7 @@ module.exports = {
           {
             type: Sequelize.DataTypes.ENUM(Object.values(calendarEventStatus)),
             defaultValue: calendarEventStatus.DRAFT,
+            allowNull: false,
           },
           { transaction },
         );

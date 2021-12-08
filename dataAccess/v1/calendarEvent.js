@@ -266,6 +266,7 @@ exports.getAdminsById = async (id, params = {}) => {
       'name',
       'isOpen',
       'ownerId',
+      'status',
     ],
   });
 
