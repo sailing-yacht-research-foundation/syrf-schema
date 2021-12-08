@@ -230,7 +230,7 @@ exports.getCompetitionUnitsById = async (id, transaction) => {
     },
     raw: true,
     transaction,
-    attributes: ['id', 'name'],
+    attributes: ['id', 'name', 'startTime'],
   });
 
   return result;
