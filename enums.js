@@ -167,6 +167,7 @@ const bullQueues = {
   importingEvents: 'importing_events',
   courseEdit: 'course_edit',
   participantEdit: 'participant_edit',
+  eventStop: 'event_stop',
 };
 
 const externalServiceSources = {
