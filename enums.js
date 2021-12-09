@@ -164,6 +164,7 @@ const bullQueues = {
   openGraph: 'open_graph',
   closestCity: 'closest_city',
   yachtScoringTestCredentials: 'yachtscoring_test_credentials',
+  importingEvents: 'importing_events',
   courseEdit: 'course_edit',
   participantEdit: 'participant_edit',
 };

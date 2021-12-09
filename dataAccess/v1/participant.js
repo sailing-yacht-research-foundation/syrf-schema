@@ -322,3 +322,11 @@ exports.bulkCreate = async (data, transaction) => {
   });
   return result;
 };
+
+exports.bulkCreateWithOptions = async (data, options) => {
+  if (data.length === 0) {
+    return [];
+  }
+  const result = await db.Participant.bulkCreate(data, options);
+  return result;
+};
