@@ -70,10 +70,11 @@ exports.update = async (id, data = {}, transaction) => {
   return updateCount;
 };
 
-exports.delete = async (id, transaction) => {
+exports.delete = async (id, userProfileId, transaction) => {
   const deleteCount = await db.ExternalServiceCredential.destroy({
     where: {
       id,
+      userProfileId,
     },
     transaction,
   });
