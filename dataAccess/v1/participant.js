@@ -330,3 +330,22 @@ exports.bulkCreateWithOptions = async (data, options) => {
   const result = await db.Participant.bulkCreate(data, options);
   return result;
 };
+
+exports.updateUserlessParticipants = async (
+  userProfileId,
+  email,
+  transaction,
+) => {
+  const [updateCount] = await db.Participant.update(
+    { userProfileId },
+    {
+      where: {
+        participantId: email,
+        userProfileId: { [db.Op.eq]: null },
+      },
+      transaction,
+    },
+  );
+
+  return updateCount;
+};
