@@ -222,7 +222,7 @@ exports.getById = async (id, transaction) => {
   return data;
 };
 
-exports.getCompetitionUnitsById = async (id, transaction) => {
+exports.getCompetitionUnitsById = async (id, params = {}, transaction) => {
   if (!id) return null;
   const result = await db.CompetitionUnit.findAll({
     where: {
@@ -230,7 +230,7 @@ exports.getCompetitionUnitsById = async (id, transaction) => {
     },
     raw: true,
     transaction,
-    attributes: ['id', 'name', 'startTime'],
+    attributes: [...(params.attributes || []), 'id', 'name', 'startTime'],
   });
 
   return result;
