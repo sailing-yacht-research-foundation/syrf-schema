@@ -324,7 +324,12 @@ exports.validateParticipants = async (
   });
 };
 
-exports.validateVesselIds = async (vesselParticipantGroupId, id, vesselId) => {
+exports.validateVesselIds = async (
+  vesselParticipantGroupId,
+  id,
+  vesselId,
+  transaction,
+) => {
   return await db.VesselParticipant.findAll({
     where: {
       id: {
@@ -333,6 +338,7 @@ exports.validateVesselIds = async (vesselParticipantGroupId, id, vesselId) => {
       vesselParticipantGroupId,
       vesselId,
     },
+    transaction,
   });
 };
 
