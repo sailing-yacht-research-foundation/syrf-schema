@@ -1,5 +1,7 @@
+import { Transaction } from 'sequelize/types'
 export interface EventGetAdminsByIdParams {
   includeAttributes : string[]
+  transaction : Transaction
 }
 
 export interface EventGetAllParams {

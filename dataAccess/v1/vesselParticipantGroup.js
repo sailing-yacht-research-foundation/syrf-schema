@@ -87,9 +87,10 @@ exports.getAll = async (paging, params) => {
   return result;
 };
 
-exports.getById = async (id) => {
+exports.getById = async (id, transaction) => {
   const result = await db.VesselParticipantGroup.findByPk(id, {
     include,
+    transaction,
   });
 
   return result?.toJSON();

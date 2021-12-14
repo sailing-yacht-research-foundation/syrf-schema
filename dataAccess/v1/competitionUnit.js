@@ -150,12 +150,15 @@ exports.getAll = async (paging, params) => {
   return result;
 };
 
-exports.getById = async (id, includeDetail = true) => {
+exports.getById = async (id, includeDetail = true, transaction) => {
   let attr = {};
 
   if (includeDetail) attr.include = include;
 
-  const result = await db.CompetitionUnit.findByPk(id, attr);
+  const result = await db.CompetitionUnit.findByPk(id, {
+    ...attr,
+    transaction,
+  });
 
   return result?.toJSON();
 };

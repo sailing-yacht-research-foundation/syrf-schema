@@ -268,6 +268,7 @@ exports.getAdminsById = async (id, params = {}) => {
       'ownerId',
       'status',
     ],
+    transaction: params.transaction,
   });
 
   let data = result?.toJSON();
