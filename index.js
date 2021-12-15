@@ -69,6 +69,7 @@ db.GroupMember = require('./entities/GroupMember')(sequelize);
 db.CalendarEditor = require('./entities/CalendarEditor')(sequelize);
 db.CalendarGroupEditor = require('./entities/CalendarGroupEditor')(sequelize);
 db.UserFollower = require('./entities/UserFollower')(sequelize);
+db.UserStream = require('./entities/UserStream')(sequelize);
 
 db.ScrapedFailedUrl = require('./entities/ScrapedFailedUrl')(sequelize);
 db.ScrapedSuccessfulUrl = require('./entities/ScrapedSuccessfulUrl')(sequelize);

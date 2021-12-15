@@ -33,6 +33,12 @@ class UserProfile extends ModelBase {
       foreignKey: 'userProfileId',
       constraints: false,
     });
+
+    this.hasMany(models.UserStream, {
+      as: 'streams',
+      foreignKey: 'userId',
+      constraints: false,
+    });
   }
 }
 
