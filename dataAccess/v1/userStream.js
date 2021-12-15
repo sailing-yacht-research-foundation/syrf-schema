@@ -92,11 +92,11 @@ exports.update = async (
     {},
     ivsChannelName ? { ivsChannelName } : {},
     privateStream ? { privateStream } : {},
-    isLive ? { isLive } : {},
+    isLive !== undefined ? { isLive } : {},
     latencyMode ? { latencyMode } : {},
     ivsType ? { ivsType } : {},
   );
-  const [updateCount] = await db.UserFollower.update(updateParams, {
+  const [updateCount] = await db.UserStream.update(updateParams, {
     where: {
       id,
     },
