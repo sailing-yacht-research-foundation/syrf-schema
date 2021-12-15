@@ -1,6 +1,6 @@
 'use strict';
 
-const { ivsLatencyMode, ivsType } = require('../enums');
+const { ivsLatencyMode, ivsTypeEnum } = require('../enums');
 
 const tableName = 'UserStreams';
 
@@ -68,9 +68,9 @@ module.exports = {
               defaultValue: ivsLatencyMode.LOW,
             },
             ivsType: {
-              type: Sequelize.DataTypes.ENUM(Object.values(ivsType)),
+              type: Sequelize.DataTypes.ENUM(Object.values(ivsTypeEnum)),
               allowNull: false,
-              defaultValue: ivsType.STANDARD,
+              defaultValue: ivsTypeEnum.STANDARD,
             },
             createdAt: {
               type: Sequelize.DataTypes.DATE,

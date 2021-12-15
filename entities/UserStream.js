@@ -1,5 +1,5 @@
 const { DataTypes } = require('sequelize');
-const { ivsLatencyMode, ivsType } = require('../enums');
+const { ivsLatencyMode, ivsTypeEnum } = require('../enums');
 const ModelBase = require('../ModelBase');
 
 class UserStream extends ModelBase {
@@ -9,6 +9,11 @@ class UserStream extends ModelBase {
       as: 'user',
       constraints: false,
       foreignKey: 'userId',
+    });
+    this.belongsTo(models.CompetitionUnit, {
+      as: 'competition',
+      constraints: false,
+      foreignKey: 'competitionUnitId',
     });
   }
 }
@@ -66,9 +71,9 @@ module.exports = (sequelize) => {
         defaultValue: ivsLatencyMode.LOW,
       },
       ivsType: {
-        type: DataTypes.ENUM(Object.values(ivsType)),
+        type: DataTypes.ENUM(Object.values(ivsTypeEnum)),
         allowNull: false,
-        defaultValue: ivsType.STANDARD,
+        defaultValue: ivsTypeEnum.STANDARD,
       },
       createdAt: {
         type: DataTypes.DATE,

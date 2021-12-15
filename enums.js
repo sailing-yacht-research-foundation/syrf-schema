@@ -224,7 +224,7 @@ const ivsLatencyMode = {
   NORMAL: 'NORMAL',
   LOW: 'LOW',
 };
-const ivsType = {
+const ivsTypeEnum = {
   BASIC: 'BASIC',
   STANDARD: 'STANDARD',
 };
@@ -256,5 +256,5 @@ module.exports = {
   participantEditTypes,
   redisCacheKeys,
   ivsLatencyMode,
-  ivsType,
+  ivsTypeEnum,
 };
