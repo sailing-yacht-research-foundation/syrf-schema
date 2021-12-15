@@ -1,18 +1,17 @@
 const db = require('../../index');
 const { Op } = require('../../index');
 
-exports.getStreams = async (paging, { competitionUnitId, isLive }) => {
+exports.getStreams = async (paging) => {
   let where = Object.assign(
     {},
-    { isLive },
-    competitionUnitId ? { competitionUnitId } : {},
+    paging.query
+      ? {
+          ['$user.name$']: {
+            [Op.iLike]: `%${paging.query}%`,
+          },
+        }
+      : {},
   );
-
-  if (paging.query) {
-    where['$user.name$'] = {
-      [Op.iLike]: `%${paging.query}%`,
-    };
-  }
 
   const result = await db.UserStream.findAllWithPaging(
     {
