@@ -37,6 +37,10 @@ module.exports = {
               type: Sequelize.DataTypes.UUID,
               allowNull: false,
             },
+            streamName: {
+              type: Sequelize.DataTypes.STRING,
+              allowNull: false,
+            },
             ivsChannelArn: {
               type: Sequelize.DataTypes.STRING,
               allowNull: false,

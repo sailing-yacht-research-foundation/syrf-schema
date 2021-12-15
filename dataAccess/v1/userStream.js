@@ -47,6 +47,7 @@ exports.insert = async (data, transaction) => {
     options = { transaction };
   }
   const {
+    streamName,
     userId,
     isLive,
     competitionUnitId,
@@ -54,6 +55,7 @@ exports.insert = async (data, transaction) => {
     ivsChannelName,
     ivsIngestEndpoint,
     ivsPlaybackUrl,
+    streamKey,
     streamKeyArn,
     privateStream,
     latencyMode,
@@ -64,10 +66,12 @@ exports.insert = async (data, transaction) => {
       userId,
       isLive,
       competitionUnitId,
+      streamName,
       ivsChannelArn,
       ivsChannelName,
       ivsIngestEndpoint,
       ivsPlaybackUrl,
+      streamKey,
       streamKeyArn,
       privateStream,
       latencyMode,
