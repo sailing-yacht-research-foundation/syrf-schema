@@ -44,6 +44,10 @@ module.exports = (sequelize) => {
         type: DataTypes.STRING,
         allowNull: false,
       },
+      saveRecording: {
+        type: DataTypes.BOOLEAN,
+        allowNull: false,
+      },
       ivsChannelArn: {
         type: DataTypes.STRING,
         allowNull: false,

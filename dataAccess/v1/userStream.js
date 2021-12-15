@@ -57,9 +57,10 @@ exports.insert = async (data, transaction) => {
     ivsPlaybackUrl,
     streamKey,
     streamKeyArn,
-    privateStream,
+    privateStream = false,
     latencyMode,
     ivsType,
+    saveRecording = false,
   } = data;
   const result = await db.UserStream.create(
     {
@@ -67,6 +68,7 @@ exports.insert = async (data, transaction) => {
       isLive,
       competitionUnitId,
       streamName,
+      saveRecording,
       ivsChannelArn,
       ivsChannelName,
       ivsIngestEndpoint,
