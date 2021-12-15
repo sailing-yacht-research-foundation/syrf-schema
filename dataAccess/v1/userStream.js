@@ -31,6 +31,25 @@ exports.getStreams = async (paging, { competitionUnitId, isLive }) => {
   return result;
 };
 
+exports.getStreamByUser = async (userId, isLive) => {
+  const result = await db.UserStream.findAll({
+    include: [
+      {
+        as: 'user',
+        model: db.UserProfile,
+        attributes: ['id', 'name', 'avatar'],
+        required: true,
+      },
+    ],
+    where: Object.assign(
+      {},
+      { userId },
+      isLive !== undefined ? { isLive } : {},
+    ),
+  });
+  return result;
+};
+
 exports.getById = async (id) => {
   const result = await db.UserStream.findOne({
     where: {
