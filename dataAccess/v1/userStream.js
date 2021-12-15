@@ -2,10 +2,11 @@ const db = require('../../index');
 const { Op } = require('../../index');
 
 exports.getStreams = async (paging, { competitionUnitId, isLive }) => {
-  let where = {
-    competitionUnitId,
-    isLive,
-  };
+  let where = Object.assign(
+    {},
+    { isLive },
+    competitionUnitId ? { competitionUnitId } : {},
+  );
 
   if (paging.query) {
     where['$user.name$'] = {

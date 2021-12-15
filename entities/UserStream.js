@@ -56,6 +56,10 @@ module.exports = (sequelize) => {
         type: DataTypes.STRING,
         allowNull: false,
       },
+      streamKey: {
+        type: DataTypes.STRING,
+        allowNull: false,
+      },
       streamKeyArn: {
         type: DataTypes.STRING,
         allowNull: false,

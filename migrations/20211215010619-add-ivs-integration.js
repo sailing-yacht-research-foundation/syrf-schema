@@ -53,6 +53,10 @@ module.exports = {
               type: Sequelize.DataTypes.STRING,
               allowNull: false,
             },
+            streamKey: {
+              type: Sequelize.DataTypes.STRING,
+              allowNull: false,
+            },
             streamKeyArn: {
               type: Sequelize.DataTypes.STRING,
               allowNull: false,
