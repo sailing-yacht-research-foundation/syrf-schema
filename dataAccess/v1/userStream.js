@@ -32,14 +32,6 @@ exports.getStreams = async (paging) => {
 
 exports.getStreamByUser = async (userId, isLive) => {
   const result = await db.UserStream.findAll({
-    include: [
-      {
-        as: 'user',
-        model: db.UserProfile,
-        attributes: ['id', 'name', 'avatar'],
-        required: true,
-      },
-    ],
     where: Object.assign(
       {},
       { userId },
@@ -104,7 +96,7 @@ exports.insert = async (data, transaction) => {
 };
 
 exports.update = async (
-  id,
+  { id, competitionUnitId },
   { latencyMode, ivsType, ivsChannelName, privateStream, isLive },
   transaction,
 ) => {
@@ -117,9 +109,11 @@ exports.update = async (
     ivsType ? { ivsType } : {},
   );
   const [updateCount] = await db.UserStream.update(updateParams, {
-    where: {
-      id,
-    },
+    where: Object.assign(
+      {},
+      id ? { id } : {},
+      competitionUnitId ? { competitionUnitId } : {},
+    ),
     transaction,
   });
 
