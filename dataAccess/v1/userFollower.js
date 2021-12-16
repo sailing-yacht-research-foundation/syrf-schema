@@ -74,6 +74,19 @@ exports.getByValues = async (userId, followerId) => {
   return result;
 };
 
+exports.getBulkIsFollowed = async (userIdList, followerId) => {
+  const result = await db.UserFollower.findAll({
+    where: {
+      userId: {
+        [Op.in]: userIdList,
+      },
+      followerId,
+    },
+  });
+
+  return result;
+};
+
 exports.insert = async ({ userId, followerId, status }, transaction) => {
   let options;
   if (transaction) {
