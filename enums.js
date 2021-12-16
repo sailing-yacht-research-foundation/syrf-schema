@@ -220,6 +220,15 @@ const redisCacheKeys = {
   LATEST_PP_VERSION: 'pp_version',
 };
 
+const ivsLatencyMode = {
+  NORMAL: 'NORMAL',
+  LOW: 'LOW',
+};
+const ivsTypeEnum = {
+  BASIC: 'BASIC',
+  STANDARD: 'STANDARD',
+};
+
 module.exports = {
   competitionUnitStatus,
   calendarEventStatus,
@@ -246,4 +255,6 @@ module.exports = {
   expeditionBoatSides,
   participantEditTypes,
   redisCacheKeys,
+  ivsLatencyMode,
+  ivsTypeEnum,
 };

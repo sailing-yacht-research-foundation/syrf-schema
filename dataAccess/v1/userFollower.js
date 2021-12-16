@@ -74,6 +74,19 @@ exports.getByValues = async (userId, followerId) => {
   return result;
 };
 
+exports.getBulkIsFollowed = async (userIdList, followerId) => {
+  const result = await db.UserFollower.findAll({
+    where: {
+      userId: {
+        [Op.in]: userIdList,
+      },
+      followerId,
+    },
+  });
+
+  return result;
+};
+
 exports.insert = async ({ userId, followerId, status }, transaction) => {
   let options;
   if (transaction) {
@@ -169,6 +182,8 @@ exports.getTopCountryUser = async (paging, { locale, userId }) => {
         'id',
         'name',
         'avatar',
+        'isPrivate',
+        'locale',
         [
           db.sequelize.literal(
             `(SELECT COUNT(*) FROM "UserFollowers" AS "folDB" WHERE "UserProfile"."id" = "folDB"."userId" AND "folDB"."status" = '${followerStatus.accepted}')`,
@@ -211,6 +226,8 @@ exports.getTopVelocityUser = async (paging, { locale, userId }) => {
         'id',
         'name',
         'avatar',
+        'isPrivate',
+        'locale',
         [
           db.sequelize.literal(
             `(SELECT COUNT(*) FROM "UserFollowers" AS "folDB" WHERE "UserProfile"."id" = "folDB"."userId" AND "folDB"."status" = '${

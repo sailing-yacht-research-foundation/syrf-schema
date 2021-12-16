@@ -50,18 +50,23 @@ exports.getMeta = ({ updatedById, updatedAt, createdById, createdAt } = {}) => {
   };
 };
 
-exports.validateSqlDataAuth = ({ editors = [], ownerId = '' } = {}, userId) => {
+exports.validateSqlDataAuth = (
+  { editors = [], ownerId = '', owner = {} } = {},
+  userId,
+) => {
   let result = {
     isOwner: false,
     isEditor: false,
   };
+
+  if (!userId) return result;
 
   if (Array.isArray(editors) && editors.length > 0) {
     const idIndex = editors.findIndex((t) => t.id === userId);
     result.isEditor = idIndex > -1;
   }
 
-  result.isOwner = ownerId === userId;
+  result.isOwner = ownerId === userId || owner.id === userId;
 
   return result;
 };
@@ -174,6 +179,7 @@ exports.emptyPagingResponse = ({
   query,
   draw,
   filters = [],
+  // eslint-disable-next-line no-unused-vars
   multiSort = [],
 } = {}) => {
   let pagingSize = Math.max(size, 1);
