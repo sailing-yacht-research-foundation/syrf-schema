@@ -2,17 +2,6 @@ const db = require('../../index');
 const { Op } = require('../../index');
 
 exports.getStreams = async (paging) => {
-  let where = Object.assign(
-    {},
-    paging.query
-      ? {
-          ['$user.name$']: {
-            [Op.iLike]: `%${paging.query}%`,
-          },
-        }
-      : {},
-  );
-
   const result = await db.UserStream.findAllWithPaging(
     {
       include: [
@@ -23,7 +12,16 @@ exports.getStreams = async (paging) => {
           required: true,
         },
       ],
-      where,
+      where: Object.assign(
+        {},
+        paging.query
+          ? {
+              ['$user.name$']: {
+                [Op.iLike]: `%${paging.query}%`,
+              },
+            }
+          : {},
+      ),
     },
     paging,
   );
