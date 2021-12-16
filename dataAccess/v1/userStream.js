@@ -39,6 +39,17 @@ exports.getStreamByUser = async (userId, isLive) => {
   return result;
 };
 
+exports.getStreamByCompetition = async (competitionUnitId, isLive) => {
+  const result = await db.UserStream.findAll({
+    where: Object.assign(
+      {},
+      { competitionUnitId },
+      isLive !== undefined ? { isLive } : {},
+    ),
+  });
+  return result;
+};
+
 exports.getById = async (id) => {
   const result = await db.UserStream.findOne({
     where: {
@@ -116,4 +127,20 @@ exports.update = async (
   });
 
   return updateCount;
+};
+
+exports.bulkStopStream = async (idList, transaction) => {
+  const [updateCount, affectedRows] = await db.UserStream.update(
+    { isLive: false },
+    {
+      where: {
+        id: {
+          [db.Op.in]: idList,
+        },
+      },
+      transaction,
+    },
+  );
+
+  return { updateCount, stoppedIds: affectedRows.map((row) => row.id) };
 };
