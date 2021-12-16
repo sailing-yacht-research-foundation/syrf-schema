@@ -139,6 +139,7 @@ exports.bulkStopStream = async (idList, transaction) => {
         },
       },
       transaction,
+      returning: true,
     },
   );
 
