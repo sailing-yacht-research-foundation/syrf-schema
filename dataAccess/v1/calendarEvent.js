@@ -1,6 +1,7 @@
 const uuid = require('uuid');
 const competitionUnitDAL = require('./competitionUnit');
 const vesselParticipantDAL = require('./vesselParticipant');
+const vesselParticipantCrewDAL = require('./vesselParticipantCrew');
 const vesselParticipantGroupDAL = require('./vesselParticipantGroup');
 const participantDAL = require('./participant');
 const courseDAL = require('./course');
@@ -349,15 +350,6 @@ exports.delete = async (id, transaction) => {
     db.Course.findAll(param),
   ]);
 
-  const crews = await db.VesselParticipantCrew.findAll({
-    where: {
-      participantId: {
-        [db.Op.in]: participants.map((row) => row.id),
-      },
-    },
-    attributes: ['id'],
-  });
-
   const vps = await db.VesselParticipant.findAll({
     where: {
       vesselParticipantGroupId: {
@@ -399,14 +391,6 @@ exports.delete = async (id, transaction) => {
     db.CalendarGroupEditor.destroy({
       where: {
         calendarEventId: id,
-      },
-      transaction,
-    }),
-    db.VesselParticipantCrewTrackJson.destroy({
-      where: {
-        vesselParticipantCrewId: {
-          [db.Op.in]: crews.map((row) => row.id),
-        },
       },
       transaction,
     }),
