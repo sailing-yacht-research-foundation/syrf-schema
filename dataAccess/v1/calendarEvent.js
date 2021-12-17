@@ -349,6 +349,15 @@ exports.delete = async (id, transaction) => {
     db.Course.findAll(param),
   ]);
 
+  const crews = await db.VesselParticipantCrew.findAll({
+    where: {
+      participantId: {
+        [db.Op.in]: participants.map((row) => row.id),
+      },
+    },
+    attributes: ['id'],
+  });
+
   const vps = await db.VesselParticipant.findAll({
     where: {
       vesselParticipantGroupId: {
@@ -360,11 +369,11 @@ exports.delete = async (id, transaction) => {
     transaction,
   });
 
-  await competitionUnitDAL.delete(
-    races.map((t) => t.id),
-    transaction,
-  );
   await Promise.all([
+    competitionUnitDAL.delete(
+      races.map((t) => t.id),
+      transaction,
+    ),
     vesselParticipantGroupDAL.delete(
       vpgs.map((t) => t.id),
       transaction,
@@ -388,6 +397,28 @@ exports.delete = async (id, transaction) => {
       transaction,
     }),
     db.CalendarGroupEditor.destroy({
+      where: {
+        calendarEventId: id,
+      },
+      transaction,
+    }),
+    db.VesselParticipantCrewTrackJson.destroy({
+      where: {
+        vesselParticipantCrewId: {
+          [db.Op.in]: crews.map((row) => row.id),
+        },
+      },
+      transaction,
+    }),
+    db.VesselParticipantTrackJson.destroy({
+      where: {
+        competitionUnitId: {
+          [db.Op.in]: races.map((t) => t.id),
+        },
+      },
+      transaction,
+    }),
+    db.TrackHistory.destroy({
       where: {
         calendarEventId: id,
       },
