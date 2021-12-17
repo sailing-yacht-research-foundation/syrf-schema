@@ -360,11 +360,11 @@ exports.delete = async (id, transaction) => {
     transaction,
   });
 
-  await competitionUnitDAL.delete(
-    races.map((t) => t.id),
-    transaction,
-  );
   await Promise.all([
+    competitionUnitDAL.delete(
+      races.map((t) => t.id),
+      transaction,
+    ),
     vesselParticipantGroupDAL.delete(
       vpgs.map((t) => t.id),
       transaction,
@@ -388,6 +388,12 @@ exports.delete = async (id, transaction) => {
       transaction,
     }),
     db.CalendarGroupEditor.destroy({
+      where: {
+        calendarEventId: id,
+      },
+      transaction,
+    }),
+    db.TrackHistory.destroy({
       where: {
         calendarEventId: id,
       },

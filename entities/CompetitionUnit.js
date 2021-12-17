@@ -35,6 +35,11 @@ class CompetitionUnit extends ModelBase {
       foreignKey: 'competitionUnitId',
       constraints: false,
     });
+    this.hasMany(models.VesselParticipantTrackJson, {
+      as: 'vpTrackJsons',
+      foreignKey: 'competitionUnitId',
+      constraints: false,
+    });
     this.hasMany(models.UserStream, {
       as: 'streams',
       foreignKey: 'competitionUnitId',
