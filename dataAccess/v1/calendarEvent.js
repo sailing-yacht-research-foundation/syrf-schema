@@ -1,7 +1,6 @@
 const uuid = require('uuid');
 const competitionUnitDAL = require('./competitionUnit');
 const vesselParticipantDAL = require('./vesselParticipant');
-const vesselParticipantCrewDAL = require('./vesselParticipantCrew');
 const vesselParticipantGroupDAL = require('./vesselParticipantGroup');
 const participantDAL = require('./participant');
 const courseDAL = require('./course');
@@ -391,14 +390,6 @@ exports.delete = async (id, transaction) => {
     db.CalendarGroupEditor.destroy({
       where: {
         calendarEventId: id,
-      },
-      transaction,
-    }),
-    db.VesselParticipantTrackJson.destroy({
-      where: {
-        competitionUnitId: {
-          [db.Op.in]: races.map((t) => t.id),
-        },
       },
       transaction,
     }),

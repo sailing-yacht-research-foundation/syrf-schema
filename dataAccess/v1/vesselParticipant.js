@@ -266,7 +266,15 @@ exports.delete = async (id, transaction) => {
   };
 
   const [count] = await Promise.all([
-    await db.VesselParticipant.destroy({
+    db.VesselParticipantTrackJson.destroy({
+      where: {
+        vesselParticipantId: {
+          [db.Op.in]: id,
+        },
+      },
+      transaction,
+    }),
+    db.VesselParticipant.destroy({
       where: {
         id: {
           [db.Op.in]: id,
