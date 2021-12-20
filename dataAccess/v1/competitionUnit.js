@@ -319,3 +319,48 @@ exports.addOpenGraphImage = async (competitionUnitIds, data, transaction) => {
     },
   );
 };
+
+exports.getTracksCountByCompetition = async (competitionIds) => {
+  const competitions = await db.CompetitionUnit.findAll({
+    attributes: [
+      'id',
+      [
+        db.sequelize.fn('count', db.sequelize.col('"vpTrackJsons"."id"')),
+        'trackCount',
+      ],
+    ],
+    where: {
+      id: {
+        [Op.in]: competitionIds,
+      },
+    },
+    include: [
+      {
+        model: db.VesselParticipantTrackJson,
+        as: 'vpTrackJsons',
+        attributes: [],
+        required: false,
+      },
+    ],
+    subQuery: false,
+    group: ['"CompetitionUnit"."id"'],
+  });
+  let trackCount = 0;
+  competitions.forEach((row) => {
+    trackCount += Number(row.getDataValue('trackCount'));
+  });
+
+  return trackCount;
+};
+
+exports.update = async (id, data, transaction) => {
+  const [updateCount, updatedData] = await db.CompetitionUnit.update(data, {
+    where: {
+      id,
+    },
+    returning: true,
+    transaction,
+  });
+
+  return { updateCount, updatedData };
+};
