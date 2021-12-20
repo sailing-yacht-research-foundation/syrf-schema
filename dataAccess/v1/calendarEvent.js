@@ -560,6 +560,7 @@ exports.getUserEvents = async (paging, userId) => {
               attributes: ['id', 'userId'],
               where: {
                 userId,
+                status: groupMemberStatus.accepted,
               },
             },
           ],
