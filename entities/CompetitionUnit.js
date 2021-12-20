@@ -81,6 +81,12 @@ module.exports = (sequelize) => {
       isCompleted: {
         type: DataTypes.BOOLEAN,
       },
+      isSavedByEngine: {
+        type: DataTypes.BOOLEAN,
+        defaultValue: false,
+        comment:
+          'Flag to check if competition has been run and saved by Analysis Engine',
+      },
       boundingBox: {
         type: DataTypes.GEOMETRY('POLYGON', 4326),
       },
