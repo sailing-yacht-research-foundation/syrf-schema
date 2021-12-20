@@ -5,7 +5,7 @@ const { addHours } = require('date-fns');
 
 const VELOCITY_TIME_OFFSET = -48;
 
-exports.getFollowers = async (paging, { userId, status }) => {
+exports.getFollowers = async (paging, { userId, status, reqUserId }) => {
   let where = {
     userId,
     status,
@@ -25,16 +25,28 @@ exports.getFollowers = async (paging, { userId, status }) => {
           model: db.UserProfile,
           attributes: ['id', 'name', 'email', 'avatar'],
           required: true,
+          include: [
+            {
+              as: 'follower',
+              model: db.UserFollower,
+              attributes: ['status'],
+              required: false,
+              where: {
+                followerId: reqUserId,
+              },
+            },
+          ],
         },
       ],
       where,
+      subQuery: false,
     },
     paging,
   );
   return result;
 };
 
-exports.getFollowing = async (paging, { followerId, status }) => {
+exports.getFollowing = async (paging, { followerId, status, reqUserId }) => {
   let where = {
     followerId,
     status,
@@ -54,9 +66,21 @@ exports.getFollowing = async (paging, { followerId, status }) => {
           model: db.UserProfile,
           attributes: ['id', 'name', 'email', 'avatar'],
           required: true,
+          include: [
+            {
+              as: 'follower',
+              model: db.UserFollower,
+              attributes: ['status'],
+              required: false,
+              where: {
+                followerId: reqUserId,
+              },
+            },
+          ],
         },
       ],
       where,
+      subQuery: false,
     },
     paging,
   );
