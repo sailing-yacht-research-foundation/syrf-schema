@@ -570,7 +570,7 @@ exports.getUserEvents = async (paging, userId) => {
         {
           model: db.Participant,
           as: 'participants',
-          attributes: ['id'],
+          attributes: ['id', 'userProfileId'],
           where: {
             userProfileId: userId,
           },
@@ -582,8 +582,6 @@ exports.getUserEvents = async (paging, userId) => {
       },
       where,
       order,
-      limit: 10,
-      offset: 0,
       // Note: This line here is the key for this query to work without having to use aggregate subquery in attributes. For future reference so we don't waste time looking for ways to query with paging
       // Reference: https://stackoverflow.com/questions/43729254/sequelize-limit-and-offset-incorrect-placement-in-query
       subQuery: false,
