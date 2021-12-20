@@ -121,6 +121,9 @@ module.exports = (sequelize) => {
       scrapedUrl: {
         type: DataTypes.STRING,
       },
+      handicap: {
+        type: DataTypes.STRING,
+      },
     },
     {
       modelName: 'CompetitionUnit',
