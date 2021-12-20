@@ -570,7 +570,7 @@ exports.getUserEvents = async (paging, userId) => {
         {
           model: db.Participant,
           as: 'participants',
-          attributes: ['id'],
+          attributes: ['id', 'userProfileId'],
           where: {
             userProfileId: userId,
           },
