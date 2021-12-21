@@ -8,7 +8,14 @@ const include = [
   {
     as: 'calendarEvent',
     model: db.CalendarEvent,
-    attributes: ['id', 'name', 'isPrivate', 'isOpen', 'status'],
+    attributes: [
+      'id',
+      'name',
+      'isPrivate',
+      'isOpen',
+      'status',
+      'allowRegistration',
+    ],
     include: [
       {
         model: db.UserProfile,
