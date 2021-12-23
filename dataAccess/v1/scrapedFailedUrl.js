@@ -6,3 +6,23 @@ exports.create = async (data, transaction) => {
     transaction,
   });
 };
+
+exports.getAll = async (source) => {
+  return await db.ScrapedFailedUrl.findAll({
+    attributes: ['url', 'error'],
+    raw: true,
+    where: {
+      source,
+    },
+  });
+}
+
+exports.getByUrl = async (url) => {
+  return await db.ScrapedFailedUrl.findAll({
+    attributes: ['url', 'originalId'],
+    raw: true,
+    where: {
+      url,
+    },
+  });
+}
