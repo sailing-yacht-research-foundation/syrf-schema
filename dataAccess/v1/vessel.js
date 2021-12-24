@@ -116,6 +116,40 @@ exports.getByVesselIdAndSource = async (vesselIds, source) => {
   });
 };
 
+exports.getExistingVesselByCalendarEvent = async (calendarEventId) => {
+  const vesselParticipantGroups = await db.VesselParticipantGroup.findAll({
+    attributes: ['id'],
+    include: [
+      {
+        model: db.VesselParticipant,
+        as: 'vesselParticipants',
+        attributes: ['id', 'vesselId'],
+        required: true,
+        include: [
+          {
+            model: db.Vessel,
+            as: 'vessel',
+            attributes: ['id', 'vesselId'],
+            required: true,
+          }
+        ]
+      },
+    ],
+    where: { calendarEventId }
+  });
+  if (!vesselParticipantGroups.length) {
+    return [];
+  }
+  const vessels = [];
+
+  for (const group of vesselParticipantGroups) {
+    for (const vesselParticipant of group.vesselParticipants) {
+      vessels.push(vesselParticipant.vessel);
+    }
+  }
+  return vessels;
+};
+
 exports.bulkCreate = async (data, transaction) => {
   if (data.length === 0) {
     return [];
