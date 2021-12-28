@@ -295,7 +295,11 @@ exports.getRaces = async (id, pagination) => {
   return result;
 };
 
-exports.getByUserAndEvent = async (userProfileId, calendarEventId) => {
+exports.getByUserAndEvent = async (
+  userProfileId,
+  calendarEventId,
+  transaction,
+) => {
   const result = await db.Participant.findOne({
     where: {
       userProfileId,
@@ -307,9 +311,10 @@ exports.getByUserAndEvent = async (userProfileId, calendarEventId) => {
         as: 'event',
       },
     ],
+    transaction,
   });
 
-  return result;
+  return result?.toJSON();
 };
 
 exports.bulkCreate = async (data, transaction) => {
@@ -347,6 +352,17 @@ exports.updateUserlessParticipants = async (
       transaction,
     },
   );
+
+  return updateCount;
+};
+
+exports.update = async (id, data, transaction) => {
+  const [updateCount] = await db.Participant.update(data, {
+    where: {
+      id,
+    },
+    transaction,
+  });
 
   return updateCount;
 };
