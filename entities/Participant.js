@@ -1,5 +1,6 @@
 const { DataTypes } = require('sequelize');
 const ModelBase = require('../ModelBase');
+const { participantInvitationStatus } = require('../enums');
 
 class Participant extends ModelBase {
   static associate(models) {
@@ -45,6 +46,10 @@ module.exports = (sequelize) => {
       },
       userProfileId: {
         type: DataTypes.UUID,
+      },
+      invitationStatus: {
+        type: DataTypes.ENUM(Object.values(participantInvitationStatus)),
+        allowNull: false,
       },
     },
     {

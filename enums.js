@@ -229,6 +229,12 @@ const ivsTypeEnum = {
   STANDARD: 'STANDARD',
 };
 
+const participantInvitationStatus = {
+  INVITED: 'INVITED',
+  ACCEPTED: 'ACCEPTED',
+  REJECTED: 'REJECTED',
+};
+
 module.exports = {
   competitionUnitStatus,
   calendarEventStatus,
@@ -257,4 +263,5 @@ module.exports = {
   redisCacheKeys,
   ivsLatencyMode,
   ivsTypeEnum,
+  participantInvitationStatus,
 };
