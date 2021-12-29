@@ -1,5 +1,10 @@
 const uuid = require('uuid');
-const { errorCodes, statusCodes } = require('../../enums');
+const {
+  errorCodes,
+  statusCodes,
+  participantInvitationStatus,
+  calendarEventStatus,
+} = require('../../enums');
 const db = require('../../index');
 const {
   includeMeta,
@@ -365,4 +370,41 @@ exports.update = async (id, data, transaction) => {
   });
 
   return updateCount;
+};
+
+exports.getInvitation = async (paging, userId) => {
+  const result = await db.Participant.findAllWithPaging(
+    {
+      where: {
+        userProfileId: userId,
+        invitationStatus: participantInvitationStatus.INVITED,
+      },
+      include: [
+        {
+          as: 'event',
+          model: db.CalendarEvent,
+          required: true,
+          where: {
+            status: {
+              [db.Op.notIn]: [
+                calendarEventStatus.DRAFT,
+                calendarEventStatus.COMPLETED,
+              ],
+            },
+          },
+          attributes: [
+            'id',
+            'name',
+            'isOpen',
+            'allowRegistration',
+            'approximateStartTime',
+            'approximateStartTime_utc',
+            'approximateStartTime_zone',
+          ],
+        },
+      ],
+    },
+    paging,
+  );
+  return result;
 };
