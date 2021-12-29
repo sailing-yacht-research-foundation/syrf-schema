@@ -234,6 +234,7 @@ const participantInvitationStatus = {
   ACCEPTED: 'ACCEPTED',
   REJECTED: 'REJECTED',
   SELF_REGISTERED: 'SELF_REGISTERED',
+  BLOCKED: 'BLOCKED',
 };
 
 module.exports = {
