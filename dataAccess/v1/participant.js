@@ -414,3 +414,14 @@ exports.getInvitation = async (paging, userId) => {
   );
   return result;
 };
+
+exports.removeFromAllVesselParticipant = async (id, transaction) => {
+  const result = await db.VesselParticipantCrew.destroy({
+    where: {
+      participantId: id,
+    },
+    transaction,
+  });
+
+  return result;
+};
