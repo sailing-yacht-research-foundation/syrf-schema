@@ -168,6 +168,12 @@ exports.getByUserId = async (id, pagination, isPrivate = null) => {
     {
       where: {
         userProfileId: id,
+        invitationStatus: {
+          [db.Op.in]: [
+            participantInvitationStatus.ACCEPTED,
+            participantInvitationStatus.SELF_REGISTERED,
+          ],
+        },
       },
       include: [eventInclude],
     },
