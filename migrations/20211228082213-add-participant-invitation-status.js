@@ -40,7 +40,7 @@ module.exports = {
           },
           {
             where: {
-              invitationStatus: null,
+              invitationStatus: participantInvitationStatus.INVITED,
             },
             transaction,
           },
