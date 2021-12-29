@@ -43,13 +43,18 @@ module.exports = {
    * @param {Sequelize} Sequelize
    * @returns
    */
-  down: async (queryInterface) => {
+  down: async (queryInterface, Sequelize) => {
     const table = await queryInterface.describeTable(tableName);
     if (table.invitationStatus) {
-      await queryInterface.removeColumn(tableName, 'invitationStatus');
-      await queryInterface.sequelize.query(
-        'DROP TYPE IF EXISTS "enum_Participants_invitationStatus";',
-      );
+      await Sequelize.transaction(async (transaction) => {
+        await queryInterface.removeColumn(tableName, 'invitationStatus', {
+          transaction,
+        });
+        await queryInterface.sequelize.query(
+          'DROP TYPE IF EXISTS "enum_Participants_invitationStatus";',
+          { transaction },
+        );
+      });
     }
   },
 };
