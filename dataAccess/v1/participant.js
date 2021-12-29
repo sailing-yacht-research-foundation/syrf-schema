@@ -1,5 +1,10 @@
 const uuid = require('uuid');
-const { errorCodes, statusCodes } = require('../../enums');
+const {
+  errorCodes,
+  statusCodes,
+  participantInvitationStatus,
+  calendarEventStatus,
+} = require('../../enums');
 const db = require('../../index');
 const {
   includeMeta,
@@ -163,6 +168,12 @@ exports.getByUserId = async (id, pagination, isPrivate = null) => {
     {
       where: {
         userProfileId: id,
+        invitationStatus: {
+          [db.Op.in]: [
+            participantInvitationStatus.ACCEPTED,
+            participantInvitationStatus.SELF_REGISTERED,
+          ],
+        },
       },
       include: [eventInclude],
     },
@@ -295,7 +306,11 @@ exports.getRaces = async (id, pagination) => {
   return result;
 };
 
-exports.getByUserAndEvent = async (userProfileId, calendarEventId) => {
+exports.getByUserAndEvent = async (
+  userProfileId,
+  calendarEventId,
+  transaction,
+) => {
   const result = await db.Participant.findOne({
     where: {
       userProfileId,
@@ -307,9 +322,10 @@ exports.getByUserAndEvent = async (userProfileId, calendarEventId) => {
         as: 'event',
       },
     ],
+    transaction,
   });
 
-  return result;
+  return result?.toJSON();
 };
 
 exports.bulkCreate = async (data, transaction) => {
@@ -349,4 +365,52 @@ exports.updateUserlessParticipants = async (
   );
 
   return updateCount;
+};
+
+exports.update = async (id, data, transaction) => {
+  const [updateCount] = await db.Participant.update(data, {
+    where: {
+      id,
+    },
+    transaction,
+  });
+
+  return updateCount;
+};
+
+exports.getInvitation = async (paging, userId) => {
+  const result = await db.Participant.findAllWithPaging(
+    {
+      where: {
+        userProfileId: userId,
+        invitationStatus: participantInvitationStatus.INVITED,
+      },
+      include: [
+        {
+          as: 'event',
+          model: db.CalendarEvent,
+          required: true,
+          where: {
+            status: {
+              [db.Op.notIn]: [
+                calendarEventStatus.DRAFT,
+                calendarEventStatus.COMPLETED,
+              ],
+            },
+          },
+          attributes: [
+            'id',
+            'name',
+            'isOpen',
+            'allowRegistration',
+            'approximateStartTime',
+            'approximateStartTime_utc',
+            'approximateStartTime_zone',
+          ],
+        },
+      ],
+    },
+    paging,
+  );
+  return result;
 };

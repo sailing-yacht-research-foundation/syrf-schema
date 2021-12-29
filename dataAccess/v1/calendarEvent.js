@@ -6,7 +6,11 @@ const participantDAL = require('./participant');
 const courseDAL = require('./course');
 
 const db = require('../../index');
-const { conversionValues, groupMemberStatus } = require('../../enums');
+const {
+  conversionValues,
+  groupMemberStatus,
+  participantInvitationStatus,
+} = require('../../enums');
 const { includeMeta, emptyPagingResponse } = require('../../utils/utils');
 
 const include = [
@@ -573,6 +577,12 @@ exports.getUserEvents = async (paging, userId) => {
           attributes: ['id', 'userProfileId'],
           where: {
             userProfileId: userId,
+            invitationStatus: {
+              [db.Op.in]: [
+                participantInvitationStatus.ACCEPTED,
+                participantInvitationStatus.SELF_REGISTERED,
+              ],
+            },
           },
           required: false,
         },
