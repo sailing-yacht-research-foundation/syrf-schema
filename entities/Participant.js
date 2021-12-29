@@ -49,6 +49,8 @@ module.exports = (sequelize) => {
       },
       invitationStatus: {
         type: DataTypes.ENUM(Object.values(participantInvitationStatus)),
+        allowNull: false,
+        defaultValue: participantInvitationStatus.INVITED,
       },
     },
     {

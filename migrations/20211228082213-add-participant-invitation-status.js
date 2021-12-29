@@ -19,23 +19,33 @@ module.exports = {
     const table = await queryInterface.describeTable(tableName);
 
     if (!table.invitationStatus) {
-      await queryInterface.addColumn(tableName, 'invitationStatus', {
-        type: Sequelize.DataTypes.ENUM(
-          Object.values(participantInvitationStatus),
-        ),
-      });
-
-      // update previous data to be accepted to prevent breaks
-      await db.Participant.update(
-        {
-          invitationStatus: participantInvitationStatus.ACCEPTED,
-        },
-        {
-          where: {
-            invitationStatus: null,
+      await queryInterface.sequelize.transaction(async (transaction) => {
+        await queryInterface.addColumn(
+          tableName,
+          'invitationStatus',
+          {
+            type: Sequelize.DataTypes.ENUM(
+              Object.values(participantInvitationStatus),
+            ),
+            allowNull: false,
+            defaultValue: participantInvitationStatus.INVITED,
           },
-        },
-      );
+          { transaction },
+        );
+
+        // update previous data to be accepted to prevent breaks
+        await db.Participant.update(
+          {
+            invitationStatus: participantInvitationStatus.ACCEPTED,
+          },
+          {
+            where: {
+              invitationStatus: null,
+            },
+            transaction,
+          },
+        );
+      });
     }
   },
   /**
@@ -46,7 +56,7 @@ module.exports = {
   down: async (queryInterface, Sequelize) => {
     const table = await queryInterface.describeTable(tableName);
     if (table.invitationStatus) {
-      await Sequelize.transaction(async (transaction) => {
+      await queryInterface.sequelize.transaction(async (transaction) => {
         await queryInterface.removeColumn(tableName, 'invitationStatus', {
           transaction,
         });
