@@ -39,6 +39,12 @@ class UserProfile extends ModelBase {
       foreignKey: 'userId',
       constraints: false,
     });
+
+    this.belongsTo(models.SubscriptionTier, {
+      as: 'subscription',
+      constraints: false,
+      foreignKey: 'subscriptionTier',
+    });
   }
 }
 
@@ -111,6 +117,22 @@ module.exports = (sequelize) => {
       },
       sailingNumber: {
         type: DataTypes.STRING,
+      },
+      stripeCustomerId: {
+        type: DataTypes.STRING,
+        allowNull: true,
+      },
+      stripeSubscriptionId: {
+        type: DataTypes.STRING,
+        allowNull: true,
+      },
+      subscriptionTier: {
+        type: DataTypes.STRING,
+        allowNull: true,
+      },
+      subscriptionExpireDate: {
+        type: DataTypes.DATE,
+        allowNull: true,
       },
     },
     {

@@ -236,6 +236,13 @@ const participantInvitationStatus = {
   SELF_REGISTERED: 'SELF_REGISTERED',
 };
 
+const stripeInterval = {
+  DAY: 'day',
+  WEEK: 'week',
+  MONTH: 'month',
+  YEAR: 'year',
+};
+
 module.exports = {
   competitionUnitStatus,
   calendarEventStatus,
@@ -265,4 +272,5 @@ module.exports = {
   ivsLatencyMode,
   ivsTypeEnum,
   participantInvitationStatus,
+  stripeInterval,
 };
