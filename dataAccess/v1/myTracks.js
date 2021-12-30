@@ -72,7 +72,13 @@ exports.getMyTracks = async (userId, isPrivate, pagination) => {
         {
           model: db.VesselParticipantCrewTrackJson,
           as: 'trackJson',
-          attributes: ['id', 'totalTraveledDistance', 'firstPosition'],
+          attributes: [
+            'id',
+            'totalTraveledDistance',
+            'firstPosition',
+            'startTime',
+            'endTime',
+          ],
           required: false,
           where: {
             competitionUnitId: {
