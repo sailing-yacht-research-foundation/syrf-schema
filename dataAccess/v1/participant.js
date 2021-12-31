@@ -414,3 +414,62 @@ exports.getInvitation = async (paging, userId) => {
   );
   return result;
 };
+
+exports.removeFromAllVesselParticipant = async (
+  id,
+  { deleteOrphanedVp = true } = {},
+  transaction = undefined,
+) => {
+  const toBeDeleted = await db.VesselParticipantCrew.findAll({
+    where: {
+      participantId: id,
+    },
+    include: [
+      {
+        model: db.VesselParticipant,
+        as: 'vesselParticipant',
+        include: [
+          {
+            model: db.Participant,
+            as: 'participants',
+          },
+        ],
+      },
+    ],
+    transaction,
+  });
+
+  const result = await db.VesselParticipantCrew.destroy({
+    where: {
+      participantId: id,
+    },
+    transaction,
+  });
+
+  if (deleteOrphanedVp) {
+    // get vessel participant id that only has the deleted participant as crew
+    let emptyVp = toBeDeleted
+      .map((t) => t.toJSON().vesselParticipant)
+      .filter(
+        (vp) =>
+          vp.participants?.filter((participant) => participant.id !== id)
+            .length < 1,
+      )
+      .map((vp) => vp.id);
+
+    // remove duplicates
+    emptyVp = Array.from(new Set(emptyVp));
+
+    // delete orphaned vessel participant
+    await db.VesselParticipant.destroy({
+      where: {
+        id: {
+          [db.Op.in]: emptyVp,
+        },
+      },
+      transaction,
+    });
+  }
+
+  return result;
+};
