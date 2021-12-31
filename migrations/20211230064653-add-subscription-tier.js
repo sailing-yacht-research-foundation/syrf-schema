@@ -97,12 +97,29 @@ module.exports = {
           { transaction },
         );
       }
+      if (!userTable.latestInvoice) {
+        await queryInterface.addColumn(
+          userTableName,
+          'latestInvoice',
+          {
+            type: Sequelize.DataTypes.STRING,
+            allowNull: true,
+          },
+          { transaction },
+        );
+      }
     });
   },
 
   down: async (queryInterface) => {
     await queryInterface.sequelize.transaction(async (transaction) => {
       await queryInterface.removeColumn(userTableName, 'subscriptionTier', {
+        transaction,
+      });
+      await queryInterface.removeColumn(userTableName, 'stripeCustomerId', {
+        transaction,
+      });
+      await queryInterface.removeColumn(userTableName, 'stripeSubscriptionId', {
         transaction,
       });
       await queryInterface.removeColumn(
@@ -112,6 +129,22 @@ module.exports = {
           transaction,
         },
       );
+      await queryInterface.removeColumn(userTableName, 'latestInvoice', {
+        transaction,
+      });
+
+      let tableInfo;
+      try {
+        tableInfo = await queryInterface.describeTable(subscriptionTableName);
+      } catch (err) {
+        tableInfo = null;
+      }
+
+      if (tableInfo) {
+        await queryInterface.dropTable(subscriptionTableName, {
+          transaction,
+        });
+      }
     });
   },
 };

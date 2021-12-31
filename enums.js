@@ -261,6 +261,14 @@ const stripeCheckoutStatus = {
   EXPIRED: 'expired',
 };
 
+const stripeInvoiceStatus = {
+  DRAFT: 'draft',
+  PAID: 'paid',
+  OPEN: 'open',
+  UNCOLLECTIBLE: 'uncollectible',
+  VOID: 'void',
+};
+
 module.exports = {
   competitionUnitStatus,
   calendarEventStatus,
@@ -294,4 +302,5 @@ module.exports = {
   stripePaymentStatus,
   stripeCheckoutMode,
   stripeCheckoutStatus,
+  stripeInvoiceStatus,
 };

@@ -134,6 +134,10 @@ module.exports = (sequelize) => {
         type: DataTypes.DATE,
         allowNull: true,
       },
+      latestInvoice: {
+        type: DataTypes.STRING,
+        allowNull: true,
+      },
     },
     {
       modelName: 'UserProfile',
