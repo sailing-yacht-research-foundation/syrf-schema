@@ -50,6 +50,10 @@ module.exports = (sequelize) => {
       groupImage: {
         type: DataTypes.STRING,
       },
+      stripeConnectedAccountId: {
+        type: DataTypes.STRING,
+        allowNull: true,
+      },
     },
     {
       modelName: 'Group',

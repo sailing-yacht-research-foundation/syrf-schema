@@ -2,6 +2,7 @@
 
 const userTableName = 'UserProfiles';
 const subscriptionTableName = 'SubscriptionTiers';
+const groupTableName = 'Groups';
 
 module.exports = {
   up: async (queryInterface, Sequelize) => {
@@ -108,6 +109,20 @@ module.exports = {
           { transaction },
         );
       }
+
+      const groupTable = await queryInterface.describeTable(groupTableName);
+
+      if (!groupTable.stripeConnectedAccountId) {
+        await queryInterface.addColumn(
+          groupTableName,
+          'stripeConnectedAccountId',
+          {
+            type: Sequelize.DataTypes.STRING,
+            allowNull: true,
+          },
+          { transaction },
+        );
+      }
     });
   },
 
@@ -132,6 +147,14 @@ module.exports = {
       await queryInterface.removeColumn(userTableName, 'latestInvoice', {
         transaction,
       });
+
+      await queryInterface.removeColumn(
+        groupTableName,
+        'stripeConnectedAccountId',
+        {
+          transaction,
+        },
+      );
 
       let tableInfo;
       try {
