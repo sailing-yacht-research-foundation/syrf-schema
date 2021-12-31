@@ -243,6 +243,24 @@ const stripeInterval = {
   YEAR: 'year',
 };
 
+const stripePaymentStatus = {
+  PAID: 'paid',
+  UNPAID: 'unpaid',
+  NOTREQUIRED: 'no_payment_required',
+};
+
+const stripeCheckoutMode = {
+  PAYMENT: 'payment',
+  SETUP: 'setup',
+  SUBSCRIPTION: 'subscription',
+};
+
+const stripeCheckoutStatus = {
+  COMPLETE: 'complete',
+  OPEN: 'open',
+  EXPIRED: 'expired',
+};
+
 module.exports = {
   competitionUnitStatus,
   calendarEventStatus,
@@ -273,4 +291,7 @@ module.exports = {
   ivsTypeEnum,
   participantInvitationStatus,
   stripeInterval,
+  stripePaymentStatus,
+  stripeCheckoutMode,
+  stripeCheckoutStatus,
 };
