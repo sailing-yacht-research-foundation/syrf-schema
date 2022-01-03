@@ -3,6 +3,7 @@
 const userTableName = 'UserProfiles';
 const subscriptionTableName = 'SubscriptionTiers';
 const groupTableName = 'Groups';
+const calendarEventTableName = 'CalendarEvents';
 
 module.exports = {
   up: async (queryInterface, Sequelize) => {
@@ -151,6 +152,45 @@ module.exports = {
           'tosAcceptance',
           {
             type: Sequelize.DataTypes.JSON,
+            allowNull: true,
+          },
+          { transaction },
+        );
+      }
+
+      const eventTable = await queryInterface.describeTable(
+        calendarEventTableName,
+      );
+      if (!eventTable.stripeGroup) {
+        await queryInterface.addColumn(
+          calendarEventTableName,
+          'stripeGroup',
+          {
+            type: Sequelize.DataTypes.STRING,
+            allowNull: true,
+            comment: 'Group that holds the stripe payouts integration',
+          },
+          { transaction },
+        );
+      }
+
+      if (!eventTable.stripeProductId) {
+        await queryInterface.addColumn(
+          calendarEventTableName,
+          'stripeProductId',
+          {
+            type: Sequelize.DataTypes.STRING,
+            allowNull: true,
+          },
+          { transaction },
+        );
+      }
+      if (!eventTable.stripePricingId) {
+        await queryInterface.addColumn(
+          calendarEventTableName,
+          'stripePricingId',
+          {
+            type: Sequelize.DataTypes.STRING,
             allowNull: true,
           },
           { transaction },

@@ -269,6 +269,11 @@ const stripeInvoiceStatus = {
   VOID: 'void',
 };
 
+const stripeAccountUpdateType = {
+  onboarding: 'account_onboarding',
+  update: 'account_update',
+};
+
 module.exports = {
   competitionUnitStatus,
   calendarEventStatus,
@@ -303,4 +308,5 @@ module.exports = {
   stripeCheckoutMode,
   stripeCheckoutStatus,
   stripeInvoiceStatus,
+  stripeAccountUpdateType,
 };

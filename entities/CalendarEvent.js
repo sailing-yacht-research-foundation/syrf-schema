@@ -146,6 +146,19 @@ module.exports = (sequelize) => {
         defaultValue: calendarEventStatus.DRAFT,
         allowNull: false,
       },
+      stripeGroup: {
+        type: DataTypes.STRING,
+        allowNull: true,
+        comment: 'Group that holds the stripe payouts integration',
+      },
+      stripeProductId: {
+        type: DataTypes.STRING,
+        allowNull: true,
+      },
+      stripePricingId: {
+        type: DataTypes.STRING,
+        allowNull: true,
+      },
     },
     {
       modelName: 'CalendarEvent',
