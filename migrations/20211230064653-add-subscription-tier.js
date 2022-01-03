@@ -161,10 +161,10 @@ module.exports = {
       const eventTable = await queryInterface.describeTable(
         calendarEventTableName,
       );
-      if (!eventTable.stripeGroup) {
+      if (!eventTable.organizerGroupId) {
         await queryInterface.addColumn(
           calendarEventTableName,
-          'stripeGroup',
+          'organizerGroupId',
           {
             type: Sequelize.DataTypes.STRING,
             allowNull: true,
@@ -173,7 +173,17 @@ module.exports = {
           { transaction },
         );
       }
-
+      if (!eventTable.participatingFee) {
+        await queryInterface.addColumn(
+          calendarEventTableName,
+          'participatingFee',
+          {
+            type: Sequelize.DataTypes.DOUBLE,
+            allowNull: true,
+          },
+          { transaction },
+        );
+      }
       if (!eventTable.stripeProductId) {
         await queryInterface.addColumn(
           calendarEventTableName,
@@ -245,6 +255,35 @@ module.exports = {
       await queryInterface.removeColumn(groupTableName, 'tosAcceptance', {
         transaction,
       });
+
+      await queryInterface.removeColumn(
+        calendarEventTableName,
+        'organizerGroupId',
+        {
+          transaction,
+        },
+      );
+      await queryInterface.removeColumn(
+        calendarEventTableName,
+        'participatingFee',
+        {
+          transaction,
+        },
+      );
+      await queryInterface.removeColumn(
+        calendarEventTableName,
+        'stripeProductId',
+        {
+          transaction,
+        },
+      );
+      await queryInterface.removeColumn(
+        calendarEventTableName,
+        'stripePricingId',
+        {
+          transaction,
+        },
+      );
 
       let tableInfo;
       try {

@@ -151,6 +151,11 @@ module.exports = (sequelize) => {
         allowNull: true,
         comment: 'Group that holds the stripe payouts integration',
       },
+      participatingFee: {
+        type: DataTypes.STRING,
+        allowNull: true,
+        comment: 'The base participating fee, excluding the 10% platform fee',
+      },
       stripeProductId: {
         type: DataTypes.STRING,
         allowNull: true,
