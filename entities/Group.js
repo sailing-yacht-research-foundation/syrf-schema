@@ -54,6 +54,18 @@ module.exports = (sequelize) => {
         type: DataTypes.STRING,
         allowNull: true,
       },
+      stripeChargesEnabled: {
+        type: DataTypes.BOOLEAN,
+        allowNull: true,
+      },
+      stripePayoutsEnabled: {
+        type: DataTypes.BOOLEAN,
+        allowNull: true,
+      },
+      tosAcceptance: {
+        type: DataTypes.JSON,
+        allowNull: true,
+      },
     },
     {
       modelName: 'Group',

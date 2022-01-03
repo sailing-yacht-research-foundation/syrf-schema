@@ -123,6 +123,39 @@ module.exports = {
           { transaction },
         );
       }
+      if (!groupTable.stripeChargesEnabled) {
+        await queryInterface.addColumn(
+          groupTableName,
+          'stripeChargesEnabled',
+          {
+            type: Sequelize.DataTypes.BOOLEAN,
+            allowNull: true,
+          },
+          { transaction },
+        );
+      }
+      if (!groupTable.stripePayoutsEnabled) {
+        await queryInterface.addColumn(
+          groupTableName,
+          'stripePayoutsEnabled',
+          {
+            type: Sequelize.DataTypes.BOOLEAN,
+            allowNull: true,
+          },
+          { transaction },
+        );
+      }
+      if (!groupTable.tosAcceptance) {
+        await queryInterface.addColumn(
+          groupTableName,
+          'tosAcceptance',
+          {
+            type: Sequelize.DataTypes.JSON,
+            allowNull: true,
+          },
+          { transaction },
+        );
+      }
     });
   },
 
@@ -155,6 +188,23 @@ module.exports = {
           transaction,
         },
       );
+      await queryInterface.removeColumn(
+        groupTableName,
+        'stripeChargesEnabled',
+        {
+          transaction,
+        },
+      );
+      await queryInterface.removeColumn(
+        groupTableName,
+        'stripePayoutsEnabled',
+        {
+          transaction,
+        },
+      );
+      await queryInterface.removeColumn(groupTableName, 'tosAcceptance', {
+        transaction,
+      });
 
       let tableInfo;
       try {
