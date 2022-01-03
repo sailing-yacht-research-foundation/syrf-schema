@@ -237,6 +237,44 @@ const participantInvitationStatus = {
   BLOCKED: 'BLOCKED',
 };
 
+const stripeInterval = {
+  DAY: 'day',
+  WEEK: 'week',
+  MONTH: 'month',
+  YEAR: 'year',
+};
+
+const stripePaymentStatus = {
+  PAID: 'paid',
+  UNPAID: 'unpaid',
+  NOTREQUIRED: 'no_payment_required',
+};
+
+const stripeCheckoutMode = {
+  PAYMENT: 'payment',
+  SETUP: 'setup',
+  SUBSCRIPTION: 'subscription',
+};
+
+const stripeCheckoutStatus = {
+  COMPLETE: 'complete',
+  OPEN: 'open',
+  EXPIRED: 'expired',
+};
+
+const stripeInvoiceStatus = {
+  DRAFT: 'draft',
+  PAID: 'paid',
+  OPEN: 'open',
+  UNCOLLECTIBLE: 'uncollectible',
+  VOID: 'void',
+};
+
+const stripeAccountUpdateType = {
+  onboarding: 'account_onboarding',
+  update: 'account_update',
+};
+
 module.exports = {
   competitionUnitStatus,
   calendarEventStatus,
@@ -266,4 +304,10 @@ module.exports = {
   ivsLatencyMode,
   ivsTypeEnum,
   participantInvitationStatus,
+  stripeInterval,
+  stripePaymentStatus,
+  stripeCheckoutMode,
+  stripeCheckoutStatus,
+  stripeInvoiceStatus,
+  stripeAccountUpdateType,
 };

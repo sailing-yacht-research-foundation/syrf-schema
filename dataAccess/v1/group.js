@@ -182,3 +182,13 @@ exports.getUserGroupsForInput = async (paging, userId) => {
   );
   return result;
 };
+
+exports.getByStripeConnectedAccount = async (stripeConnectedAccountId) => {
+  const result = await db.Group.findOne({
+    where: {
+      stripeConnectedAccountId,
+    },
+  });
+
+  return result?.toJSON();
+};

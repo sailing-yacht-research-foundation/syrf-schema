@@ -50,6 +50,22 @@ module.exports = (sequelize) => {
       groupImage: {
         type: DataTypes.STRING,
       },
+      stripeConnectedAccountId: {
+        type: DataTypes.STRING,
+        allowNull: true,
+      },
+      stripeChargesEnabled: {
+        type: DataTypes.BOOLEAN,
+        allowNull: true,
+      },
+      stripePayoutsEnabled: {
+        type: DataTypes.BOOLEAN,
+        allowNull: true,
+      },
+      tosAcceptance: {
+        type: DataTypes.JSON,
+        allowNull: true,
+      },
     },
     {
       modelName: 'Group',
