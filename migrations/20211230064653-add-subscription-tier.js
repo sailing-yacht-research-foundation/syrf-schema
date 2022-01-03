@@ -166,7 +166,7 @@ module.exports = {
           calendarEventTableName,
           'organizerGroupId',
           {
-            type: Sequelize.DataTypes.STRING,
+            type: Sequelize.DataTypes.UUID,
             allowNull: true,
             comment: 'Group that holds the stripe payouts integration',
           },

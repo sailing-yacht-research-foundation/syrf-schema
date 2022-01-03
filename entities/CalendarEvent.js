@@ -146,8 +146,8 @@ module.exports = (sequelize) => {
         defaultValue: calendarEventStatus.DRAFT,
         allowNull: false,
       },
-      stripeGroup: {
-        type: DataTypes.STRING,
+      organizerGroupId: {
+        type: DataTypes.UUID,
         allowNull: true,
         comment: 'Group that holds the stripe payouts integration',
       },
