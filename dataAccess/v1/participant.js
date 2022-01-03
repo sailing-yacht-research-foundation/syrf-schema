@@ -328,6 +328,32 @@ exports.getByUserAndEvent = async (
   return result?.toJSON();
 };
 
+/**
+ *
+ * @param {object} participant
+ * @param {*} transaction
+ * @returns
+ */
+exports.findDuplicate = async (
+  { id, userProfileId, calendarEventId } = {},
+  transaction,
+) => {
+  if (!id || !userProfileId || !calendarEventId) return null;
+
+  const result = await db.Participant.findOne({
+    where: {
+      id: {
+        [db.Op.ne]: id,
+      },
+      userProfileId,
+      calendarEventId,
+    },
+    transaction,
+  });
+
+  return result?.toJSON();
+};
+
 exports.bulkCreate = async (data, transaction) => {
   if (data.length === 0) {
     return [];
