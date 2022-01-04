@@ -40,6 +40,12 @@ class UserProfile extends ModelBase {
       constraints: false,
     });
 
+    this.hasMany(models.ParticipationCharge, {
+      as: 'participationCharge',
+      foreignKey: 'userId',
+      constraints: false,
+    });
+
     this.belongsTo(models.SubscriptionTier, {
       as: 'subscription',
       constraints: false,
