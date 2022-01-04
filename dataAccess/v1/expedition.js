@@ -160,6 +160,16 @@ exports.getAllOngoingCUWithCourse = async () => {
   return result;
 };
 
+exports.getAllOngoingCU = async () => {
+  const result = await db.CompetitionUnit.findAll({
+    where: {
+      status: competitionUnitStatus.ONGOING,
+    },
+    raw: true,
+  });
+  return result;
+};
+
 exports.getById = async (id) => {
   const result = await db.ExpeditionSubscription.findByPk(id, {
     include,
