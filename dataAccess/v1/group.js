@@ -1,5 +1,9 @@
 const uuid = require('uuid');
-const { groupVisibilities, groupMemberStatus } = require('../../enums');
+const {
+  groupVisibilities,
+  groupMemberStatus,
+  groupTypes,
+} = require('../../enums');
 const db = require('../../index');
 const { Op } = require('../../index');
 
@@ -191,4 +195,39 @@ exports.getByStripeConnectedAccount = async (stripeConnectedAccountId) => {
   });
 
   return result?.toJSON();
+};
+
+exports.getValidOrganizerGroup = async (userId) => {
+  let where = {
+    visibility: {
+      [db.Op.in]: [groupVisibilities.private, groupVisibilities.moderated],
+    },
+    groupType: groupTypes.organization,
+  };
+
+  const result = await db.Group.findAll({
+    where,
+    attributes: [
+      'id',
+      'groupName',
+      'groupImage',
+      'visibility',
+      'groupType',
+      'stripeConnectedAccountId',
+    ],
+    include: [
+      {
+        as: 'groupMember',
+        model: db.GroupMember,
+        attributes: ['status', 'isAdmin'],
+        required: true,
+        where: {
+          userId,
+          status: groupMemberStatus.accepted,
+        },
+      },
+    ],
+    raw: true,
+  });
+  return result;
 };
