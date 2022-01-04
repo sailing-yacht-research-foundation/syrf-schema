@@ -230,7 +230,6 @@ exports.getValidOrganizerGroup = async (userId) => {
         },
       },
     ],
-    raw: true,
   });
   return result;
 };
