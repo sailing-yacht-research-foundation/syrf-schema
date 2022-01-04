@@ -203,6 +203,9 @@ exports.getValidOrganizerGroup = async (userId) => {
       [db.Op.in]: [groupVisibilities.private, groupVisibilities.moderated],
     },
     groupType: groupTypes.organization,
+    stripeConnectedAccountId: {
+      [db.Op.ne]: null,
+    },
   };
 
   const result = await db.Group.findAll({
