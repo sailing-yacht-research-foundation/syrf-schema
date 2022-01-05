@@ -244,6 +244,16 @@ const stripeInterval = {
   YEAR: 'year',
 };
 
+const stripeSubscriptionStatus = {
+  INCOMPLETE: 'incomplete',
+  EXPIRED: 'incomplete_expired',
+  TRIALING: 'trialing',
+  ACTIVE: 'active',
+  PASTDUE: 'past_due',
+  CANCELED: 'canceled',
+  UNPAID: 'unpaid',
+};
+
 const stripePaymentStatus = {
   PAID: 'paid',
   UNPAID: 'unpaid',
@@ -305,6 +315,7 @@ module.exports = {
   ivsTypeEnum,
   participantInvitationStatus,
   stripeInterval,
+  stripeSubscriptionStatus,
   stripePaymentStatus,
   stripeCheckoutMode,
   stripeCheckoutStatus,
