@@ -78,6 +78,7 @@ db.ExternalServiceCredential = require('./entities/ExternalServiceCredential')(
   sequelize,
 );
 db.SubscriptionTier = require('./entities/SubscriptionTier')(sequelize);
+db.ParticipationCharge = require('./entities/ParticipationCharge')(sequelize);
 
 for (const key in db) {
   if (Object.hasOwnProperty.call(db, key)) {

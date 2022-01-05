@@ -15,6 +15,10 @@ const include = [
       'isOpen',
       'status',
       'allowRegistration',
+      'organizerGroupId',
+      'stripeProductId',
+      'stripePricingId',
+      'participatingFee',
     ],
     include: [
       {
