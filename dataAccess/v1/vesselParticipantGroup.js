@@ -96,6 +96,22 @@ exports.getById = async (id, transaction) => {
   return result?.toJSON();
 };
 
+exports.getByIds = async (id = [], transaction) => {
+  if (id.length < 1) return id;
+
+  const result = await db.VesselParticipantGroup.findAll({
+    where: {
+      id: {
+        [db.Op.in]: id,
+      },
+    },
+    raw: true,
+    transaction,
+  });
+
+  return result;
+};
+
 exports.getByCompetitionId = async (competitionUnitId) => {
   const result = await db.VesselParticipantGroup.findOne({
     where: {

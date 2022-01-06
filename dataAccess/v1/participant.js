@@ -122,6 +122,11 @@ exports.getAll = async (paging, params) => {
           },
         ],
       },
+      {
+        model: db.UserProfile,
+        as: 'profile',
+        attributes: ['id', 'name', 'locale', 'avatar'],
+      },
     ];
   } else {
     if (params.userId) where.createdById = params.userId;
