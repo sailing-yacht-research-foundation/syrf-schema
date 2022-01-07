@@ -152,6 +152,9 @@ module.exports = (sequelize) => {
         type: DataTypes.STRING,
         allowNull: true,
       },
+      interests: {
+        type: DataTypes.JSONB,
+      },
     },
     {
       modelName: 'UserProfile',

@@ -100,6 +100,8 @@ const lifeRaftTableName = 'VesselLifeRafts';
 const vesselEditorTableName = 'VesselEditors';
 const vesselGroupEditorTableName = 'VesselGroupEditors';
 
+const userTableName = 'UserProfiles';
+
 module.exports = {
   up: async (queryInterface, Sequelize) => {
     await queryInterface.sequelize.transaction(async (transaction) => {
@@ -271,6 +273,19 @@ module.exports = {
         });
       }
       // End of Vessel Editor & Group Editor
+
+      const userTable = await queryInterface.describeTable(userTableName);
+      if (!userTable.interests) {
+        await queryInterface.addColumn(
+          userTableName,
+          'interests',
+          {
+            // Content can be queried. https://sequelize.org/master/manual/other-data-types.html#jsonb--postgresql-only-
+            type: Sequelize.DataTypes.JSONB,
+          },
+          { transaction },
+        );
+      }
     });
   },
 
@@ -321,6 +336,10 @@ module.exports = {
           transaction,
         });
       }
+
+      await queryInterface.removeColumn(userTableName, 'interests', {
+        transaction,
+      });
     });
   },
 };
