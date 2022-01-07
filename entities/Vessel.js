@@ -9,6 +9,20 @@ class Vessel extends ModelBase {
       constraints: false,
       foreignKey: 'vesselId',
     });
+    this.belongsToMany(models.UserProfile, {
+      through: 'VesselEditors',
+      as: 'editors',
+      constraints: false,
+      foreignKey: 'vesselId',
+      otherKey: 'userId',
+    });
+    this.belongsToMany(models.Group, {
+      through: 'VesselGroupEditors',
+      as: 'groupEditors',
+      constraints: false,
+      foreignKey: 'vesselId',
+      otherKey: 'groupId',
+    });
   }
 }
 

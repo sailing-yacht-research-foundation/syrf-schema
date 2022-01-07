@@ -16,6 +16,14 @@ class UserProfile extends ModelBase {
       constraints: false,
     });
 
+    this.belongsToMany(models.Vessel, {
+      through: 'VesselEditors',
+      as: 'vesselEditors',
+      constraints: false,
+      foreignKey: 'userProfileId',
+      otherKey: 'vesselId',
+    });
+
     this.hasMany(models.UserFollower, {
       as: 'follower',
       constraints: false,

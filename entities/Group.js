@@ -18,6 +18,14 @@ class Group extends ModelBase {
       foreignKey: 'groupId',
       otherKey: 'calendarEventId',
     });
+
+    this.belongsToMany(models.Vessel, {
+      through: 'VesselGroupEditors',
+      as: 'vessels',
+      constraints: false,
+      foreignKey: 'groupId',
+      otherKey: 'vesselId',
+    });
   }
 }
 
