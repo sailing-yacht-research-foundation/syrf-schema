@@ -97,12 +97,14 @@ const newVesselColumns = [
 ];
 
 const lifeRaftTableName = 'VesselLifeRafts';
+const vesselEditorTableName = 'VesselEditors';
+const vesselGroupEditorTableName = 'VesselGroupEditors';
 
 module.exports = {
   up: async (queryInterface, Sequelize) => {
     await queryInterface.sequelize.transaction(async (transaction) => {
+      // Vessel Table changes
       const vesselTable = await queryInterface.describeTable(vesselTableName);
-
       newVesselColumns.map(async (col) => {
         if (!vesselTable[col.columnName]) {
           await queryInterface.addColumn(
@@ -128,14 +130,15 @@ module.exports = {
           );
         }
       });
+      // End of Vessel Table changes
 
+      // Life Raft Table
       let lifeRaftTable;
       try {
         lifeRaftTable = await queryInterface.describeTable(lifeRaftTableName);
       } catch (err) {
         lifeRaftTable = null;
       }
-
       if (!lifeRaftTable) {
         await queryInterface.createTable(
           lifeRaftTableName,
@@ -203,6 +206,71 @@ module.exports = {
           },
         );
       }
+      // End of life raft table
+
+      // Vessel Editor & Group Editor
+      let vesselEditorTable;
+      try {
+        vesselEditorTable = await queryInterface.describeTable(
+          vesselEditorTableName,
+        );
+      } catch (err) {
+        vesselEditorTable = null;
+      }
+      if (!vesselEditorTable) {
+        await queryInterface.createTable(vesselEditorTableName, {
+          userProfileId: {
+            type: Sequelize.DataTypes.UUID,
+            allowNull: false,
+            primaryKey: true,
+          },
+          vesselId: {
+            type: Sequelize.DataTypes.UUID,
+            allowNull: false,
+            primaryKey: true,
+          },
+          createdAt: {
+            type: Sequelize.DataTypes.DATE,
+            allowNull: false,
+          },
+          updatedAt: {
+            type: Sequelize.DataTypes.DATE,
+            allowNull: false,
+          },
+        });
+      }
+
+      let vesselGroupEditorTable;
+      try {
+        vesselGroupEditorTable = await queryInterface.describeTable(
+          vesselGroupEditorTableName,
+        );
+      } catch (err) {
+        vesselGroupEditorTable = null;
+      }
+      if (!vesselGroupEditorTable) {
+        await queryInterface.createTable(vesselGroupEditorTableName, {
+          groupId: {
+            type: Sequelize.DataTypes.UUID,
+            allowNull: false,
+            primaryKey: true,
+          },
+          vesselId: {
+            type: Sequelize.DataTypes.UUID,
+            allowNull: false,
+            primaryKey: true,
+          },
+          createdAt: {
+            type: Sequelize.DataTypes.DATE,
+            allowNull: false,
+          },
+          updatedAt: {
+            type: Sequelize.DataTypes.DATE,
+            allowNull: false,
+          },
+        });
+      }
+      // End of Vessel Editor & Group Editor
     });
   },
 
@@ -220,9 +288,36 @@ module.exports = {
       } catch (err) {
         lifeRaftTable = null;
       }
-
       if (lifeRaftTable) {
         await queryInterface.dropTable(lifeRaftTableName, {
+          transaction,
+        });
+      }
+
+      let vesselEditorTable;
+      try {
+        vesselEditorTable = await queryInterface.describeTable(
+          vesselEditorTableName,
+        );
+      } catch (err) {
+        vesselEditorTable = null;
+      }
+      if (!vesselEditorTable) {
+        await queryInterface.dropTable(vesselEditorTableName, {
+          transaction,
+        });
+      }
+
+      let vesselGroupEditorTable;
+      try {
+        vesselGroupEditorTable = await queryInterface.describeTable(
+          vesselGroupEditorTableName,
+        );
+      } catch (err) {
+        vesselGroupEditorTable = null;
+      }
+      if (!vesselGroupEditorTable) {
+        await queryInterface.dropTable(vesselGroupEditorTableName, {
           transaction,
         });
       }
