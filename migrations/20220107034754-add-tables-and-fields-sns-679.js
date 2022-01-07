@@ -101,6 +101,58 @@ const vesselEditorTableName = 'VesselEditors';
 const vesselGroupEditorTableName = 'VesselGroupEditors';
 
 const userTableName = 'UserProfiles';
+const newUserColumns = [
+  {
+    // Content can be queried. https://sequelize.org/master/manual/other-data-types.html#jsonb--postgresql-only-
+    columnName: 'interests',
+    type: DataTypes.JSONB,
+  },
+  {
+    columnName: 'emergencyContactName',
+    type: DataTypes.STRING,
+  },
+  {
+    columnName: 'emergencyContactPhone',
+    type: DataTypes.STRING,
+  },
+  {
+    columnName: 'emergencyContactEmail',
+    type: DataTypes.STRING,
+  },
+  {
+    columnName: 'emergencyContactRelationship',
+    type: DataTypes.STRING,
+  },
+  {
+    columnName: 'foodAllergies',
+    type: DataTypes.ARRAY(DataTypes.STRING),
+  },
+  {
+    columnName: 'epirbBeaconHexId',
+    type: DataTypes.STRING,
+  },
+  {
+    columnName: 'certifications',
+    type: DataTypes.ARRAY(DataTypes.STRING),
+  },
+  {
+    columnName: 'medicalProblems',
+    type: DataTypes.STRING,
+    comment: 'Contains array of string json, encrypted',
+  },
+  {
+    columnName: 'covidVaccinationCard',
+    type: DataTypes.STRING,
+  },
+  {
+    columnName: 'tShirtSize',
+    type: DataTypes.STRING,
+  },
+  {
+    columnName: 'passportInformation',
+    type: DataTypes.JSONB,
+  },
+];
 
 module.exports = {
   up: async (queryInterface, Sequelize) => {
@@ -275,17 +327,31 @@ module.exports = {
       // End of Vessel Editor & Group Editor
 
       const userTable = await queryInterface.describeTable(userTableName);
-      if (!userTable.interests) {
-        await queryInterface.addColumn(
-          userTableName,
-          'interests',
-          {
-            // Content can be queried. https://sequelize.org/master/manual/other-data-types.html#jsonb--postgresql-only-
-            type: Sequelize.DataTypes.JSONB,
-          },
-          { transaction },
-        );
-      }
+      newUserColumns.map(async (col) => {
+        if (!userTable[col.columnName]) {
+          await queryInterface.addColumn(
+            userTableName,
+            col.columnName,
+            Object.assign(
+              {},
+              {
+                type: col.type,
+              },
+              col.allowNull
+                ? {
+                    allowNull: col.allowNull,
+                  }
+                : {},
+              col.comment
+                ? {
+                    comment: col.comment,
+                  }
+                : {},
+            ),
+            { transaction },
+          );
+        }
+      });
     });
   },
 
@@ -337,8 +403,10 @@ module.exports = {
         });
       }
 
-      await queryInterface.removeColumn(userTableName, 'interests', {
-        transaction,
+      newUserColumns.map(async (col) => {
+        await queryInterface.removeColumn(userTableName, col.columnName, {
+          transaction,
+        });
       });
     });
   },

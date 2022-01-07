@@ -155,6 +155,40 @@ module.exports = (sequelize) => {
       interests: {
         type: DataTypes.JSONB,
       },
+      emergencyContactName: {
+        type: DataTypes.STRING,
+      },
+      emergencyContactPhone: {
+        type: DataTypes.STRING,
+      },
+      emergencyContactEmail: {
+        type: DataTypes.STRING,
+      },
+      emergencyContactRelationship: {
+        type: DataTypes.STRING,
+      },
+      foodAllergies: {
+        type: DataTypes.ARRAY(DataTypes.STRING),
+      },
+      epirbBeaconHexId: {
+        type: DataTypes.STRING,
+      },
+      certifications: {
+        type: DataTypes.ARRAY(DataTypes.STRING),
+      },
+      medicalProblems: {
+        type: DataTypes.STRING,
+        comment: 'Contains array of string json, encrypted',
+      },
+      covidVaccinationCard: {
+        type: DataTypes.STRING,
+      },
+      tShirtSize: {
+        type: DataTypes.STRING,
+      },
+      passportInformation: {
+        type: DataTypes.JSONB,
+      },
     },
     {
       modelName: 'UserProfile',
