@@ -1,7 +1,7 @@
 'use strict';
 const { DataTypes } = require('sequelize');
 
-const { vesselTypeEnums } = require('../enums');
+const { vesselTypeEnums, lifeRaftOwnership } = require('../enums');
 
 const vesselTableName = 'Vessels';
 const newVesselColumns = [
@@ -172,7 +172,7 @@ module.exports = {
               type: Sequelize.DataTypes.DATE,
             },
             ownership: {
-              type: Sequelize.DataTypes.ENUM(Object.values(vesselTypeEnums)),
+              type: Sequelize.DataTypes.ENUM(Object.values(lifeRaftOwnership)),
             },
             verifyDate: {
               type: Sequelize.DataTypes.DATE,

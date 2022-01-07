@@ -1,7 +1,7 @@
 const { DataTypes } = require('sequelize');
 
 const ModelBase = require('../ModelBase');
-const { vesselTypeEnums } = require('../enums');
+const { lifeRaftOwnership } = require('../enums');
 
 class VesselLifeRaft extends ModelBase {
   static associate(models) {
@@ -49,7 +49,7 @@ module.exports = (sequelize) => {
         type: DataTypes.DATE,
       },
       ownership: {
-        type: DataTypes.ENUM(Object.values(vesselTypeEnums)),
+        type: DataTypes.ENUM(Object.values(lifeRaftOwnership)),
       },
       verifyDate: {
         type: DataTypes.DATE,
