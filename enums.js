@@ -285,6 +285,19 @@ const stripeAccountUpdateType = {
   update: 'account_update',
 };
 
+const vesselTypeEnums = {
+  FOILBOARD: 'FOIL_BOARD',
+  BOARD: 'BOARD',
+  DINGHY: 'DINGHY',
+  KEELBOAT: 'KEELBOAT',
+  OTHER: 'OTHER',
+};
+
+const lifeRaftOwnership = {
+  OWNED: 'OWNED',
+  RENTED: 'RENTED',
+};
+
 module.exports = {
   competitionUnitStatus,
   calendarEventStatus,
@@ -321,4 +334,6 @@ module.exports = {
   stripeCheckoutStatus,
   stripeInvoiceStatus,
   stripeAccountUpdateType,
+  vesselTypeEnums,
+  lifeRaftOwnership,
 };
