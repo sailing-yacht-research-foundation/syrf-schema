@@ -25,8 +25,8 @@ db.VesselParticipantCrew = require('./entities/VesselParticipantCrew')(
 db.VesselParticipantGroup = require('./entities/VesselParticipantGroup')(
   sequelize,
 );
-db.VesselEditor = require('./entities/VesselEditor');
-db.VesselGroupEditor = require('./entities/VesselGroupEditor');
+db.VesselEditor = require('./entities/VesselEditor')(sequelize);
+db.VesselGroupEditor = require('./entities/VesselGroupEditor')(sequelize);
 db.CalendarEvent = require('./entities/CalendarEvent')(sequelize);
 db.CompetitionUnit = require('./entities/CompetitionUnit')(sequelize);
 db.Course = require('./entities/Course')(sequelize);
