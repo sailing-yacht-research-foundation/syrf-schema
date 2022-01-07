@@ -14,7 +14,7 @@ class Vessel extends ModelBase {
       as: 'editors',
       constraints: false,
       foreignKey: 'vesselId',
-      otherKey: 'userId',
+      otherKey: 'userProfileId',
     });
     this.belongsToMany(models.Group, {
       through: 'VesselGroupEditors',
