@@ -17,6 +17,7 @@ const db = {};
 db.UserProfile = require('./entities/UserProfile')(sequelize);
 db.Participant = require('./entities/Participant')(sequelize);
 db.Vessel = require('./entities/Vessel')(sequelize);
+db.VesselLifeRaft = require('./entities/VesselLifeRaft')(sequelize);
 db.VesselParticipant = require('./entities/VesselParticipant')(sequelize);
 db.VesselParticipantCrew = require('./entities/VesselParticipantCrew')(
   sequelize,
