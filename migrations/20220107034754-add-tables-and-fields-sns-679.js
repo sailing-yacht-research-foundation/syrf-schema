@@ -10,12 +10,6 @@ const newVesselColumns = [
     type: DataTypes.ENUM(Object.values(vesselTypeEnums)),
   },
   {
-    columnName: 'model',
-    type: DataTypes.STRING,
-    comment:
-      'Going with string instead of ENUM cause model might have long list and possibly updates a lot, which will require script to edit the postgre enum',
-  },
-  {
     // Not clear whether to support only 1 photo or multiple,
     // but array of string should work best for both so no updates required in the future
     columnName: 'photo',
