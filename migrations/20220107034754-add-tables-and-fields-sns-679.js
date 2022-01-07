@@ -1,7 +1,12 @@
 'use strict';
 const { DataTypes } = require('sequelize');
 
-const { vesselTypeEnums, lifeRaftOwnership } = require('../enums');
+const {
+  vesselTypeEnums,
+  lifeRaftOwnership,
+  eventTypeEnums,
+  entranceFeeTypes,
+} = require('../enums');
 
 const vesselTableName = 'Vessels';
 const newVesselColumns = [
@@ -151,6 +156,47 @@ const newUserColumns = [
   {
     columnName: 'passportInformation',
     type: DataTypes.JSONB,
+  },
+];
+
+const calendarEventTableName = 'CalendarEvents';
+const newCalendarEventColumns = [
+  {
+    columnName: 'eventTypes',
+    type: DataTypes.ENUM(Object.values(eventTypeEnums)),
+  },
+  {
+    columnName: 'hashtag',
+    type: DataTypes.STRING,
+  },
+  {
+    columnName: 'entranceFeeType',
+    type: DataTypes.ENUM(Object.values(entranceFeeTypes)),
+  },
+  {
+    columnName: 'noticeOfRacePDF',
+    type: DataTypes.STRING,
+  },
+  {
+    columnName: 'mediaWaiverPDF',
+    type: DataTypes.STRING,
+  },
+  {
+    columnName: 'disclaimerPDF',
+    type: DataTypes.STRING,
+  },
+  {
+    columnName: 'isCrewed',
+    type: DataTypes.BOOLEAN,
+    comment: 'true -> Crewed, false -> SingleHanded',
+  },
+  {
+    columnName: 'crewedMinValue',
+    type: DataTypes.SMALLINT,
+  },
+  {
+    columnName: 'crewedMaxValue',
+    type: DataTypes.SMALLINT,
   },
 ];
 
@@ -326,6 +372,7 @@ module.exports = {
       }
       // End of Vessel Editor & Group Editor
 
+      // New User Table Columns
       const userTable = await queryInterface.describeTable(userTableName);
       newUserColumns.map(async (col) => {
         if (!userTable[col.columnName]) {
@@ -352,6 +399,38 @@ module.exports = {
           );
         }
       });
+      // End of New User Table Columns
+
+      // New Calendar Event Columns
+      const calendarEventTable = await queryInterface.describeTable(
+        calendarEventTableName,
+      );
+      newCalendarEventColumns.map(async (col) => {
+        if (!calendarEventTable[col.columnName]) {
+          await queryInterface.addColumn(
+            calendarEventTableName,
+            col.columnName,
+            Object.assign(
+              {},
+              {
+                type: col.type,
+              },
+              col.allowNull
+                ? {
+                    allowNull: col.allowNull,
+                  }
+                : {},
+              col.comment
+                ? {
+                    comment: col.comment,
+                  }
+                : {},
+            ),
+            { transaction },
+          );
+        }
+      });
+      // End of Calendar Event Columns
     });
   },
 
@@ -407,6 +486,16 @@ module.exports = {
         await queryInterface.removeColumn(userTableName, col.columnName, {
           transaction,
         });
+      });
+
+      newCalendarEventColumns.map(async (col) => {
+        await queryInterface.removeColumn(
+          calendarEventTableName,
+          col.columnName,
+          {
+            transaction,
+          },
+        );
       });
     });
   },

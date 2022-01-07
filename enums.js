@@ -298,6 +298,23 @@ const lifeRaftOwnership = {
   RENTED: 'RENTED',
 };
 
+const eventTypeEnums = {
+  ONEDESIGN: 'ONE_DESIGN',
+  HANDICAP: 'HANDICAP_RACE',
+  KITESURFING: 'KITESURFING',
+  WINGING: 'WINGING',
+  WINDSURFING: 'WINDSURFING',
+  CRUISING: 'CRUISING',
+  RALLY: 'RALLY',
+  TRAINING: 'TRAINING',
+  OTHER: 'OTHER',
+};
+
+const entranceFeeTypes = {
+  PERSON: 'PERSON',
+  VESSEL: 'VESSEL',
+};
+
 module.exports = {
   competitionUnitStatus,
   calendarEventStatus,
@@ -336,4 +353,6 @@ module.exports = {
   stripeAccountUpdateType,
   vesselTypeEnums,
   lifeRaftOwnership,
+  eventTypeEnums,
+  entranceFeeTypes,
 };
