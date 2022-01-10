@@ -636,3 +636,16 @@ exports.getByScrapedOriginalIdAndSource = async (originalIds, source) => {
     where,
   });
 };
+
+exports.clearGroupAdmins = async (id, transaction) => {
+  const result = await db.CalendarGroupEditor.destroy(
+    {
+      where: {
+        calendarEventId: id,
+      },
+    },
+    { transaction },
+  );
+
+  return result;
+};
