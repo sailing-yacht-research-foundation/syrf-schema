@@ -10,6 +10,13 @@ class VesselParticipant extends ModelBase {
       constraints: false,
     });
 
+    this.belongsToMany(models.Participant, {
+      as: 'crews',
+      through: models.VesselParticipantCrew,
+      foreignKey: 'vesselParticipantId',
+      constraints: false,
+    });
+
     this.belongsTo(models.Vessel, {
       as: 'vessel',
       constraints: false,
