@@ -154,8 +154,24 @@ const newUserColumns = [
     type: DataTypes.STRING,
   },
   {
-    columnName: 'passportInformation',
-    type: DataTypes.JSONB,
+    columnName: 'passportNumber',
+    type: DataTypes.STRING,
+  },
+  {
+    columnName: 'passportIssueDate',
+    type: DataTypes.DATE,
+  },
+  {
+    columnName: 'passportExpirationDate',
+    type: DataTypes.DATE,
+  },
+  {
+    columnName: 'passportIssueCountry',
+    type: DataTypes.STRING,
+  },
+  {
+    columnName: 'passportPhoto',
+    type: DataTypes.STRING,
   },
 ];
 

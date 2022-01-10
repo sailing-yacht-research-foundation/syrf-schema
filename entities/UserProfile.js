@@ -186,8 +186,20 @@ module.exports = (sequelize) => {
       tShirtSize: {
         type: DataTypes.STRING,
       },
-      passportInformation: {
-        type: DataTypes.JSONB,
+      passportNumber: {
+        type: DataTypes.STRING,
+      },
+      passportIssueDate: {
+        type: DataTypes.DATE,
+      },
+      passportExpirationDate: {
+        type: DataTypes.DATE,
+      },
+      passportIssueCountry: {
+        type: DataTypes.STRING,
+      },
+      passportPhoto: {
+        type: DataTypes.STRING,
       },
     },
     {
