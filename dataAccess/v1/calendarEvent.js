@@ -50,7 +50,7 @@ const include = [
   {
     model: db.UserProfile,
     as: 'owner',
-    attributes: ['id', 'name'],
+    attributes: ['id', 'name', 'avatar'],
   },
   ...includeMeta,
 ];
