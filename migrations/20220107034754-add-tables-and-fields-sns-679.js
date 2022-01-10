@@ -205,31 +205,33 @@ module.exports = {
     await queryInterface.sequelize.transaction(async (transaction) => {
       // Vessel Table changes
       const vesselTable = await queryInterface.describeTable(vesselTableName);
-      newVesselColumns.map(async (col) => {
-        if (!vesselTable[col.columnName]) {
-          await queryInterface.addColumn(
-            vesselTableName,
-            col.columnName,
-            Object.assign(
-              {},
-              {
-                type: col.type,
-              },
-              col.allowNull
-                ? {
-                    allowNull: col.allowNull,
-                  }
-                : {},
-              col.comment
-                ? {
-                    comment: col.comment,
-                  }
-                : {},
-            ),
-            { transaction },
-          );
-        }
-      });
+      await Promise.all(
+        newVesselColumns.map(async (col) => {
+          if (!vesselTable[col.columnName]) {
+            await queryInterface.addColumn(
+              vesselTableName,
+              col.columnName,
+              Object.assign(
+                {},
+                {
+                  type: col.type,
+                },
+                col.allowNull
+                  ? {
+                      allowNull: col.allowNull,
+                    }
+                  : {},
+                col.comment
+                  ? {
+                      comment: col.comment,
+                    }
+                  : {},
+              ),
+              { transaction },
+            );
+          }
+        }),
+      );
       // End of Vessel Table changes
 
       // Life Raft Table
@@ -374,62 +376,67 @@ module.exports = {
 
       // New User Table Columns
       const userTable = await queryInterface.describeTable(userTableName);
-      newUserColumns.map(async (col) => {
-        if (!userTable[col.columnName]) {
-          await queryInterface.addColumn(
-            userTableName,
-            col.columnName,
-            Object.assign(
-              {},
-              {
-                type: col.type,
-              },
-              col.allowNull
-                ? {
-                    allowNull: col.allowNull,
-                  }
-                : {},
-              col.comment
-                ? {
-                    comment: col.comment,
-                  }
-                : {},
-            ),
-            { transaction },
-          );
-        }
-      });
+      await Promise.all(
+        newUserColumns.map(async (col) => {
+          if (!userTable[col.columnName]) {
+            await queryInterface.addColumn(
+              userTableName,
+              col.columnName,
+              Object.assign(
+                {},
+                {
+                  type: col.type,
+                },
+                col.allowNull
+                  ? {
+                      allowNull: col.allowNull,
+                    }
+                  : {},
+                col.comment
+                  ? {
+                      comment: col.comment,
+                    }
+                  : {},
+              ),
+              { transaction },
+            );
+          }
+        }),
+      );
+
       // End of New User Table Columns
 
       // New Calendar Event Columns
       const calendarEventTable = await queryInterface.describeTable(
         calendarEventTableName,
       );
-      newCalendarEventColumns.map(async (col) => {
-        if (!calendarEventTable[col.columnName]) {
-          await queryInterface.addColumn(
-            calendarEventTableName,
-            col.columnName,
-            Object.assign(
-              {},
-              {
-                type: col.type,
-              },
-              col.allowNull
-                ? {
-                    allowNull: col.allowNull,
-                  }
-                : {},
-              col.comment
-                ? {
-                    comment: col.comment,
-                  }
-                : {},
-            ),
-            { transaction },
-          );
-        }
-      });
+      await Promise.all(
+        newCalendarEventColumns.map(async (col) => {
+          if (!calendarEventTable[col.columnName]) {
+            await queryInterface.addColumn(
+              calendarEventTableName,
+              col.columnName,
+              Object.assign(
+                {},
+                {
+                  type: col.type,
+                },
+                col.allowNull
+                  ? {
+                      allowNull: col.allowNull,
+                    }
+                  : {},
+                col.comment
+                  ? {
+                      comment: col.comment,
+                    }
+                  : {},
+              ),
+              { transaction },
+            );
+          }
+        }),
+      );
       // End of Calendar Event Columns
     });
   },
