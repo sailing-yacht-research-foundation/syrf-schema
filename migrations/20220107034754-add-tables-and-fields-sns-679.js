@@ -159,11 +159,11 @@ const newUserColumns = [
   },
   {
     columnName: 'passportIssueDate',
-    type: DataTypes.DATE,
+    type: DataTypes.DATEONLY,
   },
   {
     columnName: 'passportExpirationDate',
-    type: DataTypes.DATE,
+    type: DataTypes.DATEONLY,
   },
   {
     columnName: 'passportIssueCountry',

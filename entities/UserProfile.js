@@ -190,10 +190,10 @@ module.exports = (sequelize) => {
         type: DataTypes.STRING,
       },
       passportIssueDate: {
-        type: DataTypes.DATE,
+        type: DataTypes.DATEONLY,
       },
       passportExpirationDate: {
-        type: DataTypes.DATE,
+        type: DataTypes.DATEONLY,
       },
       passportIssueCountry: {
         type: DataTypes.STRING,
