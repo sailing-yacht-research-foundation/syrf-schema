@@ -56,6 +56,20 @@ exports.getById = async (id) => {
   return result?.toJSON();
 };
 
+exports.getByIds = async (ids = [], transaction) => {
+  const result = await db.Group.findAll({
+    where: {
+      id: {
+        [db.Op.in]: ids,
+      },
+    },
+    transaction,
+    raw: true,
+  });
+
+  return result;
+};
+
 exports.upsert = async (id, data = {}, transaction) => {
   if (!id) id = uuid.v4();
 
