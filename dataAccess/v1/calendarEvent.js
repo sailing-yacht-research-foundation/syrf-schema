@@ -609,6 +609,8 @@ exports.getUserEvents = async (paging, userId) => {
       ...otherData,
       lon: location?.coordinates?.[0],
       lat: location?.coordinates?.[1],
+      isEditor: row.editors?.length > 0 || row.groupEditors?.length > 0,
+      isParticipant: row.participants?.length > 0,
     });
   });
 
