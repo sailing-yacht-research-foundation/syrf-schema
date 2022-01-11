@@ -202,6 +202,14 @@ module.exports = (sequelize) => {
       crewedMaxValue: {
         type: DataTypes.SMALLINT,
       },
+      requireCovidCertificate: {
+        type: DataTypes.BOOLEAN,
+      },
+      requiredCertifications: {
+        type: DataTypes.ARRAY(DataTypes.STRING),
+        comments:
+          'List of all required certifications, should be for display purposes only',
+      },
     },
     {
       modelName: 'CalendarEvent',

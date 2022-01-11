@@ -153,6 +153,16 @@ const newCalendarEventColumns = [
     columnName: 'crewedMaxValue',
     type: DataTypes.SMALLINT,
   },
+  {
+    columnName: 'requireCovidCertificate',
+    type: DataTypes.BOOLEAN,
+  },
+  {
+    columnName: 'requiredCertifications',
+    type: DataTypes.ARRAY(DataTypes.STRING),
+    comments:
+      'List of all required certifications, should be for display purposes only',
+  },
 ];
 
 const userShareableInfoTableName = 'UserShareableInfos';
