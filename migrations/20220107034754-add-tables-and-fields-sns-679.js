@@ -112,67 +112,6 @@ const newUserColumns = [
     columnName: 'interests',
     type: DataTypes.JSONB,
   },
-  {
-    columnName: 'emergencyContactName',
-    type: DataTypes.STRING,
-  },
-  {
-    columnName: 'emergencyContactPhone',
-    type: DataTypes.STRING,
-  },
-  {
-    columnName: 'emergencyContactEmail',
-    type: DataTypes.STRING,
-  },
-  {
-    columnName: 'emergencyContactRelationship',
-    type: DataTypes.STRING,
-  },
-  {
-    columnName: 'foodAllergies',
-    type: DataTypes.ARRAY(DataTypes.STRING),
-  },
-  {
-    columnName: 'epirbBeaconHexId',
-    type: DataTypes.STRING,
-  },
-  {
-    columnName: 'certifications',
-    type: DataTypes.ARRAY(DataTypes.STRING),
-  },
-  {
-    columnName: 'medicalProblems',
-    type: DataTypes.STRING,
-    comment: 'Contains array of string json, encrypted',
-  },
-  {
-    columnName: 'covidVaccinationCard',
-    type: DataTypes.STRING,
-  },
-  {
-    columnName: 'tShirtSize',
-    type: DataTypes.STRING,
-  },
-  {
-    columnName: 'passportNumber',
-    type: DataTypes.STRING,
-  },
-  {
-    columnName: 'passportIssueDate',
-    type: DataTypes.DATEONLY,
-  },
-  {
-    columnName: 'passportExpirationDate',
-    type: DataTypes.DATEONLY,
-  },
-  {
-    columnName: 'passportIssueCountry',
-    type: DataTypes.STRING,
-  },
-  {
-    columnName: 'passportPhoto',
-    type: DataTypes.STRING,
-  },
 ];
 
 const calendarEventTableName = 'CalendarEvents';
@@ -215,6 +154,8 @@ const newCalendarEventColumns = [
     type: DataTypes.SMALLINT,
   },
 ];
+
+const userShareableInfoTableName = 'UserShareableInfos';
 
 module.exports = {
   up: async (queryInterface, Sequelize) => {
@@ -454,6 +395,78 @@ module.exports = {
         }),
       );
       // End of Calendar Event Columns
+
+      // User Shareable
+      let userShareableInfoTable;
+      try {
+        userShareableInfoTable = await queryInterface.describeTable(
+          userShareableInfoTableName,
+        );
+      } catch (err) {
+        userShareableInfoTable = null;
+      }
+      if (!userShareableInfoTable) {
+        await queryInterface.createTable(
+          userShareableInfoTableName,
+          {
+            userId: {
+              type: Sequelize.DataTypes.UUID,
+              allowNull: false,
+              primaryKey: true,
+            },
+            semergencyContactName: {
+              type: Sequelize.DataTypes.STRING,
+            },
+            emergencyContactPhone: {
+              type: Sequelize.DataTypes.STRING,
+            },
+            emergencyContactEmail: {
+              type: Sequelize.DataTypes.STRING,
+            },
+            emergencyContactRelationship: {
+              type: Sequelize.DataTypes.STRING,
+            },
+            foodAllergies: {
+              type: Sequelize.DataTypes.ARRAY(Sequelize.DataTypes.STRING),
+            },
+            epirbBeaconHexId: {
+              type: Sequelize.DataTypes.STRING,
+            },
+            certifications: {
+              type: Sequelize.DataTypes.ARRAY(Sequelize.DataTypes.STRING),
+            },
+            medicalProblems: {
+              type: Sequelize.DataTypes.STRING,
+              comment: 'Contains array of string json, encrypted',
+            },
+            covidVaccinationCard: {
+              type: Sequelize.DataTypes.STRING,
+            },
+            tShirtSize: {
+              type: Sequelize.DataTypes.STRING,
+            },
+            passportNumber: {
+              type: Sequelize.DataTypes.STRING,
+            },
+            passportIssueDate: {
+              type: Sequelize.DataTypes.DATEONLY,
+            },
+            passportExpirationDate: {
+              type: Sequelize.DataTypes.DATEONLY,
+            },
+            passportIssueCountry: {
+              type: Sequelize.DataTypes.STRING,
+            },
+            passportPhoto: {
+              type: Sequelize.DataTypes.STRING,
+            },
+          },
+          {
+            transaction,
+          },
+        );
+      }
+      // End of life raft table
     });
   },
 
@@ -520,6 +533,20 @@ module.exports = {
           },
         );
       });
+
+      let userShareableInfoTable;
+      try {
+        userShareableInfoTable = await queryInterface.describeTable(
+          userShareableInfoTableName,
+        );
+      } catch (err) {
+        userShareableInfoTable = null;
+      }
+      if (userShareableInfoTable) {
+        await queryInterface.dropTable(userShareableInfoTableName, {
+          transaction,
+        });
+      }
     });
   },
 };
