@@ -310,7 +310,7 @@ const eventTypeEnums = {
   OTHER: 'OTHER',
 };
 
-const participatingFeeType = {
+const participatingFeeTypes = {
   PERSON: 'PERSON',
   VESSEL: 'VESSEL',
 };
