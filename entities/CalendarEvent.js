@@ -180,7 +180,7 @@ module.exports = (sequelize) => {
       hashtag: {
         type: DataTypes.STRING,
       },
-      entranceFeeType: {
+      participatingFeeType: {
         type: DataTypes.ENUM(Object.values(participatingFeeTypes)),
       },
       noticeOfRacePDF: {
