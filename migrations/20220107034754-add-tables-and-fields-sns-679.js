@@ -5,7 +5,7 @@ const {
   vesselTypeEnums,
   lifeRaftOwnership,
   eventTypeEnums,
-  entranceFeeTypes,
+  participatingFeeTypes,
 } = require('../enums');
 
 const vesselTableName = 'Vessels';
@@ -125,8 +125,8 @@ const newCalendarEventColumns = [
     type: DataTypes.STRING,
   },
   {
-    columnName: 'entranceFeeType',
-    type: DataTypes.ENUM(Object.values(entranceFeeTypes)),
+    columnName: 'participatingFeeType',
+    type: DataTypes.ENUM(Object.values(participatingFeeTypes)),
   },
   {
     columnName: 'noticeOfRacePDF',

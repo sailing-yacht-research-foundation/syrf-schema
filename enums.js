@@ -310,7 +310,7 @@ const eventTypeEnums = {
   OTHER: 'OTHER',
 };
 
-const entranceFeeTypes = {
+const participatingFeeType = {
   PERSON: 'PERSON',
   VESSEL: 'VESSEL',
 };
@@ -354,5 +354,5 @@ module.exports = {
   vesselTypeEnums,
   lifeRaftOwnership,
   eventTypeEnums,
-  entranceFeeTypes,
+  participatingFeeTypes,
 };

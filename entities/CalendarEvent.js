@@ -2,7 +2,7 @@ const { DataTypes } = require('sequelize');
 const {
   calendarEventStatus,
   eventTypeEnums,
-  entranceFeeTypes,
+  participatingFeeTypes,
 } = require('../enums');
 const ModelBase = require('../ModelBase');
 
@@ -181,7 +181,7 @@ module.exports = (sequelize) => {
         type: DataTypes.STRING,
       },
       entranceFeeType: {
-        type: DataTypes.ENUM(Object.values(entranceFeeTypes)),
+        type: DataTypes.ENUM(Object.values(participatingFeeTypes)),
       },
       noticeOfRacePDF: {
         type: DataTypes.STRING,
