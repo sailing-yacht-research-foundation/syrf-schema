@@ -1,4 +1,5 @@
 const uuid = require('uuid');
+const { participantInvitationStatus } = require('../../enums');
 const db = require('../../index');
 const { includeMeta, emptyPagingResponse } = require('../../utils/utils');
 
@@ -92,6 +93,66 @@ exports.getAllForEvent = async (userId, eventId, paging = {}) => {
   const result = await db.Vessel.findAllWithPaging(
     {
       where,
+    },
+    paging,
+  );
+
+  return result;
+};
+
+exports.getAllRegisteredInEvent = async (eventId, paging = {}) => {
+  const result = await db.Vessel.findAllWithPaging(
+    {
+      subQuery: false,
+      attributes: {
+        exclude: ['orcJsonPolars'],
+      },
+      include: [
+        {
+          model: db.VesselParticipant,
+          as: 'vesselParticipants',
+          attributes: ['id'],
+          required: true,
+          include: [
+            {
+              model: db.VesselParticipantGroup,
+              as: 'group',
+              attributes: [
+                'id',
+                'name',
+                'vesselParticipantGroupId',
+                'calendarEventId',
+              ],
+              where: {
+                calendarEventId: eventId,
+              },
+            },
+            {
+              model: db.Participant,
+              as: 'crews',
+              attributes: ['id', 'publicName', 'invitationStatus'],
+              through: {
+                attributes: ['id'],
+              },
+              where: {
+                invitationStatus: {
+                  [db.Op.in]: [
+                    participantInvitationStatus.ACCEPTED,
+                    participantInvitationStatus.SELF_REGISTERED,
+                  ],
+                },
+              },
+              include: [
+                {
+                  model: db.UserProfile,
+                  as: 'profile',
+                  attributes: ['id', 'name', 'locale', 'avatar'],
+                },
+              ],
+            },
+          ],
+        },
+      ],
     },
     paging,
   );

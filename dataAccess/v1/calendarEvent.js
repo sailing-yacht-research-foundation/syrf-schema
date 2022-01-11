@@ -50,7 +50,7 @@ const include = [
   {
     model: db.UserProfile,
     as: 'owner',
-    attributes: ['id', 'name'],
+    attributes: ['id', 'name', 'avatar'],
   },
   ...includeMeta,
 ];
@@ -609,6 +609,8 @@ exports.getUserEvents = async (paging, userId) => {
       ...otherData,
       lon: location?.coordinates?.[0],
       lat: location?.coordinates?.[1],
+      isEditor: row.editors?.length > 0 || row.groupEditors?.length > 0,
+      isParticipant: row.participants?.length > 0,
     });
   });
 
@@ -635,4 +637,17 @@ exports.getByScrapedOriginalIdAndSource = async (originalIds, source) => {
     attributes: ['id', 'scrapedOriginalId'],
     where,
   });
+};
+
+exports.clearGroupAdmins = async (id, transaction) => {
+  const result = await db.CalendarGroupEditor.destroy(
+    {
+      where: {
+        calendarEventId: id,
+      },
+    },
+    { transaction },
+  );
+
+  return result;
 };
