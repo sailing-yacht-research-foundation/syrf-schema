@@ -17,19 +17,19 @@ exports.update = async (userId, data = {}, transaction) => {
   return result;
 };
 
-exports.getById = async (sub) => {
-  return await db.UserShareableInfo.findByPk(sub, {
+exports.getById = async (id) => {
+  return await db.UserShareableInfo.findByPk(id, {
     raw: true,
   });
 };
 
-exports.delete = async (id, transaction) => {
-  const data = await db.UserShareableInfo.findByPk(id);
+exports.delete = async (userId, transaction) => {
+  const data = await db.UserShareableInfo.findByPk(userId);
 
   if (data) {
     await db.UserShareableInfo.destroy({
       where: {
-        id,
+        userId,
       },
       transaction,
     });
