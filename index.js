@@ -15,6 +15,7 @@ const sequelize = new Sequelize(
 const db = {};
 
 db.UserProfile = require('./entities/UserProfile')(sequelize);
+db.UserShareableInfo = require('./entities/UserShareableInfo')(sequelize);
 db.Participant = require('./entities/Participant')(sequelize);
 db.Vessel = require('./entities/Vessel')(sequelize);
 db.VesselLifeRaft = require('./entities/VesselLifeRaft')(sequelize);
