@@ -414,7 +414,7 @@ module.exports = {
               allowNull: false,
               primaryKey: true,
             },
-            semergencyContactName: {
+            emergencyContactName: {
               type: Sequelize.DataTypes.STRING,
             },
             emergencyContactPhone: {
@@ -459,6 +459,14 @@ module.exports = {
             },
             passportPhoto: {
               type: Sequelize.DataTypes.STRING,
+            },
+            createdAt: {
+              type: Sequelize.DataTypes.DATE,
+              allowNull: false,
+            },
+            updatedAt: {
+              type: Sequelize.DataTypes.DATE,
+              allowNull: false,
             },
           },
           {
