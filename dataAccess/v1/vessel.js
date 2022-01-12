@@ -5,6 +5,24 @@ const { includeMeta, emptyPagingResponse } = require('../../utils/utils');
 
 const include = [...includeMeta];
 
+exports.create = async (data, transaction) => {
+  return await db.Vessel.create(data, {
+    validate: true,
+    transaction,
+  });
+};
+
+exports.update = async (id, data, transaction) => {
+  const [updateCount] = await db.Vessel.update(data, {
+    where: {
+      id,
+    },
+    transaction,
+  });
+
+  return updateCount;
+};
+
 exports.upsert = async (id, data = {}, transaction = undefined) => {
   if (!id) id = uuid.v4();
 
