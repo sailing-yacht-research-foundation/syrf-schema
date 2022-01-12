@@ -362,3 +362,17 @@ exports.updateUserlessInvitations = async (userId, email, transaction) => {
 
   return updateCount;
 };
+
+exports.getCurrentAcceptedMembers = async (groupIds) => {
+  const users = await db.GroupMember.findAll({
+    where: {
+      groupId: {
+        [Op.in]: groupIds,
+      },
+      status: groupMemberStatus.accepted,
+    },
+    attributes: ['userId'],
+    raw: true,
+  });
+  return [...new Set(users.map((row) => row.userId))];
+};
