@@ -99,14 +99,23 @@ module.exports = (sequelize) => {
       mmsi: {
         type: DataTypes.STRING,
       },
-      mobilePhoneOnboard: {
+      onboardPhone: {
         type: DataTypes.STRING,
+      },
+      isVerifiedOnboardPhone: {
+        type: DataTypes.BOOLEAN,
       },
       satelliteNumber: {
         type: DataTypes.STRING,
       },
+      isVerifiedSatelliteNumber: {
+        type: DataTypes.BOOLEAN,
+      },
       onboardEmail: {
         type: DataTypes.STRING,
+      },
+      isVerifiedOnboardEmail: {
+        type: DataTypes.BOOLEAN,
       },
       ssbTransceiver: {
         type: DataTypes.STRING,

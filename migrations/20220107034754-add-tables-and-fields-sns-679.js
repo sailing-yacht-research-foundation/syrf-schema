@@ -48,16 +48,28 @@ const newVesselColumns = [
     type: DataTypes.STRING,
   },
   {
-    columnName: 'mobilePhoneOnboard',
+    columnName: 'onboardPhone',
     type: DataTypes.STRING,
+  },
+  {
+    columnName: 'isVerifiedOnboardPhone',
+    type: DataTypes.BOOLEAN,
   },
   {
     columnName: 'satelliteNumber',
     type: DataTypes.STRING,
   },
   {
+    columnName: 'isVerifiedSatelliteNumber',
+    type: DataTypes.BOOLEAN,
+  },
+  {
     columnName: 'onboardEmail',
     type: DataTypes.STRING,
+  },
+  {
+    columnName: 'isVerifiedOnboardEmail',
+    type: DataTypes.BOOLEAN,
   },
   {
     columnName: 'ssbTransceiver',
