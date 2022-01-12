@@ -13,14 +13,15 @@ exports.create = async (data, transaction) => {
 };
 
 exports.update = async (id, data, transaction) => {
-  const [updateCount] = await db.Vessel.update(data, {
+  const [updateCount, updatedData] = await db.Vessel.update(data, {
     where: {
       id,
     },
+    returning: true,
     transaction,
   });
 
-  return updateCount;
+  return [updateCount, updatedData];
 };
 
 exports.upsert = async (id, data = {}, transaction = undefined) => {
