@@ -396,3 +396,29 @@ exports.validateAdminsById = async (id, userId) => {
 
   return result;
 };
+
+exports.removeUsersFromEditor = async (vesselId, users, transaction) => {
+  const deleteCount = await db.VesselEditor.destroy({
+    where: {
+      vesselId,
+      userProfileId: {
+        [db.Op.in]: users,
+      },
+    },
+    transaction,
+  });
+  return deleteCount;
+};
+
+exports.removeGroupsFromEditor = async (vesselId, groups, transaction) => {
+  const deleteCount = await db.VesselGroupEditor.destroy({
+    where: {
+      vesselId,
+      groupId: {
+        [db.Op.in]: groups,
+      },
+    },
+    transaction,
+  });
+  return deleteCount;
+};
