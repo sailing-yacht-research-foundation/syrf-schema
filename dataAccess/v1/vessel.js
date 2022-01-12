@@ -215,3 +215,61 @@ exports.bulkCreateWithOptions = async (data, options) => {
   const result = await db.Vessel.bulkCreate(data, options);
   return result;
 };
+
+exports.addEditors = async (vesselId, editors, transaction) => {
+  if (editors.length === 0) {
+    return [];
+  }
+  const result = await db.VesselEditor.bulkCreate(
+    editors.map((userProfileId) => {
+      return {
+        vesselId,
+        userProfileId,
+      };
+    }),
+    {
+      ignoreDuplicates: true,
+      validate: true,
+      transaction,
+    },
+  );
+  return result;
+};
+
+exports.addGroupEditors = async (vesselId, groupEditors, transaction) => {
+  if (groupEditors.length === 0) {
+    return [];
+  }
+  const result = await db.VesselGroupEditor.bulkCreate(
+    groupEditors.map((groupId) => {
+      return {
+        vesselId,
+        groupId,
+      };
+    }),
+    {
+      ignoreDuplicates: true,
+      validate: true,
+      transaction,
+    },
+  );
+  return result;
+};
+
+exports.removeAllEditors = async (vesselId, transaction) => {
+  return await db.VesselEditor.destroy({
+    where: {
+      vesselId,
+    },
+    transaction,
+  });
+};
+
+exports.removeAllGroupEditors = async (vesselId, transaction) => {
+  return await db.VesselGroupEditor.destroy({
+    where: {
+      vesselId,
+    },
+    transaction,
+  });
+};
