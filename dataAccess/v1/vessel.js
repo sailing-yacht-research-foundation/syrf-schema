@@ -1,9 +1,47 @@
 const uuid = require('uuid');
-const { participantInvitationStatus } = require('../../enums');
+const {
+  participantInvitationStatus,
+  groupMemberStatus,
+} = require('../../enums');
 const db = require('../../index');
 const { includeMeta, emptyPagingResponse } = require('../../utils/utils');
 
-const include = [...includeMeta];
+const include = [
+  {
+    model: db.UserProfile,
+    as: 'editors',
+    attributes: ['id', 'name', 'avatar'],
+    through: {
+      attributes: [],
+    },
+  },
+  {
+    model: db.Group,
+    as: 'groupEditors',
+    attributes: ['id', 'groupName', 'groupImage'],
+    through: {
+      attributes: [],
+    },
+    include: [
+      {
+        model: db.GroupMember,
+        as: 'groupMember',
+        attributes: ['id', 'userId'],
+        include: [
+          {
+            as: 'member',
+            model: db.UserProfile,
+            attributes: ['name'],
+          },
+        ],
+        where: {
+          status: groupMemberStatus.accepted,
+        },
+      },
+    ],
+  },
+  ...includeMeta,
+];
 
 exports.create = async (data, transaction) => {
   return await db.Vessel.create(data, {
@@ -69,8 +107,28 @@ exports.getById = async (id) => {
   const result = await db.Vessel.findByPk(id, {
     include,
   });
-
-  return result?.toJSON();
+  let data = result?.toJSON();
+  if (data) {
+    // Combining editors from groupEditors with regular editors
+    const { editors, groupEditors } = data;
+    let editorsFromGroup = [];
+    groupEditors.forEach((group) => {
+      editorsFromGroup = [
+        ...editorsFromGroup,
+        ...group.groupMember.map((row) => {
+          return {
+            id: row.userId,
+            name: row.member?.name,
+          };
+        }),
+      ];
+    });
+    data = {
+      ...data,
+      combinedEditors: [...editors, ...editorsFromGroup],
+    };
+  }
+  return data;
 };
 
 exports.delete = async (id, transaction) => {
@@ -272,4 +330,69 @@ exports.removeAllGroupEditors = async (vesselId, transaction) => {
     },
     transaction,
   });
+};
+
+exports.validateAdminsById = async (id, userId) => {
+  let result = {
+    isOwner: false,
+    isEditor: false,
+    vessel: undefined,
+  };
+  if (id) {
+    const vesselData = await db.Vessel.findByPk(id, {
+      include: [
+        {
+          model: db.UserProfile,
+          as: 'editors',
+          attributes: ['id'],
+          through: {
+            attributes: [],
+          },
+        },
+        {
+          model: db.Group,
+          as: 'groupEditors',
+          attributes: ['id'],
+          through: {
+            attributes: [],
+          },
+          include: [
+            {
+              model: db.GroupMember,
+              as: 'groupMember',
+              attributes: ['id', 'userId'],
+              where: {
+                status: groupMemberStatus.accepted,
+              },
+            },
+          ],
+        },
+      ],
+      attributes: ['id', 'createdById'],
+    });
+
+    let data = vesselData?.toJSON();
+    if (data) {
+      const { editors, groupEditors, createdById } = data;
+      result.vessel = data;
+      result.isOwner = createdById === userId;
+
+      let editorsFromGroup = [];
+      groupEditors.forEach((group) => {
+        editorsFromGroup = [
+          ...editorsFromGroup,
+          ...group.groupMember.map((row) => {
+            return {
+              id: row.userId,
+            };
+          }),
+        ];
+      });
+      const combinedEditors = [...editors, ...editorsFromGroup];
+      result.isEditor =
+        combinedEditors.findIndex((t) => t.id === userId) !== -1;
+    }
+  }
+
+  return result;
 };
