@@ -21,7 +21,7 @@ exports.update = async (id, data, transaction) => {
     transaction,
   });
 
-  return [updateCount, updatedData];
+  return { updateCount, updatedData };
 };
 
 exports.upsert = async (id, data = {}, transaction = undefined) => {
