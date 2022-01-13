@@ -49,16 +49,10 @@ exports.getById = async (id) => {
 };
 
 exports.delete = async (id, transaction) => {
-  const data = await db.VesselLifeRaft.findByPk(id);
-
-  if (data) {
-    await db.VesselLifeRaft.destroy({
-      where: {
-        id: id,
-      },
-      transaction,
-    });
-  }
-
-  return data?.toJSON();
+  return await db.VesselLifeRaft.destroy({
+    where: {
+      id: id,
+    },
+    transaction,
+  });
 };
