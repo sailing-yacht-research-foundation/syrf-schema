@@ -1,5 +1,9 @@
 const { DataTypes } = require('sequelize');
-const { calendarEventStatus } = require('../enums');
+const {
+  calendarEventStatus,
+  eventTypeEnums,
+  participatingFeeTypes,
+} = require('../enums');
 const ModelBase = require('../ModelBase');
 
 class CalendarEvent extends ModelBase {
@@ -169,6 +173,42 @@ module.exports = (sequelize) => {
       stripePricingId: {
         type: DataTypes.STRING,
         allowNull: true,
+      },
+      eventTypes: {
+        type: DataTypes.ENUM(Object.values(eventTypeEnums)),
+      },
+      hashtag: {
+        type: DataTypes.STRING,
+      },
+      participatingFeeType: {
+        type: DataTypes.ENUM(Object.values(participatingFeeTypes)),
+      },
+      noticeOfRacePDF: {
+        type: DataTypes.STRING,
+      },
+      mediaWaiverPDF: {
+        type: DataTypes.STRING,
+      },
+      disclaimerPDF: {
+        type: DataTypes.STRING,
+      },
+      isCrewed: {
+        type: DataTypes.BOOLEAN,
+        comment: 'true -> Crewed, false -> SingleHanded',
+      },
+      crewedMinValue: {
+        type: DataTypes.SMALLINT,
+      },
+      crewedMaxValue: {
+        type: DataTypes.SMALLINT,
+      },
+      requireCovidCertificate: {
+        type: DataTypes.BOOLEAN,
+      },
+      requiredCertifications: {
+        type: DataTypes.ARRAY(DataTypes.STRING),
+        comments:
+          'List of all required certifications, should be for display purposes only',
       },
     },
     {

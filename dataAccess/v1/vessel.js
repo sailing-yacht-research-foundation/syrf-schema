@@ -1,9 +1,66 @@
 const uuid = require('uuid');
-const { participantInvitationStatus } = require('../../enums');
+const {
+  participantInvitationStatus,
+  groupMemberStatus,
+} = require('../../enums');
 const db = require('../../index');
 const { includeMeta, emptyPagingResponse } = require('../../utils/utils');
 
-const include = [...includeMeta];
+const include = [
+  {
+    model: db.UserProfile,
+    as: 'editors',
+    attributes: ['id', 'name', 'avatar'],
+    through: {
+      attributes: [],
+    },
+  },
+  {
+    model: db.Group,
+    as: 'groupEditors',
+    attributes: ['id', 'groupName', 'groupImage'],
+    through: {
+      attributes: [],
+    },
+    include: [
+      {
+        model: db.GroupMember,
+        as: 'groupMember',
+        attributes: ['id', 'userId'],
+        include: [
+          {
+            as: 'member',
+            model: db.UserProfile,
+            attributes: ['name'],
+          },
+        ],
+        where: {
+          status: groupMemberStatus.accepted,
+        },
+      },
+    ],
+  },
+  ...includeMeta,
+];
+
+exports.create = async (data, transaction) => {
+  return await db.Vessel.create(data, {
+    validate: true,
+    transaction,
+  });
+};
+
+exports.update = async (id, data, transaction) => {
+  const [updateCount, updatedData] = await db.Vessel.update(data, {
+    where: {
+      id,
+    },
+    returning: true,
+    transaction,
+  });
+
+  return { updateCount, updatedData };
+};
 
 exports.upsert = async (id, data = {}, transaction = undefined) => {
   if (!id) id = uuid.v4();
@@ -50,8 +107,28 @@ exports.getById = async (id) => {
   const result = await db.Vessel.findByPk(id, {
     include,
   });
-
-  return result?.toJSON();
+  let data = result?.toJSON();
+  if (data) {
+    // Combining editors from groupEditors with regular editors
+    const { editors, groupEditors } = data;
+    let editorsFromGroup = [];
+    groupEditors.forEach((group) => {
+      editorsFromGroup = [
+        ...editorsFromGroup,
+        ...group.groupMember.map((row) => {
+          return {
+            id: row.userId,
+            name: row.member?.name,
+          };
+        }),
+      ];
+    });
+    data = {
+      ...data,
+      combinedEditors: [...editors, ...editorsFromGroup],
+    };
+  }
+  return data;
 };
 
 exports.delete = async (id, transaction) => {
@@ -195,4 +272,153 @@ exports.bulkCreateWithOptions = async (data, options) => {
   }
   const result = await db.Vessel.bulkCreate(data, options);
   return result;
+};
+
+exports.addEditors = async (vesselId, editors, transaction) => {
+  if (editors.length === 0) {
+    return [];
+  }
+  const result = await db.VesselEditor.bulkCreate(
+    editors.map((userProfileId) => {
+      return {
+        vesselId,
+        userProfileId,
+      };
+    }),
+    {
+      ignoreDuplicates: true,
+      validate: true,
+      transaction,
+    },
+  );
+  return result;
+};
+
+exports.addGroupEditors = async (vesselId, groupEditors, transaction) => {
+  if (groupEditors.length === 0) {
+    return [];
+  }
+  const result = await db.VesselGroupEditor.bulkCreate(
+    groupEditors.map((groupId) => {
+      return {
+        vesselId,
+        groupId,
+      };
+    }),
+    {
+      ignoreDuplicates: true,
+      validate: true,
+      transaction,
+    },
+  );
+  return result;
+};
+
+exports.removeAllEditors = async (vesselId, transaction) => {
+  return await db.VesselEditor.destroy({
+    where: {
+      vesselId,
+    },
+    transaction,
+  });
+};
+
+exports.removeAllGroupEditors = async (vesselId, transaction) => {
+  return await db.VesselGroupEditor.destroy({
+    where: {
+      vesselId,
+    },
+    transaction,
+  });
+};
+
+exports.validateAdminsById = async (id, userId) => {
+  let result = {
+    isOwner: false,
+    isEditor: false,
+    vessel: undefined,
+  };
+  if (id) {
+    const vesselData = await db.Vessel.findByPk(id, {
+      include: [
+        {
+          model: db.UserProfile,
+          as: 'editors',
+          attributes: ['id'],
+          through: {
+            attributes: [],
+          },
+        },
+        {
+          model: db.Group,
+          as: 'groupEditors',
+          attributes: ['id'],
+          through: {
+            attributes: [],
+          },
+          include: [
+            {
+              model: db.GroupMember,
+              as: 'groupMember',
+              attributes: ['id', 'userId'],
+              where: {
+                status: groupMemberStatus.accepted,
+              },
+            },
+          ],
+        },
+      ],
+      attributes: ['id', 'createdById'],
+    });
+
+    let data = vesselData?.toJSON();
+    if (data) {
+      const { editors, groupEditors, createdById } = data;
+      result.vessel = data;
+      result.isOwner = createdById === userId;
+
+      let editorsFromGroup = [];
+      groupEditors.forEach((group) => {
+        editorsFromGroup = [
+          ...editorsFromGroup,
+          ...group.groupMember.map((row) => {
+            return {
+              id: row.userId,
+            };
+          }),
+        ];
+      });
+      const combinedEditors = [...editors, ...editorsFromGroup];
+      result.isEditor =
+        combinedEditors.findIndex((t) => t.id === userId) !== -1;
+    }
+  }
+
+  return result;
+};
+
+exports.removeUsersFromEditor = async (vesselId, users, transaction) => {
+  const deleteCount = await db.VesselEditor.destroy({
+    where: {
+      vesselId,
+      userProfileId: {
+        [db.Op.in]: users,
+      },
+    },
+    transaction,
+  });
+  return deleteCount;
+};
+
+exports.removeGroupsFromEditor = async (vesselId, groups, transaction) => {
+  const deleteCount = await db.VesselGroupEditor.destroy({
+    where: {
+      vesselId,
+      groupId: {
+        [db.Op.in]: groups,
+      },
+    },
+    transaction,
+  });
+  return deleteCount;
 };

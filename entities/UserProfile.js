@@ -16,6 +16,14 @@ class UserProfile extends ModelBase {
       constraints: false,
     });
 
+    this.belongsToMany(models.Vessel, {
+      through: 'VesselEditors',
+      as: 'vesselEditors',
+      constraints: false,
+      foreignKey: 'userProfileId',
+      otherKey: 'vesselId',
+    });
+
     this.hasMany(models.UserFollower, {
       as: 'follower',
       constraints: false,
@@ -50,6 +58,13 @@ class UserProfile extends ModelBase {
       as: 'subscription',
       constraints: false,
       foreignKey: 'subscriptionTier',
+    });
+
+    this.hasOne(models.UserShareableInfo, {
+      as: 'shareables',
+      constraints: false,
+      sourceKey: 'id',
+      foreignKey: 'userId',
     });
   }
 }
@@ -143,6 +158,9 @@ module.exports = (sequelize) => {
       latestInvoice: {
         type: DataTypes.STRING,
         allowNull: true,
+      },
+      interests: {
+        type: DataTypes.JSONB,
       },
     },
     {

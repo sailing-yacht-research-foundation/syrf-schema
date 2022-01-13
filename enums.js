@@ -285,6 +285,36 @@ const stripeAccountUpdateType = {
   update: 'account_update',
 };
 
+const vesselTypeEnums = {
+  FOILBOARD: 'FOIL_BOARD',
+  BOARD: 'BOARD',
+  DINGHY: 'DINGHY',
+  KEELBOAT: 'KEELBOAT',
+  OTHER: 'OTHER',
+};
+
+const lifeRaftOwnership = {
+  OWNED: 'OWNED',
+  RENTED: 'RENTED',
+};
+
+const eventTypeEnums = {
+  ONEDESIGN: 'ONE_DESIGN',
+  HANDICAP: 'HANDICAP_RACE',
+  KITESURFING: 'KITESURFING',
+  WINGING: 'WINGING',
+  WINDSURFING: 'WINDSURFING',
+  CRUISING: 'CRUISING',
+  RALLY: 'RALLY',
+  TRAINING: 'TRAINING',
+  OTHER: 'OTHER',
+};
+
+const participatingFeeTypes = {
+  PERSON: 'PERSON',
+  VESSEL: 'VESSEL',
+};
+
 module.exports = {
   competitionUnitStatus,
   calendarEventStatus,
@@ -321,4 +351,8 @@ module.exports = {
   stripeCheckoutStatus,
   stripeInvoiceStatus,
   stripeAccountUpdateType,
+  vesselTypeEnums,
+  lifeRaftOwnership,
+  eventTypeEnums,
+  participatingFeeTypes,
 };

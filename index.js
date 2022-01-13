@@ -15,8 +15,10 @@ const sequelize = new Sequelize(
 const db = {};
 
 db.UserProfile = require('./entities/UserProfile')(sequelize);
+db.UserShareableInfo = require('./entities/UserShareableInfo')(sequelize);
 db.Participant = require('./entities/Participant')(sequelize);
 db.Vessel = require('./entities/Vessel')(sequelize);
+db.VesselLifeRaft = require('./entities/VesselLifeRaft')(sequelize);
 db.VesselParticipant = require('./entities/VesselParticipant')(sequelize);
 db.VesselParticipantCrew = require('./entities/VesselParticipantCrew')(
   sequelize,
@@ -24,6 +26,8 @@ db.VesselParticipantCrew = require('./entities/VesselParticipantCrew')(
 db.VesselParticipantGroup = require('./entities/VesselParticipantGroup')(
   sequelize,
 );
+db.VesselEditor = require('./entities/VesselEditor')(sequelize);
+db.VesselGroupEditor = require('./entities/VesselGroupEditor')(sequelize);
 db.CalendarEvent = require('./entities/CalendarEvent')(sequelize);
 db.CompetitionUnit = require('./entities/CompetitionUnit')(sequelize);
 db.Course = require('./entities/Course')(sequelize);
