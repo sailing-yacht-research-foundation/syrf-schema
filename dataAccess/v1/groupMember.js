@@ -376,3 +376,25 @@ exports.getCurrentAcceptedMembers = async (groupIds) => {
   });
   return [...new Set(users.map((row) => row.userId))];
 };
+
+exports.getMembersById = async (groupId) => {
+  groupId = Array.isArray(groupId) ? groupId : [groupId];
+
+  const result = await db.GroupMember.findAll({
+    where: {
+      groupId: {
+        [db.Op.in]: groupId,
+      },
+      status: groupMemberStatus.accepted,
+    },
+    attributes: ['id', 'groupId', 'status', 'joinDate', 'isAdmin', 'userId'],
+    include: [
+      {
+        model: db.UserProfile,
+        as: 'member',
+        attributes: ['id', 'name', 'avatar'],
+      },
+    ],
+  });
+  return result.map((t) => t.toJSON());
+};
