@@ -38,7 +38,7 @@ const include = [
           {
             as: 'member',
             model: db.UserProfile,
-            attributes: ['name'],
+            attributes: ['id', 'name', 'avatar'],
           },
         ],
         where: {
@@ -212,6 +212,9 @@ exports.getById = async (id, transaction) => {
           return {
             id: row.userId,
             name: row.member.name,
+            avatar: row.member.avatar,
+            fromGroup: true,
+            groupId: row.groupId,
           };
         }),
       ];
@@ -221,7 +224,11 @@ exports.getById = async (id, transaction) => {
       lon: location?.coordinates?.[0],
       lat: location?.coordinates?.[1],
       editors: [...editors, ...editorsFromGroup],
-      groups: groupEditors.map((group) => group.id),
+      groups: groupEditors.map((group) => ({
+        id: group.id,
+        groupName: group.groupName,
+        groupImage: group.groupImage,
+      })),
     };
   }
   return data;
