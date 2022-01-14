@@ -504,3 +504,16 @@ exports.removeFromAllVesselParticipant = async (
 
   return result;
 };
+
+exports.getAllWithoutPaging = async (where, attributes, transaction) => {
+  let params = {};
+
+  if (where) params.where = where;
+  if (attributes) params.attributes = attributes;
+
+  return await db.Participant.findAll({
+    ...params,
+    transaction,
+    raw: true,
+  });
+};
