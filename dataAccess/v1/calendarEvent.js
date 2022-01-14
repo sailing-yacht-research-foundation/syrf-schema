@@ -695,14 +695,14 @@ exports.getBulkEventEditors = async (idList) => {
   });
 
   groupEditors.forEach((row) => {
-    const { calendarEventId, user } = row;
+    const { calendarEventId, group } = row;
     if (!calendarEventEditors[calendarEventId]) {
       calendarEventEditors[calendarEventId] = {
         editors: [],
         groupEditors: [],
       };
     }
-    calendarEventEditors[calendarEventId].groupEditors.push(user);
+    calendarEventEditors[calendarEventId].groupEditors.push(group);
   });
   return calendarEventEditors;
 };
