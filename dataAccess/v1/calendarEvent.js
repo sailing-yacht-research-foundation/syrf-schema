@@ -12,6 +12,7 @@ const {
   participantInvitationStatus,
 } = require('../../enums');
 const { includeMeta, emptyPagingResponse } = require('../../utils/utils');
+const { Op } = require('../../index');
 
 const include = [
   {
@@ -650,4 +651,58 @@ exports.clearGroupAdmins = async (id, transaction) => {
   );
 
   return result;
+};
+
+exports.getBulkEventEditors = async (idList) => {
+  const individualEditors = await db.CalendarEditor.findAll({
+    where: {
+      CalendarEventId: {
+        [Op.in]: idList,
+      },
+    },
+    include: [
+      {
+        model: db.UserProfile,
+        as: 'user',
+        attributes: ['id', 'name', 'avatar'],
+      },
+    ],
+  });
+  const groupEditors = await db.CalendarGroupEditor.findAll({
+    where: {
+      calendarEventId: {
+        [Op.in]: idList,
+      },
+    },
+    include: [
+      {
+        model: db.Group,
+        as: 'group',
+        attributes: ['id', 'groupName', 'groupImage'],
+      },
+    ],
+  });
+  const calendarEventEditors = {};
+  individualEditors.forEach((row) => {
+    const { CalendarEventId: eventId, user } = row;
+    if (!calendarEventEditors[eventId]) {
+      calendarEventEditors[eventId] = {
+        editors: [],
+        groupEditors: [],
+      };
+    }
+    calendarEventEditors[eventId].editors.push(user);
+  });
+
+  groupEditors.forEach((row) => {
+    const { calendarEventId, user } = row;
+    if (!calendarEventEditors[calendarEventId]) {
+      calendarEventEditors[calendarEventId] = {
+        editors: [],
+        groupEditors: [],
+      };
+    }
+    calendarEventEditors[calendarEventId].groupEditors.push(user);
+  });
+  return calendarEventEditors;
 };
