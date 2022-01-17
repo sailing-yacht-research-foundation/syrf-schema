@@ -758,3 +758,16 @@ exports.getEventForScheduler = async (statusArray, filterDateStart) => {
     };
   });
 };
+
+exports.bulkUpdate = async (idList, data, transaction) => {
+  const [updateCount] = await db.CalendarEvent.update(data, {
+    where: {
+      id: {
+        [Op.in]: idList,
+      },
+    },
+    transaction,
+  });
+
+  return updateCount;
+};
