@@ -713,3 +713,61 @@ exports.getBulkEventEditors = async (idList) => {
   });
   return calendarEventEditors;
 };
+
+exports.getEventForScheduler = async (statusArray, filterDateStart) => {
+  let where = {
+    status: {
+      [Op.in]: statusArray,
+    },
+    approximateEndTime_utc: {
+      [Op.lte]: filterDateStart,
+    },
+  };
+  let order = [['approximateEndTime_utc', 'ASC']];
+
+  const result = await db.CalendarEvent.findAll({
+    attributes: ['id', 'name', 'status', 'approximateEndTime_utc'],
+    include: [
+      {
+        model: db.CompetitionUnit,
+        as: 'competitionUnit',
+        attributes: ['id', 'name', 'status'],
+      },
+    ],
+    where,
+    order,
+  });
+
+  return result.map((row) => {
+    const {
+      id: calendarEventId,
+      name: calendarEventName,
+      status,
+      approximateEndTime_utc: endTime,
+      competitionUnit,
+    } = row;
+    return {
+      calendarEventId,
+      calendarEventName,
+      status,
+      approximateEndTime_utc: endTime,
+      competitionUnits: competitionUnit.map((cUnit) => {
+        const { id: competitionUnitId, status, name } = cUnit;
+        return { competitionUnitId, status, name };
+      }),
+    };
+  });
+};
+
+exports.bulkUpdate = async (idList, data, transaction) => {
+  const [updateCount] = await db.CalendarEvent.update(data, {
+    where: {
+      id: {
+        [Op.in]: idList,
+      },
+    },
+    transaction,
+  });
+
+  return updateCount;
+};
