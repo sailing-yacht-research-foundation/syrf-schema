@@ -130,6 +130,11 @@ module.exports = (sequelize) => {
       handicap: {
         type: DataTypes.STRING,
       },
+      failedSetupCount: {
+        type: DataTypes.SMALLINT,
+        comment:
+          'How many times analysis engine start this competition but crashes in the middle',
+      },
     },
     {
       modelName: 'CompetitionUnit',

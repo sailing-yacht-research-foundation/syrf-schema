@@ -13,6 +13,8 @@ module.exports = {
           'failedSetupCount',
           {
             type: Sequelize.DataTypes.SMALLINT,
+            comment:
+              'How many times analysis engine start this competition but crashes in the middle',
           },
           { transaction },
         );
