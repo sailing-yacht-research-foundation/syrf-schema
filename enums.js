@@ -285,6 +285,29 @@ const stripeAccountUpdateType = {
   update: 'account_update',
 };
 
+const stripePaymentMethods = {
+  acssDebit: 'acss_debit',
+  auBecsDebit: 'au_becs_debit',
+  bancontact: 'bancontact',
+  card: 'card',
+  cardPresent: 'card_present',
+  eps: 'eps',
+  giropay: 'giropay',
+  ideal: 'ideal',
+  p24: 'p24',
+  sepaDebit: 'sepa_debit',
+  sofort: 'sofort',
+};
+
+const stripeSetupIntentStatus = {
+  requiresPaymentMethod: 'requires_payment_method',
+  requiresConfirmation: 'requires_confirmation',
+  requiresAction: 'requires_action',
+  processing: 'processing',
+  canceled: 'canceled',
+  succeeded: 'succeeded',
+};
+
 const vesselTypeEnums = {
   FOILBOARD: 'FOIL_BOARD',
   BOARD: 'BOARD',
@@ -351,6 +374,8 @@ module.exports = {
   stripeCheckoutStatus,
   stripeInvoiceStatus,
   stripeAccountUpdateType,
+  stripePaymentMethods,
+  stripeSetupIntentStatus,
   vesselTypeEnums,
   lifeRaftOwnership,
   eventTypeEnums,

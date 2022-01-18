@@ -107,3 +107,12 @@ exports.getByStripeSubscription = async (
     raw: true,
   });
 };
+
+exports.getByStripeCustomer = async (stripeCustomerId) => {
+  return await db.UserProfile.findOne({
+    where: {
+      stripeCustomerId,
+    },
+    raw: true,
+  });
+};
