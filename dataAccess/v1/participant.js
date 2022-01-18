@@ -253,8 +253,8 @@ exports.getEvent = async (id) => {
   return result?.toJSON();
 };
 
-exports.getRaces = async (id, pagination) => {
-  const participant = await db.Participant.findByPk(id);
+const getRacesQuery = async (participantId) => {
+  const participant = await db.Participant.findByPk(participantId);
   if (!participant)
     throw new ValidationError(
       'participant not found',
@@ -263,50 +263,75 @@ exports.getRaces = async (id, pagination) => {
       errorCodes.DATA_VALIDATION_FAILED,
     );
 
-  const result = await db.CompetitionUnit.findAllWithPaging(
-    {
-      where: {
-        calendarEventId: participant.calendarEventId,
-      },
-      attributes: {
-        exclude: ['boundingBox', 'createdById', 'updatedById', 'developerId'],
-      },
-      include: [
-        {
-          model: db.VesselParticipantGroup,
-          as: 'vesselParticipantGroup',
-          required: true,
-          attributes: ['id', 'vesselParticipantGroupId'],
-          include: [
-            {
-              model: db.VesselParticipant,
-              as: 'vesselParticipants',
-              required: true,
-              attributes: ['id', 'vesselParticipantId'],
-              include: [
-                {
-                  model: db.Vessel,
-                  as: 'vessel',
-                  attributes: ['id', 'globalId', 'publicName'],
-                  paranoid: false,
-                },
-                {
-                  model: db.Participant,
-                  as: 'participants',
-                  required: true,
+  return {
+    where: {
+      calendarEventId: participant.calendarEventId,
+    },
+    attributes: {
+      exclude: ['boundingBox', 'createdById', 'updatedById', 'developerId'],
+    },
+    include: [
+      {
+        model: db.VesselParticipantGroup,
+        as: 'group',
+        required: true,
+        attributes: ['id', 'vesselParticipantGroupId', 'name'],
+        include: [
+          {
+            model: db.VesselParticipant,
+            as: 'vesselParticipants',
+            required: true,
+            attributes: ['id', 'vesselParticipantId', 'vesselId'],
+            include: [
+              {
+                model: db.Vessel,
+                as: 'vessel',
+                attributes: ['id', 'globalId', 'publicName'],
+                paranoid: false,
+              },
+              {
+                model: db.Participant,
+                as: 'participants',
+                through: {
                   attributes: [],
-                  where: {
-                    id: id,
+                },
+                required: true,
+                attributes: [
+                  'id',
+                  'publicName',
+                  'trackerUrl',
+                  'userProfileId',
+                  'invitationStatus',
+                ],
+                where: {
+                  id: participantId,
+                  invitationStatus: {
+                    [db.Op.in]: [
+                      participantInvitationStatus.ACCEPTED,
+                      participantInvitationStatus.SELF_REGISTERED,
+                    ],
                   },
                 },
-              ],
-            },
-          ],
-        },
-      ],
-    },
+              },
+            ],
+          },
+        ],
+      },
+    ],
+  };
+};
+
+exports.getRaces = async (id, pagination) => {
+  const result = await db.CompetitionUnit.findAllWithPaging(
+    await getRacesQuery(id),
     pagination,
   );
+
+  return result;
+};
+
+exports.getRacesWithoutPaging = async (id) => {
+  const result = await db.CompetitionUnit.findAll(await getRacesQuery(id));
 
   return result;
 };
@@ -516,4 +541,68 @@ exports.getAllWithoutPaging = async (where, attributes, transaction) => {
     transaction,
     raw: true,
   });
+};
+
+exports.getByUserAndRace = async (raceId, userId, transaction) => {
+  const result = await db.CompetitionUnit.findOne(
+    {
+      where: {
+        id: raceId,
+      },
+      attributes: {
+        exclude: ['boundingBox', 'createdById', 'updatedById', 'developerId'],
+      },
+      include: [
+        {
+          model: db.VesselParticipantGroup,
+          as: 'group',
+          required: true,
+          attributes: ['id', 'vesselParticipantGroupId', 'name'],
+          include: [
+            {
+              model: db.VesselParticipant,
+              as: 'vesselParticipants',
+              required: true,
+              attributes: ['id', 'vesselParticipantId', 'vesselId'],
+              include: [
+                {
+                  model: db.Vessel,
+                  as: 'vessel',
+                  attributes: ['id', 'globalId', 'publicName'],
+                  paranoid: false,
+                },
+                {
+                  model: db.Participant,
+                  as: 'participants',
+                  required: true,
+                  through: {
+                    attributes: [],
+                  },
+                  attributes: [
+                    'id',
+                    'publicName',
+                    'trackerUrl',
+                    'userProfileId',
+                    'invitationStatus',
+                  ],
+                  where: {
+                    userProfileId: userId,
+                    invitationStatus: {
+                      [db.Op.in]: [
+                        participantInvitationStatus.ACCEPTED,
+                        participantInvitationStatus.SELF_REGISTERED,
+                      ],
+                    },
+                  },
+                },
+              ],
+            },
+          ],
+        },
+      ],
+    },
+    transaction,
+  );
+
+  return result?.toJSON();
 };
