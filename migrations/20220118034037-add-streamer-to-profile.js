@@ -20,17 +20,6 @@ module.exports = {
         );
       }
 
-      if (!table.stripePaymentIntent) {
-        await queryInterface.addColumn(
-          tableName,
-          'stripePaymentIntent',
-          {
-            type: Sequelize.DataTypes.STRING,
-          },
-          { transaction },
-        );
-      }
-
       if (!table.hasVerifiedStripePayment) {
         await queryInterface.addColumn(
           tableName,
@@ -49,9 +38,6 @@ module.exports = {
   down: async (queryInterface) => {
     await queryInterface.sequelize.transaction(async (transaction) => {
       await queryInterface.removeColumn(tableName, 'isStreamer', {
-        transaction,
-      });
-      await queryInterface.removeColumn(tableName, 'stripePaymentIntent', {
         transaction,
       });
       await queryInterface.removeColumn(tableName, 'hasVerifiedStripePayment', {

@@ -167,9 +167,6 @@ module.exports = (sequelize) => {
         defaultValue: false,
         allowNull: false,
       },
-      stripePaymentIntent: {
-        type: DataTypes.STRING,
-      },
       hasVerifiedStripePayment: {
         type: DataTypes.BOOLEAN,
         defaultValue: false,
