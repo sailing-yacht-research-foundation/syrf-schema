@@ -162,6 +162,11 @@ module.exports = (sequelize) => {
       interests: {
         type: DataTypes.JSONB,
       },
+      isStreamer: {
+        type: DataTypes.BOOLEAN,
+        defaultValue: false,
+        allowNull: false,
+      },
     },
     {
       modelName: 'UserProfile',
