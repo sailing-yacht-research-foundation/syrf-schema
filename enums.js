@@ -299,6 +299,15 @@ const stripePaymentMethods = {
   sofort: 'sofort',
 };
 
+const stripeSetupIntentStatus = {
+  requiresPaymentMethod: 'requires_payment_method',
+  requiresConfirmation: 'requires_confirmation',
+  requiresAction: 'requires_action',
+  processing: 'processing',
+  canceled: 'canceled',
+  succeeded: 'succeeded',
+};
+
 const vesselTypeEnums = {
   FOILBOARD: 'FOIL_BOARD',
   BOARD: 'BOARD',
@@ -366,6 +375,7 @@ module.exports = {
   stripeInvoiceStatus,
   stripeAccountUpdateType,
   stripePaymentMethods,
+  stripeSetupIntentStatus,
   vesselTypeEnums,
   lifeRaftOwnership,
   eventTypeEnums,
