@@ -270,6 +270,8 @@ const getRacesQuery = async (participantId) => {
     attributes: {
       exclude: ['boundingBox', 'createdById', 'updatedById', 'developerId'],
     },
+    raw: true,
+    nest: true,
     include: [
       {
         model: db.VesselParticipantGroup,
@@ -549,6 +551,8 @@ exports.getByUserAndRace = async (raceId, userId, transaction) => {
       where: {
         id: raceId,
       },
+      raw: true,
+      nest: true,
       attributes: {
         exclude: ['boundingBox', 'createdById', 'updatedById', 'developerId'],
       },
@@ -604,5 +608,5 @@ exports.getByUserAndRace = async (raceId, userId, transaction) => {
     transaction,
   );
 
-  return result?.toJSON();
+  return result;
 };
