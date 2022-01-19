@@ -168,6 +168,7 @@ const bullQueues = {
   courseEdit: 'course_edit',
   participantEdit: 'participant_edit',
   eventStop: 'event_stop',
+  importTrack: 'import_track',
 };
 
 const externalServiceSources = {
