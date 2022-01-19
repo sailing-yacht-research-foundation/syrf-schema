@@ -454,3 +454,22 @@ exports.bulkCreateWithOptions = async (data, options) => {
   const result = await db.VesselParticipant.bulkCreate(data, options);
   return result;
 };
+
+exports.getParticipantCrews = async (id, transaction) => {
+  const results = await db.VesselParticipantCrew.findAll({
+    where: {
+      vesselParticipantId: id,
+    },
+    include: [
+      {
+        model: db.Participant,
+        as: 'participant',
+      },
+    ],
+    raw: true,
+    nest: true,
+    transaction,
+  });
+
+  return results;
+};
