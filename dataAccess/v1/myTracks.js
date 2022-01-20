@@ -234,13 +234,23 @@ exports.getMyTrackByCompetition = async (userId, competitionUnitId) => {
   return result;
 };
 
-exports.addMyTrack = async (id, data) => {
+exports.addMyTrack = async (id, data, transaction) => {
   if (!id) id = uuid.v4();
 
-  const [result] = await db.TrackHistory.upsert({
-    ...data,
-    id,
-  });
+  const [result] = await db.TrackHistory.upsert(
+    {
+      ...data,
+      id,
+    },
+    { transaction },
+  );
 
   return result?.toJSON();
+};
+
+exports.addCrewTrackJson = async (data, transaction) => {
+  return await db.VesselParticipantCrewTrackJson.create(data, {
+    validate: true,
+    transaction,
+  });
 };
