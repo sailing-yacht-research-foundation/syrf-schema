@@ -169,6 +169,7 @@ const bullQueues = {
   participantEdit: 'participant_edit',
   eventStop: 'event_stop',
   importTrack: 'import_track',
+  calculateImport: 'calculate_import_track',
 };
 
 const externalServiceSources = {
@@ -339,6 +340,11 @@ const participatingFeeTypes = {
   VESSEL: 'VESSEL',
 };
 
+const dataSources = {
+  SYRF: 'SYRF',
+  IMPORT: 'IMPORT',
+};
+
 module.exports = {
   competitionUnitStatus,
   calendarEventStatus,
@@ -381,4 +387,5 @@ module.exports = {
   lifeRaftOwnership,
   eventTypeEnums,
   participatingFeeTypes,
+  dataSources,
 };
