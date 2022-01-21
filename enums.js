@@ -189,6 +189,12 @@ const redisKeyPrefixes = {
   PHONE_VERIFY_CODE: 'phone_verify_code_',
   PHONE_VERIFY_LOCK: 'phone_verify_lock_',
   PHONE_VERIFY_ATTEMP: 'phone_verify_attempt_',
+  VESSEL_SATELLITE_VERIFY_CODE: 'vessel_satellite_verify_code_',
+  VESSEL_SATELLITE_VERIFY_LOCK: 'vessel_satellite_verify_lock_',
+  VESSEL_SATELLITE_VERIFY_ATTEMPT: 'vessel_satellite_verify_attempt_',
+  VESSEL_ONBOARD_PHONE_VERIFY_CODE: 'vessel_onboard_phone_verify_code_',
+  VESSEL_ONBOARD_PHONE_VERIFY_LOCK: 'vessel_onboard_phone_verify_lock_',
+  VESSEL_ONBOARD_PHONE_VERIFY_ATTEMPT: 'vessel_onboard_phone_verify_attempt_',
 };
 
 const vesselEvents = {
