@@ -273,7 +273,7 @@ const getRacesQuery = async (participantId) => {
     include: [
       {
         model: db.VesselParticipantGroup,
-        as: 'group',
+        as: 'group', // using group instead of vesselParticipantGroup as alias to avoid column name length limitation of postgres
         required: true,
         attributes: ['id', 'vesselParticipantGroupId', 'name'],
         include: [
