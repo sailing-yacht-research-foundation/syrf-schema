@@ -466,10 +466,8 @@ exports.getParticipantCrews = async (id, transaction) => {
         as: 'participant',
       },
     ],
-    raw: true,
-    nest: true,
     transaction,
   });
 
-  return results;
+  return results.map((t) => t.toJSON());
 };
