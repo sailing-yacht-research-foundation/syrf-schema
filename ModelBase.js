@@ -132,7 +132,7 @@ class ModelBase extends Model {
 
     return {
       count,
-      rows: result,
+      rows: result.map((t) => t.toJSON()),
       page,
       size: pagingSize,
       sort: sortQuery,

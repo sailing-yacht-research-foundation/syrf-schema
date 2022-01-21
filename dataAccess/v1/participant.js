@@ -270,12 +270,10 @@ const getRacesQuery = async (participantId) => {
     attributes: {
       exclude: ['boundingBox', 'createdById', 'updatedById', 'developerId'],
     },
-    raw: true,
-    nest: true,
     include: [
       {
         model: db.VesselParticipantGroup,
-        as: 'group',
+        as: 'group', // using group instead of vesselParticipantGroup as alias to avoid column name length limitation of postgres
         required: true,
         attributes: ['id', 'vesselParticipantGroupId', 'name'],
         include: [
@@ -335,7 +333,7 @@ exports.getRaces = async (id, pagination) => {
 exports.getRacesWithoutPaging = async (id) => {
   const result = await db.CompetitionUnit.findAll(await getRacesQuery(id));
 
-  return result;
+  return result?.map((t) => t.toJSON());
 };
 
 exports.getByUserAndEvent = async (
