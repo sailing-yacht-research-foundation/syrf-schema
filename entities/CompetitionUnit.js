@@ -128,7 +128,7 @@ module.exports = (sequelize) => {
         type: DataTypes.STRING,
       },
       handicap: {
-        type: DataTypes.STRING,
+        type: DataTypes.ARRAY(DataTypes.STRING),
       },
       failedSetupCount: {
         type: DataTypes.SMALLINT,
