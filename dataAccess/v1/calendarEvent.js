@@ -611,7 +611,7 @@ exports.getUserEvents = async (paging, userId) => {
 
   const formattedRows = [];
   rows.forEach((row) => {
-    const plainData = row.get({ plain: true });
+    const plainData = row;
     const { location, ...otherData } = plainData;
     formattedRows.push({
       ...otherData,
