@@ -328,17 +328,36 @@ exports.searchFollowedUser = async ({ page, size, name }, userId) => {
   return result;
 };
 
-exports.getBidirectionalFollowStatus = async (userA, userB) => {
+exports.getBidirectionalFollowStatus = async (targetUser, requester) => {
   const result = await db.UserFollower.findAll({
     where: {
       [Op.or]: [
-        { userId: userA, followerId: userB },
-        { userId: userB, followerId: userA },
+        { userId: targetUser, followerId: requester },
+        { userId: requester, followerId: targetUser },
       ],
     },
     attributes: ['userId', 'followerId', 'status'],
     raw: true,
   });
-
-  return result;
+  let isBlocking = false;
+  let isBlocked = false;
+  let followStatus = null;
+  result.forEach((row) => {
+    if (row.userId === requester && row.status === followerStatus.blocked) {
+      // Requesting user blocks the profile
+      isBlocking = true;
+    }
+    if (row.followerId === requester && row.status === followerStatus.blocked) {
+      // Profile owner blocks the user
+      isBlocked = true;
+    }
+    if (row.followerId === requester) {
+      followStatus = row.status;
+    }
+  });
+  return {
+    isBlocking,
+    isBlocked,
+    followStatus,
+  };
 };
