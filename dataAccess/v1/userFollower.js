@@ -143,6 +143,12 @@ exports.update = async ({ userId, followerId, status }, transaction) => {
   return updateCount;
 };
 
+exports.upsert = async (data) => {
+  const [result] = await db.UserFollower.upsert(data);
+
+  return result?.toJSON();
+};
+
 exports.delete = async ({ userId, followerId }, transaction) => {
   const deleteCount = await db.UserFollower.destroy({
     where: {
