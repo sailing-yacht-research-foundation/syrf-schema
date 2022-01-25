@@ -141,6 +141,7 @@ const groupMemberStatus = {
   requested: 'REQUESTED',
   accepted: 'ACCEPTED',
   declined: 'DECLINED',
+  blocked: 'BLOCKED',
 };
 
 const followerStatus = {
