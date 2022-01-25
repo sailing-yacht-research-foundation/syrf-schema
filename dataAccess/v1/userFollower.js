@@ -327,3 +327,18 @@ exports.searchFollowedUser = async ({ page, size, name }, userId) => {
   });
   return result;
 };
+
+exports.getBidirectionalFollowStatus = async (userA, userB) => {
+  const result = await db.UserFollower.findAll({
+    where: {
+      [Op.or]: [
+        { userId: userA, followerId: userB },
+        { userId: userB, followerId: userA },
+      ],
+    },
+    attributes: ['userId', 'followerId', 'status'],
+    raw: true,
+  });
+
+  return result;
+};
