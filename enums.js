@@ -141,11 +141,13 @@ const groupMemberStatus = {
   requested: 'REQUESTED',
   accepted: 'ACCEPTED',
   declined: 'DECLINED',
+  blocked: 'BLOCKED',
 };
 
 const followerStatus = {
   accepted: 'ACCEPTED',
   requested: 'REQUESTED',
+  blocked: 'BLOCKED',
 };
 
 const groupTypes = {

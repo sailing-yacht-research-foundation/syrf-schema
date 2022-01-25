@@ -143,11 +143,18 @@ exports.update = async ({ userId, followerId, status }, transaction) => {
   return updateCount;
 };
 
-exports.delete = async ({ userId, followerId }, transaction) => {
+exports.upsert = async (data) => {
+  const [result] = await db.UserFollower.upsert(data);
+
+  return result?.toJSON();
+};
+
+exports.delete = async ({ userId, followerId, status }, transaction) => {
   const deleteCount = await db.UserFollower.destroy({
     where: {
       userId,
       followerId,
+      status,
     },
     transaction,
   });
@@ -319,4 +326,38 @@ exports.searchFollowedUser = async ({ page, size, name }, userId) => {
     offset: (page - 1) * size,
   });
   return result;
+};
+
+exports.getBidirectionalFollowStatus = async (targetUser, requester) => {
+  const result = await db.UserFollower.findAll({
+    where: {
+      [Op.or]: [
+        { userId: targetUser, followerId: requester },
+        { userId: requester, followerId: targetUser },
+      ],
+    },
+    attributes: ['userId', 'followerId', 'status'],
+    raw: true,
+  });
+  let isBlocking = false;
+  let isBlocked = false;
+  let followStatus = null;
+  result.forEach((row) => {
+    if (row.userId === requester && row.status === followerStatus.blocked) {
+      // Requesting user blocks the profile
+      isBlocking = true;
+    }
+    if (row.followerId === requester && row.status === followerStatus.blocked) {
+      // Profile owner blocks the user
+      isBlocked = true;
+    }
+    if (row.followerId === requester) {
+      followStatus = row.status;
+    }
+  });
+  return {
+    isBlocking,
+    isBlocked,
+    followStatus,
+  };
 };
