@@ -149,11 +149,12 @@ exports.upsert = async (data) => {
   return result?.toJSON();
 };
 
-exports.delete = async ({ userId, followerId }, transaction) => {
+exports.delete = async ({ userId, followerId, status }, transaction) => {
   const deleteCount = await db.UserFollower.destroy({
     where: {
       userId,
       followerId,
+      status,
     },
     transaction,
   });
