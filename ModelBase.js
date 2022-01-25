@@ -30,7 +30,7 @@ class ModelBase extends Model {
   /**
    * @param {FindOptions} attribute
    * @param {import('./types/pagination').PaginationRequest} paging
-   * @returns {import('./types/pagination').PaginationResponse<any>}
+   * @returns {import('./types/pagination').PaginationResponse<ModelBase>}
    */
   static async findAllWithPaging(
     attribute = {},
@@ -132,7 +132,7 @@ class ModelBase extends Model {
 
     return {
       count,
-      rows: result.map((t) => t.toJSON()),
+      rows: result,
       page,
       size: pagingSize,
       sort: sortQuery,
