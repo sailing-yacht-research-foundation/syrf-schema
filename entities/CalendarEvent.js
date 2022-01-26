@@ -210,6 +210,18 @@ module.exports = (sequelize) => {
         comments:
           'List of all required certifications, should be for display purposes only',
       },
+      requireEmergencyContact: {
+        type: DataTypes.BOOLEAN,
+      },
+      requireImmigrationInfo: {
+        type: DataTypes.BOOLEAN,
+      },
+      requireMedicalProblems: {
+        type: DataTypes.BOOLEAN,
+      },
+      requireFoodAllergies: {
+        type: DataTypes.BOOLEAN,
+      },
     },
     {
       modelName: 'CalendarEvent',
