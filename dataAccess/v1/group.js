@@ -7,7 +7,7 @@ const {
 const db = require('../../index');
 const { Op } = require('../../index');
 
-exports.getAll = async (paging, { visibilities, userId }) => {
+exports.getAll = async (paging, { visibilities, userId, status }) => {
   let where = {
     visibility: {
       [Op.in]: visibilities,
@@ -40,6 +40,7 @@ exports.getAll = async (paging, { visibilities, userId }) => {
           required: false,
           where: {
             userId,
+            status,
           },
         },
       ],
