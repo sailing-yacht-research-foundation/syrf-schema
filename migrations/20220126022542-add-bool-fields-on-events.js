@@ -6,18 +6,26 @@ const newCalendarEventColumns = [
   {
     columnName: 'requireEmergencyContact',
     type: DataTypes.BOOLEAN,
+    allowNull: false,
+    defaultValue: false,
   },
   {
     columnName: 'requireImmigrationInfo',
     type: DataTypes.BOOLEAN,
+    allowNull: false,
+    defaultValue: false,
   },
   {
     columnName: 'requireMedicalProblems',
     type: DataTypes.BOOLEAN,
+    allowNull: false,
+    defaultValue: false,
   },
   {
     columnName: 'requireFoodAllergies',
     type: DataTypes.BOOLEAN,
+    allowNull: false,
+    defaultValue: false,
   },
 ];
 
@@ -46,6 +54,11 @@ module.exports = {
                 col.comment
                   ? {
                       comment: col.comment,
+                    }
+                  : {},
+                col.defaultValue !== undefined
+                  ? {
+                      defaultValue: col.defaultValue,
                     }
                   : {},
               ),
