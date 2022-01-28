@@ -7,7 +7,7 @@ const {
 const db = require('../../index');
 const { Op } = require('../../index');
 
-exports.getAll = async (paging, { visibilities, userId }) => {
+exports.getAll = async (paging, { visibilities, userId, status }) => {
   let where = {
     visibility: {
       [Op.in]: visibilities,
@@ -38,9 +38,17 @@ exports.getAll = async (paging, { visibilities, userId }) => {
           model: db.GroupMember,
           attributes: ['status', 'isAdmin'],
           required: false,
-          where: {
-            userId,
-          },
+          where: Object.assign(
+            {},
+            {
+              userId,
+            },
+            status
+              ? {
+                  status,
+                }
+              : [],
+          ),
         },
       ],
       where,
