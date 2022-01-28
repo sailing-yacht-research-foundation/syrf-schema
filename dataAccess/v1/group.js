@@ -38,10 +38,17 @@ exports.getAll = async (paging, { visibilities, userId, status }) => {
           model: db.GroupMember,
           attributes: ['status', 'isAdmin'],
           required: false,
-          where: {
-            userId,
-            status,
-          },
+          where: Object.assign(
+            {},
+            {
+              userId,
+            },
+            status
+              ? {
+                  status,
+                }
+              : [],
+          ),
         },
       ],
       where,
