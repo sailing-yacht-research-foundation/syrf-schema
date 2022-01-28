@@ -1,4 +1,5 @@
 const db = require('../../index');
+const Op = db.Op;
 
 exports.create = async (data, transaction) => {
   return await db.ScrapedSuccessfulUrl.create(data, {
@@ -24,5 +25,16 @@ exports.getByUrl = async (url) => {
     where: {
       url,
     },
+  });
+}
+
+exports.deleteByOriginalId = async (originalId, transaction) => {
+  await db.ScrapedSuccessfulUrl.destroy({
+    where: {
+      originalId: {
+        [Op.eq]: originalId,
+      },
+    },
+    transaction,
   });
 }
