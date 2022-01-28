@@ -46,7 +46,7 @@ module.exports = {
                 {
                   type: col.type,
                 },
-                col.allowNull
+                col.allowNull !== undefined
                   ? {
                       allowNull: col.allowNull,
                     }
