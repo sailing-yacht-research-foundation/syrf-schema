@@ -119,6 +119,7 @@ const raceSetupType = {
   RESETUP: 'RESETUP',
   STOP_TRACKING: 'STOP_TRACKING',
   POSTPONE: 'POSTPONE',
+  RESCHEDULE: 'RESCHEDULE',
 };
 
 const openCompetitionConfig = {
