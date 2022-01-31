@@ -28,12 +28,15 @@ exports.getByUrl = async (url) => {
   });
 }
 
-exports.deleteByOriginalId = async (originalId, transaction) => {
+exports.deleteByOriginalId = async ({ source, originalId }, transaction) => {
   await db.ScrapedSuccessfulUrl.destroy({
     where: {
       originalId: {
         [Op.eq]: originalId,
       },
+      source: {
+        [Op.eq]: source,
+      }
     },
     transaction,
   });
