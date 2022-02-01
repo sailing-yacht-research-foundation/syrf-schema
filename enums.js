@@ -175,6 +175,7 @@ const bullQueues = {
   eventStop: 'event_stop',
   importTrack: 'import_track',
   calculateImport: 'calculate_import_track',
+  recalculateTrack: 'recalculate_track',
 };
 
 const externalServiceSources = {
