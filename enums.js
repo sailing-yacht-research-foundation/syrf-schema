@@ -2,6 +2,7 @@ const competitionUnitStatus = {
   SCHEDULED: 'SCHEDULED',
   ONGOING: 'ONGOING',
   COMPLETED: 'COMPLETED',
+  POSTPONED: 'POSTPONED',
 };
 
 const calendarEventStatus = {
@@ -117,6 +118,8 @@ const raceSetupType = {
   COMPETITION_UNIT_SYNC: 'COMPETITION_UNIT_SYNC',
   RESETUP: 'RESETUP',
   STOP_TRACKING: 'STOP_TRACKING',
+  POSTPONE: 'POSTPONE',
+  RESCHEDULE: 'RESCHEDULE',
 };
 
 const openCompetitionConfig = {
