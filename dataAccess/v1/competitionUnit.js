@@ -1,5 +1,9 @@
 const uuid = require('uuid');
-const { competitionUnitStatus, conversionValues } = require('../../enums');
+const {
+  competitionUnitStatus,
+  conversionValues,
+  calendarEventStatus,
+} = require('../../enums');
 const db = require('../../index');
 const { Op } = require('../../index');
 const { includeMeta, emptyPagingResponse } = require('../../utils/utils');
@@ -375,4 +379,29 @@ exports.update = async (id, data, transaction) => {
   });
 
   return { updateCount, updatedData };
+};
+
+exports.getScheduledRaces = async (transaction) => {
+  const result = await db.CompetitionUnit.findAll({
+    where: {
+      status: competitionUnitStatus.SCHEDULED,
+    },
+    include: [
+      {
+        model: db.CalendarEvent,
+        as: 'calendarEvent',
+        attribute: ['id', 'name', 'status'],
+        required: true,
+        where: {
+          status: {
+            [db.Op.in]: [
+              calendarEventStatus.SCHEDULED,
+              calendarEventStatus.ONGOING,
+            ],
+          },
+        },
+      },
+    ],
+  });
+  return result.map((t) => t.toJSON());
 };
