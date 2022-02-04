@@ -165,9 +165,10 @@ exports.getCourseCenterPoint = (geometries = []) => {
  *
  * @param {Array.<PromiseSettledResult<any>>} results
  */
-exports.logPromiseAllSettledErrors = (results = []) => {
+exports.logPromiseAllSettledErrors = (results = [], prefix = '') => {
   results.forEach((element) => {
-    if (element.status === 'rejected') console.log(element.reason?.message);
+    if (element.status === 'rejected')
+      console.log(prefix + element.reason?.message);
   });
 };
 

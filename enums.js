@@ -176,6 +176,7 @@ const bullQueues = {
   importTrack: 'import_track',
   calculateImport: 'calculate_import_track',
   recalculateTrack: 'recalculate_track',
+  raceUpdate: 'race_update',
 };
 
 const externalServiceSources = {
@@ -357,6 +358,13 @@ const dataSources = {
   IMPORT: 'IMPORT',
 };
 
+const raceUpdateTypes = {
+  ADDED: 'ADDED',
+  UPDATED: 'UPDATED',
+  DELETED: 'DELETED',
+  STATUS_CHANGED: 'STATUS_CHANGED',
+};
+
 module.exports = {
   competitionUnitStatus,
   calendarEventStatus,
@@ -400,4 +408,5 @@ module.exports = {
   eventTypeEnums,
   participatingFeeTypes,
   dataSources,
+  raceUpdateTypes,
 };
