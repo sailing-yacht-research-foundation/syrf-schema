@@ -549,8 +549,6 @@ exports.getByUserAndRace = async (raceId, userId, transaction) => {
       where: {
         id: raceId,
       },
-      raw: true,
-      nest: true,
       attributes: {
         exclude: ['boundingBox', 'createdById', 'updatedById', 'developerId'],
       },
@@ -606,5 +604,5 @@ exports.getByUserAndRace = async (raceId, userId, transaction) => {
     transaction,
   );
 
-  return result;
+  return result?.toJSON();
 };

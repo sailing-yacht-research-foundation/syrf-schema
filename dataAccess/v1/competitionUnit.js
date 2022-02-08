@@ -3,6 +3,8 @@ const {
   competitionUnitStatus,
   conversionValues,
   calendarEventStatus,
+  participantInvitationStatus,
+  groupMemberStatus,
 } = require('../../enums');
 const db = require('../../index');
 const { Op } = require('../../index');
@@ -403,6 +405,109 @@ exports.getScheduledRaces = async (transaction) => {
         },
       },
     ],
+    transaction,
+  });
+  return result.map((t) => t.toJSON());
+};
+
+exports.getUserRelationToCompetitionUnit = async (
+  ids = [],
+  userId,
+  options = {},
+  transaction,
+) => {
+  const result = await db.CompetitionUnit.findAll({
+    ...options,
+    where: {
+      id: {
+        [db.Op.in]: ids,
+      },
+    },
+    include: [
+      {
+        model: db.VesselParticipantGroup,
+        as: 'group',
+        attributes: ['id', 'vesselParticipantGroupId', 'name'],
+        include: [
+          {
+            model: db.VesselParticipant,
+            as: 'vesselParticipants',
+            attributes: ['id', 'vesselParticipantId', 'vesselId'],
+            include: [
+              {
+                model: db.Vessel,
+                as: 'vessel',
+                attributes: ['id', 'globalId', 'publicName'],
+                paranoid: false,
+              },
+              {
+                model: db.Participant,
+                as: 'participants',
+                required: true,
+                through: {
+                  attributes: [],
+                },
+                attributes: [
+                  'id',
+                  'publicName',
+                  'trackerUrl',
+                  'userProfileId',
+                  'invitationStatus',
+                ],
+                where: {
+                  userProfileId: userId,
+                  invitationStatus: {
+                    [db.Op.in]: [
+                      participantInvitationStatus.ACCEPTED,
+                      participantInvitationStatus.SELF_REGISTERED,
+                    ],
+                  },
+                },
+              },
+            ],
+          },
+        ],
+      },
+      {
+        model: db.CalendarEvent,
+        as: 'calendarEvent',
+        attributes: ['id', 'name', 'status'],
+        include: [
+          {
+            model: db.UserProfile,
+            as: 'editors',
+            attributes: ['id', 'name', 'avatar'],
+            required: false,
+            through: {
+              attributes: [],
+            },
+            where: {
+              id: userId,
+            },
+          },
+          {
+            model: db.Group,
+            as: 'groupEditors',
+            attributes: ['id', 'groupName', 'groupImage'],
+            through: {
+              attributes: [],
+            },
+            include: [
+              {
+                model: db.GroupMember,
+                as: 'groupMember',
+                attributes: ['id', 'groupId', 'userId', 'isAdmin'],
+                where: {
+                  status: groupMemberStatus.accepted,
+                  userId,
+                },
+              },
+            ],
+          },
+        ],
+      },
+    ],
+    transaction,
   });
   return result.map((t) => t.toJSON());
 };
