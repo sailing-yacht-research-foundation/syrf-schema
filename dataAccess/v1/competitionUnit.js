@@ -24,6 +24,7 @@ const include = [
       'stripePricingId',
       'participatingFee',
       'location',
+      'source',
     ],
     include: [
       {
