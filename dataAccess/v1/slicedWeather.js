@@ -8,3 +8,13 @@ exports.bulkInsert = async (data, transaction) => {
   });
   return result;
 };
+
+exports.findExistingSlices = async ({ competitionUnitId, originalFileId }) => {
+  const result = await db.SlicedWeather.findAll({
+    where: {
+      competitionUnitId,
+      originalFileId,
+    },
+  });
+  return result;
+};
