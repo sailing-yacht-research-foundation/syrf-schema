@@ -50,6 +50,14 @@ module.exports = (sequelize) => {
         type: DataTypes.UUID,
         allowNull: true,
       },
+      originalFileId: {
+        type: DataTypes.UUID,
+        allowNull: true,
+      },
+      sliceDate: {
+        type: DataTypes.DATE,
+        allowNull: true,
+      },
     },
     {
       modelName: 'SlicedWeather',
