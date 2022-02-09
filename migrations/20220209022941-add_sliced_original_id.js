@@ -18,12 +18,27 @@ module.exports = {
           { transaction },
         );
       }
+
+      if (!table.sliceDate) {
+        await queryInterface.addColumn(
+          tableName,
+          'sliceDate',
+          {
+            type: Sequelize.DataTypes.DATE,
+            allowNull: true,
+          },
+          { transaction },
+        );
+      }
     });
   },
 
   down: async (queryInterface) => {
     await queryInterface.sequelize.transaction(async (transaction) => {
       await queryInterface.removeColumn(tableName, 'originalFileId', {
+        transaction,
+      });
+      await queryInterface.removeColumn(tableName, 'sliceDate', {
         transaction,
       });
     });
