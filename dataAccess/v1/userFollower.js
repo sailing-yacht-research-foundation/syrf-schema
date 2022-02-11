@@ -143,8 +143,8 @@ exports.update = async ({ userId, followerId, status }, transaction) => {
   return updateCount;
 };
 
-exports.upsert = async (data) => {
-  const [result] = await db.UserFollower.upsert(data);
+exports.upsert = async (data, transaction) => {
+  const [result] = await db.UserFollower.upsert(data, { transaction });
 
   return result?.toJSON();
 };
