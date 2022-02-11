@@ -60,6 +60,10 @@ module.exports = (sequelize) => {
         allowNull: false,
         defaultValue: 0,
       },
+      isRecalculated: {
+        type: DataTypes.BOOLEAN,
+        allowNull: true,
+      },
     },
     {
       modelName: 'VesselParticipantLeg',

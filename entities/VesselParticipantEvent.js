@@ -34,6 +34,10 @@ module.exports = (sequelize) => {
       eventCoordinate: {
         type: DataTypes.GEOMETRY('POINT', 4326),
       },
+      isRecalculated: {
+        type: DataTypes.BOOLEAN,
+        allowNull: true,
+      },
     },
     {
       modelName: 'VesselParticipantEvent',
