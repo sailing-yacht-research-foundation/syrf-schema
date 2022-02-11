@@ -31,6 +31,10 @@ module.exports = (sequelize) => {
         type: DataTypes.INTEGER,
         allowNull: false,
       },
+      isRecalculated: {
+        type: DataTypes.BOOLEAN,
+        allowNull: true,
+      },
     },
     {
       modelName: 'CompetitionResult',
