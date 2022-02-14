@@ -422,3 +422,156 @@ exports.removeGroupsFromEditor = async (vesselId, groups, transaction) => {
   });
   return deleteCount;
 };
+
+exports.getUserVessels = async (paging, userId) => {
+  let where = {
+    [db.Op.and]: [
+      {
+        [db.Op.or]: [
+          { createdById: userId },
+          db.sequelize.where(db.sequelize.literal(`"editors"."id"`), {
+            [db.Op.ne]: null,
+          }),
+          db.sequelize.where(
+            db.sequelize.literal(`"groupEditors->groupMember"."userId"`),
+            {
+              [db.Op.ne]: null,
+            },
+          ),
+        ],
+      },
+    ],
+  };
+  let order = [];
+  if (paging.query) {
+    where[db.Op.or] = [
+      {
+        publicName: {
+          [db.Op.iLike]: `%${paging.query}%`,
+        },
+      },
+      {
+        model: {
+          [db.Op.iLike]: `%${paging.query}%`,
+        },
+      },
+    ];
+  }
+
+  const result = await db.Vessel.findAllWithPaging(
+    {
+      include: [
+        {
+          model: db.UserProfile,
+          as: 'editors',
+          attributes: ['id', 'name', 'avatar'],
+          through: {
+            attributes: [],
+          },
+          where: {
+            id: userId,
+          },
+          required: false,
+        },
+        {
+          model: db.Group,
+          as: 'groupEditors',
+          attributes: ['id', 'groupName', 'groupImage'],
+          through: {
+            attributes: [],
+          },
+          include: [
+            {
+              model: db.GroupMember,
+              as: 'groupMember',
+              attributes: ['id', 'userId'],
+              where: {
+                userId,
+                status: groupMemberStatus.accepted,
+              },
+            },
+          ],
+          required: false,
+        },
+      ],
+      replacements: {
+        userId,
+      },
+      where,
+      order,
+      subQuery: false,
+    },
+    paging,
+  );
+  const { count, rows, page, size } = result;
+
+  const formattedRows = [];
+  rows.forEach((row) => {
+    const plainData = row.toJSON();
+    formattedRows.push({
+      ...plainData,
+      isEditor: row.editors?.length > 0 || row.groupEditors?.length > 0,
+    });
+  });
+
+  return {
+    count,
+    rows: formattedRows,
+    page,
+    size,
+  };
+};
+
+exports.getBulkVesselEditors = async (idList) => {
+  const individualEditors = await db.VesselEditor.findAll({
+    where: {
+      vesselId: {
+        [db.Op.in]: idList,
+      },
+    },
+    include: [
+      {
+        model: db.UserProfile,
+        as: 'user',
+        attributes: ['id', 'name', 'avatar'],
+      },
+    ],
+  });
+  const groupEditors = await db.VesselGroupEditor.findAll({
+    where: {
+      vesselId: {
+        [db.Op.in]: idList,
+      },
+    },
+    include: [
+      {
+        model: db.Group,
+        as: 'group',
+        attributes: ['id', 'groupName', 'groupImage'],
+      },
+    ],
+  });
+  const vesselEditors = {};
+  individualEditors.forEach((row) => {
+    const { vesselId, user } = row;
+    if (!vesselEditors[vesselId]) {
+      vesselEditors[vesselId] = {
+        editors: [],
+        groupEditors: [],
+      };
+    }
+    vesselEditors[vesselId].editors.push(user);
+  });
+
+  groupEditors.forEach((row) => {
+    const { vesselId, group } = row;
+    if (!vesselEditors[vesselId]) {
+      vesselEditors[vesselId] = {
+        editors: [],
+        groupEditors: [],
+      };
+    }
+    vesselEditors[vesselId].groupEditors.push(group);
+  });
+  return vesselEditors;
+};
