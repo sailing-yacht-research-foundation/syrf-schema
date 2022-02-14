@@ -7,12 +7,31 @@ const {
 const db = require('../../index');
 const { Op } = require('../../index');
 
-exports.getAll = async (paging, { visibilities, userId, status }) => {
-  let where = {
-    visibility: {
-      [Op.in]: visibilities,
+exports.getAll = async (paging, { visibilities, userId, excludeBlocked }) => {
+  let where = Object.assign(
+    {},
+    {
+      visibility: {
+        [Op.in]: visibilities,
+      },
     },
-  };
+    excludeBlocked
+      ? {
+          [Op.or]: [
+            {
+              '$groupMember.status$': {
+                [Op.ne]: groupMemberStatus.blocked,
+              },
+            },
+            {
+              '$groupMember.status$': {
+                [Op.is]: null,
+              },
+            },
+          ],
+        }
+      : {},
+  );
 
   if (paging.query) {
     where.groupName = {
@@ -43,15 +62,11 @@ exports.getAll = async (paging, { visibilities, userId, status }) => {
             {
               userId,
             },
-            status
-              ? {
-                  status,
-                }
-              : [],
           ),
         },
       ],
       where,
+      subQuery: false,
     },
     paging,
   );
