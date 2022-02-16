@@ -365,6 +365,10 @@ const raceUpdateTypes = {
   STATUS_CHANGED: 'STATUS_CHANGED',
 };
 
+const userRoles = {
+  SUPERADMIN: 'SUPERADMIN',
+};
+
 module.exports = {
   competitionUnitStatus,
   calendarEventStatus,
@@ -409,4 +413,5 @@ module.exports = {
   participatingFeeTypes,
   dataSources,
   raceUpdateTypes,
+  userRoles,
 };
