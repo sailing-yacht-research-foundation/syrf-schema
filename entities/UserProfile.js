@@ -66,6 +66,12 @@ class UserProfile extends ModelBase {
       sourceKey: 'id',
       foreignKey: 'userId',
     });
+
+    this.hasMany(models.UserNotification, {
+      as: 'notification',
+      foreignKey: 'userId',
+      constraints: false,
+    });
   }
 }
 
