@@ -369,6 +369,19 @@ const userRoles = {
   SUPERADMIN: 'SUPERADMIN',
 };
 
+const notificationTypes = {
+  userAddedToGroupAdmin: 'USER_ADDED_TO_GROUP_ADMIN',
+  userInvitedToGroup: 'USER_INVITED_TO_GROUP',
+  userAddedToEventAdmin: 'USER_ADDED_TO_EVENT_ADMIN',
+  userInvitedToPrivateRegatta: 'USER_INVITED_TO_PRIVATE_REGATTA',
+  userNewFollower: 'USER_NEW_FOLLOWER',
+  eventInactivityDeletion: 'EVENT_INACTIVITY_DELETION',
+  requestJoinGroup: 'REQUEST_JOIN_GROUP',
+  userAchieveBadge: 'USER_ACHIEVE_BADGE',
+  groupAchieveBadge: 'GROUP_ACHIEVE_BADGE',
+  openEventNearbyCreated: 'OPEN_EVENT_NEARBY_CREATED',
+};
+
 module.exports = {
   competitionUnitStatus,
   calendarEventStatus,
@@ -414,4 +427,5 @@ module.exports = {
   dataSources,
   raceUpdateTypes,
   userRoles,
+  notificationTypes,
 };

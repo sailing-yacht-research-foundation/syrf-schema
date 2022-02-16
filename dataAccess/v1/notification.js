@@ -34,8 +34,29 @@ exports.getById = async (id, userId) => {
   return result?.toJSON();
 };
 
-exports.addNewNotification = async (data, transaction) => {
-  return await db.UserNotification.create(data, {
+exports.addNewNotification = async (
+  {
+    recipients,
+    notificationType,
+    notificationMessage,
+    notificationTitle,
+    metadata,
+  },
+  transaction,
+) => {
+  const data = recipients.map((userId) => {
+    return {
+      userId,
+      notificationType,
+      notificationTitle,
+      notificationMessage,
+      metadata,
+    };
+  });
+  const result = await db.UserNotification.bulkCreate(data, {
+    ignoreDuplicates: true,
+    validate: true,
     transaction,
   });
+  return result;
 };
