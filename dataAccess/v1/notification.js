@@ -44,6 +44,7 @@ exports.addNewNotification = async (
   },
   transaction,
 ) => {
+  const createdAt = Date.now();
   const data = recipients.map((userId) => {
     return {
       userId,
@@ -51,6 +52,7 @@ exports.addNewNotification = async (
       notificationTitle,
       notificationMessage,
       metadata,
+      createdAt,
     };
   });
   const result = await db.UserNotification.bulkCreate(data, {

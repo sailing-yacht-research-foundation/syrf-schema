@@ -53,6 +53,7 @@ module.exports = (sequelize) => {
     {
       modelName: 'UserNotification',
       sequelize,
+      timestamps: false,
     },
   );
   return UserNotification;
