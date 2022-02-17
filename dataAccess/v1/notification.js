@@ -62,3 +62,22 @@ exports.addNewNotification = async (
   });
   return result;
 };
+
+exports.markAsRead = async (ids, userId, transaction) => {
+  const [updateCount] = await db.UserNotification.update(
+    {
+      readAt: Date.now(),
+    },
+    {
+      where: {
+        id: {
+          [db.Op.in]: ids,
+        },
+        userId,
+      },
+      transaction,
+    },
+  );
+
+  return updateCount;
+};
