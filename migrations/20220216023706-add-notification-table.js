@@ -1,6 +1,7 @@
 'use strict';
 
 const notificationTableName = 'UserNotifications';
+const userTableName = 'UserProfiles';
 
 module.exports = {
   up: async (queryInterface, Sequelize) => {
@@ -56,6 +57,33 @@ module.exports = {
           },
         );
       }
+
+      const userTable = await queryInterface.describeTable(userTableName);
+
+      if (!userTable.optInEmailNotification) {
+        await queryInterface.addColumn(
+          userTableName,
+          'optInEmailNotification',
+          {
+            type: Sequelize.DataTypes.BOOLEAN,
+            defaultValue: true,
+            allowNull: false,
+          },
+          { transaction },
+        );
+      }
+      if (!userTable.optInMobileNotification) {
+        await queryInterface.addColumn(
+          userTableName,
+          'optInMobileNotification',
+          {
+            type: Sequelize.DataTypes.BOOLEAN,
+            defaultValue: true,
+            allowNull: false,
+          },
+          { transaction },
+        );
+      }
     });
   },
 
@@ -73,6 +101,21 @@ module.exports = {
           transaction,
         });
       }
+
+      await queryInterface.removeColumn(
+        userTableName,
+        'optInEmailNotification',
+        {
+          transaction,
+        },
+      );
+      await queryInterface.removeColumn(
+        userTableName,
+        'optInMobileNotification',
+        {
+          transaction,
+        },
+      );
     });
   },
 };

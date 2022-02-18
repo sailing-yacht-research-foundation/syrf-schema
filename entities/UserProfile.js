@@ -178,6 +178,16 @@ module.exports = (sequelize) => {
         defaultValue: false,
         allowNull: false,
       },
+      optInEmailNotification: {
+        type: DataTypes.BOOLEAN,
+        defaultValue: true,
+        allowNull: false,
+      },
+      optInMobileNotification: {
+        type: DataTypes.BOOLEAN,
+        defaultValue: true,
+        allowNull: false,
+      },
     },
     {
       modelName: 'UserProfile',
