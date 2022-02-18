@@ -512,3 +512,44 @@ exports.getUserRelationToCompetitionUnit = async (
   });
   return result.map((t) => t.toJSON());
 };
+
+exports.getUntrackedRaces = async (filterDate, transaction) => {
+  const result = await db.CompetitionUnit.findAll({
+    where: {
+      approximateStart: {
+        [db.Op.lte]: filterDate,
+      },
+    },
+    include: [
+      {
+        model: db.TrackHistory,
+        as: 'tracks',
+        required: true,
+        attributes: ['id', 'userProfileId'],
+      },
+      {
+        model: db.CalendarEvent,
+        as: 'calendarEvent',
+        attributes: ['id'],
+        where: {
+          status: {
+            [db.Op.in]: [
+              calendarEventStatus.SCHEDULED,
+              calendarEventStatus.ONGOING,
+              calendarEventStatus.COMPLETED,
+            ],
+          },
+        },
+        include: [
+          {
+            model: db.CompetitionUnit,
+            as: 'competitionUnit',
+            attributes: ['id'],
+          },
+        ],
+      },
+    ],
+  });
+
+  return result.map((t) => t.toJSON());
+};
