@@ -116,3 +116,16 @@ exports.getByStripeCustomer = async (stripeCustomerId) => {
     raw: true,
   });
 };
+
+exports.getPushSubscriptions = async (ids) => {
+  // TODO: Add mobile push notifications here as well once implemented
+  const data = await db.UserProfile.findAll({
+    where: {
+      id: {
+        [Op.in]: ids,
+      },
+    },
+    attributes: ['id', 'email', 'webpushSubscription'],
+  });
+  return data;
+};

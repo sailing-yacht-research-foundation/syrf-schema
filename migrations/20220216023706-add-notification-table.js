@@ -84,6 +84,17 @@ module.exports = {
           { transaction },
         );
       }
+      if (!userTable.webpushSubscription) {
+        await queryInterface.addColumn(
+          userTableName,
+          'webpushSubscription',
+          {
+            type: Sequelize.DataTypes.JSON,
+            allowNull: true,
+          },
+          { transaction },
+        );
+      }
     });
   },
 
@@ -116,6 +127,9 @@ module.exports = {
           transaction,
         },
       );
+      await queryInterface.removeColumn(userTableName, 'webpushSubscription', {
+        transaction,
+      });
     });
   },
 };

@@ -188,6 +188,10 @@ module.exports = (sequelize) => {
         defaultValue: true,
         allowNull: false,
       },
+      webpushSubscription: {
+        type: DataTypes.JSON,
+        allowNull: true,
+      },
     },
     {
       modelName: 'UserProfile',
