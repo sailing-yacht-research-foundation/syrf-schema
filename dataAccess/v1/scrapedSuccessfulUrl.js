@@ -42,7 +42,7 @@ exports.deleteByOriginalId = async ({ source, originalId }, transaction) => {
   });
 };
 
-exports.deleteByUrl = async ({ url }, transaction) => {
+exports.deleteByUrl = async (url, transaction) => {
   await db.ScrapedSuccessfulUrl.destroy({
     where: {
       url,
