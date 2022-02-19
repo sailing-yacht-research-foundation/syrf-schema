@@ -178,6 +178,7 @@ const bullQueues = {
   recalculateTrack: 'recalculate_track',
   raceUpdate: 'race_update',
   notification: 'notification',
+  clearUntrackedRaces: 'clear_untracked_races',
 };
 
 const externalServiceSources = {
