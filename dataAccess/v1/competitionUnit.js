@@ -519,18 +519,21 @@ exports.getUntrackedRaces = async (filterDate, transaction) => {
       approximateStart: {
         [db.Op.lte]: filterDate,
       },
+      '$tracks.id$': null,
     },
+    subQuery: false,
     include: [
       {
         model: db.TrackHistory,
         as: 'tracks',
-        required: true,
-        attributes: ['id', 'userProfileId'],
+        required: false,
+        attributes: ['id'],
       },
       {
         model: db.CalendarEvent,
         as: 'calendarEvent',
         attributes: ['id'],
+        required: true,
         where: {
           status: {
             [db.Op.in]: [
