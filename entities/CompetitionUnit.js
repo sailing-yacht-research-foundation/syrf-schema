@@ -27,7 +27,7 @@ class CompetitionUnit extends ModelBase {
 
     this.hasMany(models.TrackHistory, {
       as: 'tracks',
-      foreignKey: 'userProfileId',
+      foreignKey: 'competitionUnitId',
       constraints: false,
     });
     this.hasMany(models.VesselParticipantCrewTrackJson, {
