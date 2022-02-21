@@ -380,6 +380,8 @@ const notificationTypes = {
   userAchieveBadge: 'USER_ACHIEVE_BADGE',
   groupAchieveBadge: 'GROUP_ACHIEVE_BADGE',
   openEventNearbyCreated: 'OPEN_EVENT_NEARBY_CREATED',
+  competitionStartTracking: 'COMPETITION_START_TRACKING', // For when race start queue kick off analysis engine
+  newRaceAddedToEvent: 'NEW_RACE_ADDED_TO_EVENT',
 };
 
 module.exports = {
