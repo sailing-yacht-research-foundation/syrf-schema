@@ -95,6 +95,28 @@ module.exports = {
           { transaction },
         );
       }
+      if (!userTable.androidPushSubscription) {
+        await queryInterface.addColumn(
+          userTableName,
+          'androidPushSubscription',
+          {
+            type: Sequelize.DataTypes.STRING,
+            allowNull: true,
+          },
+          { transaction },
+        );
+      }
+      if (!userTable.iosPushSubscription) {
+        await queryInterface.addColumn(
+          userTableName,
+          'iosPushSubscription',
+          {
+            type: Sequelize.DataTypes.STRING,
+            allowNull: true,
+          },
+          { transaction },
+        );
+      }
     });
   },
 
@@ -128,6 +150,16 @@ module.exports = {
         },
       );
       await queryInterface.removeColumn(userTableName, 'webpushSubscription', {
+        transaction,
+      });
+      await queryInterface.removeColumn(
+        userTableName,
+        'androidPushSubscription',
+        {
+          transaction,
+        },
+      );
+      await queryInterface.removeColumn(userTableName, 'iosPushSubscription', {
         transaction,
       });
     });

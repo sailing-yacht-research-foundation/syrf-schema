@@ -192,6 +192,14 @@ module.exports = (sequelize) => {
         type: DataTypes.JSON,
         allowNull: true,
       },
+      androidPushSubscription: {
+        type: DataTypes.STRING,
+        allowNull: true,
+      },
+      iosPushSubscription: {
+        type: DataTypes.STRING,
+        allowNull: true,
+      },
     },
     {
       modelName: 'UserProfile',
