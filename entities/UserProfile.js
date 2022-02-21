@@ -192,13 +192,9 @@ module.exports = (sequelize) => {
         type: DataTypes.JSON,
         allowNull: true,
       },
-      androidPushSubscription: {
-        type: DataTypes.STRING,
-        allowNull: true,
-      },
-      iosPushSubscription: {
-        type: DataTypes.STRING,
-        allowNull: true,
+      mobilePushSubscription: {
+        type: DataTypes.ARRAY(DataTypes.STRING),
+        comment: 'FCM registration token for logged in device',
       },
     },
     {

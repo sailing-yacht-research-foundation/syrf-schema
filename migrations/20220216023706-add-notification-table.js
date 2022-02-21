@@ -95,24 +95,14 @@ module.exports = {
           { transaction },
         );
       }
-      if (!userTable.androidPushSubscription) {
+      if (!userTable.mobilePushSubscription) {
         await queryInterface.addColumn(
           userTableName,
-          'androidPushSubscription',
+          'mobilePushSubscription',
           {
-            type: Sequelize.DataTypes.STRING,
+            type: Sequelize.DataTypes.ARRAY(Sequelize.DataTypes.STRING),
             allowNull: true,
-          },
-          { transaction },
-        );
-      }
-      if (!userTable.iosPushSubscription) {
-        await queryInterface.addColumn(
-          userTableName,
-          'iosPushSubscription',
-          {
-            type: Sequelize.DataTypes.STRING,
-            allowNull: true,
+            comment: 'FCM registration token for logged in devices',
           },
           { transaction },
         );
@@ -154,14 +144,11 @@ module.exports = {
       });
       await queryInterface.removeColumn(
         userTableName,
-        'androidPushSubscription',
+        'mobilePushSubscription',
         {
           transaction,
         },
       );
-      await queryInterface.removeColumn(userTableName, 'iosPushSubscription', {
-        transaction,
-      });
     });
   },
 };

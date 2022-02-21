@@ -128,8 +128,7 @@ exports.getPushSubscriptions = async (ids) => {
       'id',
       'email',
       'webpushSubscription',
-      'androidPushSubscription',
-      'iosPushSubscription',
+      'mobilePushSubscription',
     ],
   });
   return data;
