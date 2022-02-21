@@ -27,6 +27,7 @@ const include = [
       'participatingFee',
       'location',
       'source',
+      'ownerId',
     ],
     include: [
       {
