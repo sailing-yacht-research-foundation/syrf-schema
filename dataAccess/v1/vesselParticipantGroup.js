@@ -230,3 +230,23 @@ exports.getUnregisteredParticipants = async (
     paging,
   );
 };
+
+exports.getParticipants = async (vesselParticipantGroupId) => {
+  const result = await db.Participant.findAll({
+    attributes: ['id', 'participantId', 'userProfileId', 'invitationStatus'],
+    include: [
+      {
+        model: db.VesselParticipant,
+        as: 'vesselParticipants',
+        through: {
+          attributes: [],
+        },
+        required: true,
+        where: {
+          vesselParticipantGroupId,
+        },
+      },
+    ],
+  });
+  return result;
+};
