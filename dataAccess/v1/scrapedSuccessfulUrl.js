@@ -16,7 +16,7 @@ exports.getAll = async (source) => {
       source,
     },
   });
-}
+};
 
 exports.getByUrl = async (url) => {
   return await db.ScrapedSuccessfulUrl.findAll({
@@ -26,7 +26,7 @@ exports.getByUrl = async (url) => {
       url,
     },
   });
-}
+};
 
 exports.deleteByOriginalId = async ({ source, originalId }, transaction) => {
   await db.ScrapedSuccessfulUrl.destroy({
@@ -36,8 +36,17 @@ exports.deleteByOriginalId = async ({ source, originalId }, transaction) => {
       },
       source: {
         [Op.eq]: source,
-      }
+      },
     },
     transaction,
   });
-}
+};
+
+exports.deleteByUrl = async (url, transaction) => {
+  await db.ScrapedSuccessfulUrl.destroy({
+    where: {
+      url,
+    },
+    transaction,
+  });
+};
