@@ -5,6 +5,7 @@ const {
   calendarEventStatus,
   participantInvitationStatus,
   groupMemberStatus,
+  dataSources,
 } = require('../../enums');
 const db = require('../../index');
 const { Op } = require('../../index');
@@ -542,6 +543,7 @@ exports.getUntrackedRaces = async (filterDate, transaction) => {
               calendarEventStatus.COMPLETED,
             ],
           },
+          source: dataSources.SYRF,
         },
         include: [
           {
@@ -552,6 +554,7 @@ exports.getUntrackedRaces = async (filterDate, transaction) => {
         ],
       },
     ],
+    transaction,
   });
 
   return result.map((t) => t.toJSON());
