@@ -177,6 +177,7 @@ const bullQueues = {
   calculateImport: 'calculate_import_track',
   recalculateTrack: 'recalculate_track',
   raceUpdate: 'race_update',
+  notification: 'notification',
 };
 
 const externalServiceSources = {
