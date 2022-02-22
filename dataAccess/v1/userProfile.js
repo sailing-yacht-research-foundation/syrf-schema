@@ -127,6 +127,8 @@ exports.getPushSubscriptions = async (ids) => {
     attributes: [
       'id',
       'email',
+      'optInEmailNotification',
+      'optInMobileNotification',
       'webpushSubscription',
       'mobilePushSubscription',
     ],
