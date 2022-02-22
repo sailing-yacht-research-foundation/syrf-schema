@@ -230,3 +230,57 @@ exports.getUnregisteredParticipants = async (
     paging,
   );
 };
+
+exports.getParticipants = async (vesselParticipantGroupId) => {
+  const result = await db.Participant.findAll({
+    attributes: ['id', 'participantId', 'userProfileId', 'invitationStatus'],
+    include: [
+      {
+        model: db.VesselParticipant,
+        as: 'vesselParticipants',
+        through: {
+          attributes: [],
+        },
+        required: true,
+        where: {
+          vesselParticipantGroupId,
+        },
+      },
+    ],
+  });
+  return result;
+};
+
+exports.getParticipantByEvents = async (eventId) => {
+  const result = await db.Participant.findAll({
+    attributes: ['id', 'participantId', 'userProfileId', 'invitationStatus'],
+    include: [
+      {
+        model: db.VesselParticipant,
+        as: 'vesselParticipants',
+        through: {
+          attributes: [],
+        },
+        required: true,
+        include: [
+          {
+            model: db.VesselParticipantGroup,
+            as: 'group',
+            attributes: [],
+            required: true,
+            include: [
+              {
+                model: db.CalendarEvent,
+                as: 'event',
+                where: {
+                  id: eventId,
+                },
+              },
+            ],
+          },
+        ],
+      },
+    ],
+  });
+  return result;
+};

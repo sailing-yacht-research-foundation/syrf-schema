@@ -116,3 +116,22 @@ exports.getByStripeCustomer = async (stripeCustomerId) => {
     raw: true,
   });
 };
+
+exports.getPushSubscriptions = async (ids) => {
+  const data = await db.UserProfile.findAll({
+    where: {
+      id: {
+        [Op.in]: ids,
+      },
+    },
+    attributes: [
+      'id',
+      'email',
+      'optInEmailNotification',
+      'optInMobileNotification',
+      'webpushSubscription',
+      'mobilePushSubscription',
+    ],
+  });
+  return data;
+};

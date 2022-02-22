@@ -177,6 +177,7 @@ const bullQueues = {
   calculateImport: 'calculate_import_track',
   recalculateTrack: 'recalculate_track',
   raceUpdate: 'race_update',
+  notification: 'notification',
 };
 
 const externalServiceSources = {
@@ -369,6 +370,21 @@ const userRoles = {
   SUPERADMIN: 'SUPERADMIN',
 };
 
+const notificationTypes = {
+  userAddedToGroupAdmin: 'USER_ADDED_TO_GROUP_ADMIN',
+  userInvitedToGroup: 'USER_INVITED_TO_GROUP',
+  userAddedToEventAdmin: 'USER_ADDED_TO_EVENT_ADMIN',
+  userInvitedToPrivateRegatta: 'USER_INVITED_TO_PRIVATE_REGATTA',
+  userNewFollower: 'USER_NEW_FOLLOWER',
+  eventInactivityDeletion: 'EVENT_INACTIVITY_DELETION',
+  requestJoinGroup: 'REQUEST_JOIN_GROUP',
+  userAchieveBadge: 'USER_ACHIEVE_BADGE',
+  groupAchieveBadge: 'GROUP_ACHIEVE_BADGE',
+  openEventNearbyCreated: 'OPEN_EVENT_NEARBY_CREATED',
+  competitionStartTracking: 'COMPETITION_START_TRACKING', // For when race start queue kick off analysis engine
+  newCompetitionAddedToEvent: 'NEW_COMPETITION_ADDED_TO_EVENT',
+};
+
 module.exports = {
   competitionUnitStatus,
   calendarEventStatus,
@@ -414,4 +430,5 @@ module.exports = {
   dataSources,
   raceUpdateTypes,
   userRoles,
+  notificationTypes,
 };

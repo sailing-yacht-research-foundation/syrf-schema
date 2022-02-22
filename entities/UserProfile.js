@@ -66,6 +66,12 @@ class UserProfile extends ModelBase {
       sourceKey: 'id',
       foreignKey: 'userId',
     });
+
+    this.hasMany(models.UserNotification, {
+      as: 'notification',
+      foreignKey: 'userId',
+      constraints: false,
+    });
   }
 }
 
@@ -171,6 +177,24 @@ module.exports = (sequelize) => {
         type: DataTypes.BOOLEAN,
         defaultValue: false,
         allowNull: false,
+      },
+      optInEmailNotification: {
+        type: DataTypes.BOOLEAN,
+        defaultValue: true,
+        allowNull: false,
+      },
+      optInMobileNotification: {
+        type: DataTypes.BOOLEAN,
+        defaultValue: true,
+        allowNull: false,
+      },
+      webpushSubscription: {
+        type: DataTypes.JSON,
+        allowNull: true,
+      },
+      mobilePushSubscription: {
+        type: DataTypes.ARRAY(DataTypes.STRING),
+        comment: 'FCM registration token for logged in device',
       },
     },
     {
