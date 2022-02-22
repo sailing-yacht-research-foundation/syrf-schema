@@ -10,7 +10,7 @@ exports.create = async (data, transaction) => {
 
 exports.getAll = async (source) => {
   return await db.ScrapedSuccessfulUrl.findAll({
-    attributes: ['url', 'originalId'],
+    attributes: [db.Sequelize.literal('DISTINCT url'), 'originalId'],
     raw: true,
     where: {
       source,
