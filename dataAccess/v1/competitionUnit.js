@@ -5,6 +5,7 @@ const {
   calendarEventStatus,
   participantInvitationStatus,
   groupMemberStatus,
+  dataSources,
 } = require('../../enums');
 const db = require('../../index');
 const { Op } = require('../../index');
@@ -510,5 +511,51 @@ exports.getUserRelationToCompetitionUnit = async (
     ],
     transaction,
   });
+  return result.map((t) => t.toJSON());
+};
+
+exports.getUntrackedRaces = async (filterDate, transaction) => {
+  const result = await db.CompetitionUnit.findAll({
+    where: {
+      approximateStart: {
+        [db.Op.lte]: filterDate,
+      },
+      '$tracks.id$': null,
+    },
+    subQuery: false,
+    include: [
+      {
+        model: db.TrackHistory,
+        as: 'tracks',
+        required: false,
+        attributes: ['id'],
+      },
+      {
+        model: db.CalendarEvent,
+        as: 'calendarEvent',
+        attributes: ['id'],
+        required: true,
+        where: {
+          status: {
+            [db.Op.in]: [
+              calendarEventStatus.SCHEDULED,
+              calendarEventStatus.ONGOING,
+              calendarEventStatus.COMPLETED,
+            ],
+          },
+          source: dataSources.SYRF,
+        },
+        include: [
+          {
+            model: db.CompetitionUnit,
+            as: 'competitionUnit',
+            attributes: ['id'],
+          },
+        ],
+      },
+    ],
+    transaction,
+  });
+
   return result.map((t) => t.toJSON());
 };
