@@ -81,3 +81,32 @@ exports.markAsRead = async (ids, userId, transaction) => {
 
   return updateCount;
 };
+
+exports.bulkAddNotification = async (data, transaction) => {
+  const createdAt = Date.now();
+  const result = await db.UserNotification.bulkCreate(
+    data.map((row) => {
+      const {
+        userId,
+        notificationType,
+        notificationTitle,
+        notificationMessage,
+        metadata,
+      } = row;
+      return {
+        userId,
+        notificationType,
+        notificationTitle,
+        notificationMessage,
+        metadata,
+        createdAt,
+      };
+    }),
+    {
+      ignoreDuplicates: true,
+      validate: true,
+      transaction,
+    },
+  );
+  return result;
+};
