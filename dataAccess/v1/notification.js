@@ -34,55 +34,7 @@ exports.getById = async (id, userId) => {
   return result?.toJSON();
 };
 
-exports.addNewNotification = async (
-  {
-    recipients,
-    notificationType,
-    notificationMessage,
-    notificationTitle,
-    metadata,
-  },
-  transaction,
-) => {
-  const createdAt = Date.now();
-  const data = recipients.map((userId) => {
-    return {
-      userId,
-      notificationType,
-      notificationTitle,
-      notificationMessage,
-      metadata,
-      createdAt,
-    };
-  });
-  const result = await db.UserNotification.bulkCreate(data, {
-    ignoreDuplicates: true,
-    validate: true,
-    transaction,
-  });
-  return result;
-};
-
-exports.markAsRead = async (ids, userId, transaction) => {
-  const [updateCount] = await db.UserNotification.update(
-    {
-      readAt: Date.now(),
-    },
-    {
-      where: {
-        id: {
-          [db.Op.in]: ids,
-        },
-        userId,
-      },
-      transaction,
-    },
-  );
-
-  return updateCount;
-};
-
-exports.bulkAddNotification = async (data, transaction) => {
+exports.addNewNotification = async (data, transaction) => {
   const createdAt = Date.now();
   const result = await db.UserNotification.bulkCreate(
     data.map((row) => {
@@ -109,4 +61,23 @@ exports.bulkAddNotification = async (data, transaction) => {
     },
   );
   return result;
+};
+
+exports.markAsRead = async (ids, userId, transaction) => {
+  const [updateCount] = await db.UserNotification.update(
+    {
+      readAt: Date.now(),
+    },
+    {
+      where: {
+        id: {
+          [db.Op.in]: ids,
+        },
+        userId,
+      },
+      transaction,
+    },
+  );
+
+  return updateCount;
 };
