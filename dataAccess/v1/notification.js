@@ -34,32 +34,32 @@ exports.getById = async (id, userId) => {
   return result?.toJSON();
 };
 
-exports.addNewNotification = async (
-  {
-    recipients,
-    notificationType,
-    notificationMessage,
-    notificationTitle,
-    metadata,
-  },
-  transaction,
-) => {
+exports.addNewNotification = async (data, transaction) => {
   const createdAt = Date.now();
-  const data = recipients.map((userId) => {
-    return {
-      userId,
-      notificationType,
-      notificationTitle,
-      notificationMessage,
-      metadata,
-      createdAt,
-    };
-  });
-  const result = await db.UserNotification.bulkCreate(data, {
-    ignoreDuplicates: true,
-    validate: true,
-    transaction,
-  });
+  const result = await db.UserNotification.bulkCreate(
+    data.map((row) => {
+      const {
+        userId,
+        notificationType,
+        notificationTitle,
+        notificationMessage,
+        metadata,
+      } = row;
+      return {
+        userId,
+        notificationType,
+        notificationTitle,
+        notificationMessage,
+        metadata,
+        createdAt,
+      };
+    }),
+    {
+      ignoreDuplicates: true,
+      validate: true,
+      transaction,
+    },
+  );
   return result;
 };
 
