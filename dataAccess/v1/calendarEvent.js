@@ -11,7 +11,11 @@ const {
   groupMemberStatus,
   participantInvitationStatus,
 } = require('../../enums');
-const { includeMeta, emptyPagingResponse } = require('../../utils/utils');
+const {
+  includeMeta,
+  emptyPagingResponse,
+  removeDomainFromUrl,
+} = require('../../utils/utils');
 const { Op } = require('../../index');
 
 const include = [
@@ -770,4 +774,55 @@ exports.bulkUpdate = async (idList, data, transaction) => {
   });
 
   return updateCount;
+};
+
+exports.getRelatedFiles = async (id, transaction) => {
+  const [competitionUnits, eventDetail] = await Promise.all([
+    exports.getCompetitionUnitsById(id, null, transaction),
+    exports.getById(id, transaction),
+  ]);
+
+  const result = [];
+
+  if (!eventDetail) return result;
+
+  if (eventDetail.openGraphImage)
+    result.push({
+      type: 'og_image',
+      path: removeDomainFromUrl(eventDetail.openGraphImage),
+      bucket: 'opengraph_image',
+    });
+
+  if (eventDetail.noticeOfRacePDF)
+    result.push({
+      type: 'notice_of_race',
+      path: removeDomainFromUrl(eventDetail.noticeOfRacePDF),
+      bucket: 'opengraph_image',
+    });
+
+  if (eventDetail.mediaWaiverPDF)
+    result.push({
+      type: 'media_waiver',
+      path: removeDomainFromUrl(eventDetail.mediaWaiverPDF),
+      bucket: 'opengraph_image',
+    });
+
+  if (eventDetail.disclaimerPDF)
+    result.push({
+      type: 'event_disclaimer',
+      path: removeDomainFromUrl(eventDetail.disclaimerPDF),
+      bucket: 'opengraph_image',
+    });
+
+  const competitionUnitFiles = (
+    await Promise.all(
+      competitionUnits.map(async (cu) =>
+        (
+          await competitionUnitDAL.getRelatedFiles(cu.id, transaction)
+        ).map((t) => ({ ...t, competitionUnitId: cu.id })),
+      ),
+    )
+  ).flat(1);
+
+  result.push(...competitionUnitFiles);
 };

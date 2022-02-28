@@ -9,7 +9,11 @@ const {
 } = require('../../enums');
 const db = require('../../index');
 const { Op } = require('../../index');
-const { includeMeta, emptyPagingResponse } = require('../../utils/utils');
+const {
+  includeMeta,
+  emptyPagingResponse,
+  removeDomainFromUrl,
+} = require('../../utils/utils');
 
 const include = [
   {
@@ -225,6 +229,7 @@ exports.delete = async (id, transaction) => {
     db.VesselParticipantLeg.destroy(param),
     db.VesselParticipantTrackJson.destroy(param),
     db.VesselParticipantTrack.destroy(param),
+    db.SlicedWeather.destroy(param),
   ]);
 
   return !isMultiple ? data?.toJSON() : count;
@@ -558,4 +563,84 @@ exports.getUntrackedRaces = async (filterDate, transaction) => {
   });
 
   return result.map((t) => t.toJSON());
+};
+
+exports.getRelatedFiles = (id, transaction) => {
+  const [competitionUnit, vpTrackJson, pointTrackJson, slicedWeather] =
+    await Promise.all([
+      db.CompetitionUnit.findByPk(id, { transaction }),
+      db.VesselParticipantTrackJson.findAll({
+        where: {
+          competitionUnitId: id,
+        },
+        transaction,
+      }),
+      db.VesselParticipantCrewTrackJson.findAll({
+        where: {
+          competitionUnitId: id,
+        },
+        transaction,
+      }),
+      db.CompetitionPointTrackJson.findAll({
+        where: {
+          competitionUnitId: id,
+        },
+        transaction,
+      }),
+      db.SlicedWeather.findAll({
+        where: {
+          competitionUnitId: id,
+        },
+        transaction,
+      }),
+    ]);
+
+  const result = [];
+
+  if (!competitionUnit) return result;
+
+  if (ompetitionUnit.openGraphImage)
+    result.push({
+      type: 'og_image',
+      path: removeDomainFromUrl(competitionUnit.openGraphImage),
+      bucket: 'opengraph_image',
+    });
+  result.push(
+    ...vpTrackJson
+      .filter((t) => t.providedStorageKey)
+      .map((t) => ({
+        type: 'vp_track_json',
+        path: t.providedStorageKey,
+        bucket: 'individual_track',
+      })),
+  );
+  result.push(
+    ...vpTrackJson
+      .filter((t) => t.simplifiedStorageKey)
+      .map((t) => ({
+        type: 'vp_simplified_track_json',
+        path: t.simplifiedStorageKey,
+        bucket: 'individual_track',
+      })),
+  );
+  result.push(
+    ...pointTrackJson
+      .filter((t) => t.storageKey)
+      .map((t) => ({
+        type: 'vp_crew_track_json',
+        path: t.storageKey,
+        bucket: 'individual_track',
+      })),
+  );
+  result.push(
+    ...slicedWeather
+      .filter((t) => t.s3Key)
+      .map((t) => ({
+        type: 'sliced_weather',
+        path: t.s3Key,
+        bucket: 'sliced_weather',
+      })),
+  );
+
+  return result;
 };
