@@ -565,6 +565,12 @@ exports.getUntrackedRaces = async (filterDate, transaction) => {
   return result.map((t) => t.toJSON());
 };
 
+/**
+ *
+ * @param {string} id
+ * @param {import('sequelize').Transaction} transaction
+ * @returns {import('../../types/dataAccess').RelatedFile[]}
+ */
 exports.getRelatedFiles = (id, transaction) => {
   const [competitionUnit, vpTrackJson, pointTrackJson, slicedWeather] =
     await Promise.all([

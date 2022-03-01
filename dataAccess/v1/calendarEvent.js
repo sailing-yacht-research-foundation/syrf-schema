@@ -776,6 +776,12 @@ exports.bulkUpdate = async (idList, data, transaction) => {
   return updateCount;
 };
 
+/**
+ *
+ * @param {string} id
+ * @param {import('sequelize').Transaction} transaction
+ * @returns {import('../../types/dataAccess').RelatedFile[]}
+ */
 exports.getRelatedFiles = async (id, transaction) => {
   const [competitionUnits, eventDetail] = await Promise.all([
     exports.getCompetitionUnitsById(id, null, transaction),
