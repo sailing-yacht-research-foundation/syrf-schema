@@ -784,7 +784,7 @@ exports.bulkUpdate = async (idList, data, transaction) => {
  */
 exports.getRelatedFiles = async (id, transaction) => {
   const [competitionUnits, eventDetail] = await Promise.all([
-    exports.getCompetitionUnitsById(id, null, transaction),
+    exports.getCompetitionUnitsById(id, {}, transaction),
     exports.getById(id, transaction),
   ]);
 
@@ -803,21 +803,21 @@ exports.getRelatedFiles = async (id, transaction) => {
     result.push({
       type: 'notice_of_race',
       path: removeDomainFromUrl(eventDetail.noticeOfRacePDF),
-      bucket: 'opengraph_image',
+      bucket: 'avatar_bucket',
     });
 
   if (eventDetail.mediaWaiverPDF)
     result.push({
       type: 'media_waiver',
       path: removeDomainFromUrl(eventDetail.mediaWaiverPDF),
-      bucket: 'opengraph_image',
+      bucket: 'avatar_bucket',
     });
 
   if (eventDetail.disclaimerPDF)
     result.push({
       type: 'event_disclaimer',
       path: removeDomainFromUrl(eventDetail.disclaimerPDF),
-      bucket: 'opengraph_image',
+      bucket: 'avatar_bucket',
     });
 
   const competitionUnitFiles = (
@@ -831,4 +831,6 @@ exports.getRelatedFiles = async (id, transaction) => {
   ).flat(1);
 
   result.push(...competitionUnitFiles);
+
+  return result;
 };

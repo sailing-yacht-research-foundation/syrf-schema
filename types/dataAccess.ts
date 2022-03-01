@@ -27,6 +27,10 @@ export interface RelatedFile {
     | 'vp_crew_track_json'
     | 'sliced_weather';
   path: string;
-  bucket: 'opengraph_image' | 'individual_track' | 'sliced_weather';
+  bucket:
+    | 'opengraph_image'
+    | 'individual_track'
+    | 'sliced_weather'
+    | 'avatar_bucket';
   competitionUnitId?: string;
 }

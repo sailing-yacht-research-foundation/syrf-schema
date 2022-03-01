@@ -571,7 +571,7 @@ exports.getUntrackedRaces = async (filterDate, transaction) => {
  * @param {import('sequelize').Transaction} transaction
  * @returns {import('../../types/dataAccess').RelatedFile[]}
  */
-exports.getRelatedFiles = (id, transaction) => {
+exports.getRelatedFiles = async (id, transaction) => {
   const [competitionUnit, vpTrackJson, pointTrackJson, slicedWeather] =
     await Promise.all([
       db.CompetitionUnit.findByPk(id, { transaction }),
@@ -605,7 +605,7 @@ exports.getRelatedFiles = (id, transaction) => {
 
   if (!competitionUnit) return result;
 
-  if (ompetitionUnit.openGraphImage)
+  if (competitionUnit.openGraphImage)
     result.push({
       type: 'og_image',
       path: removeDomainFromUrl(competitionUnit.openGraphImage),
