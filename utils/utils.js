@@ -209,3 +209,5 @@ exports.emptyPagingResponse = ({
 };
 
 exports.excludeMeta = ['ownerId', 'createdById', 'updatedById', 'developerId'];
+
+exports.removeDomainFromUrl = (url) => url.replace(/^.*\/\/[^\/]+\//, '');
