@@ -60,8 +60,9 @@ exports.getAllByEmail = async (emails) => {
   });
 };
 
-exports.getAllById = async (ids) => {
+exports.getAllById = async (ids, attributes) => {
   return await db.UserProfile.findAll({
+    attributes,
     where: {
       id: {
         [Op.in]: ids,

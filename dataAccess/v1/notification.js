@@ -81,3 +81,34 @@ exports.markAsRead = async (ids, userId, transaction) => {
 
   return updateCount;
 };
+
+exports.markAllUnreadAsRead = async (userId, transaction) => {
+  const [updateCount] = await db.UserNotification.update(
+    {
+      readAt: Date.now(),
+    },
+    {
+      where: {
+        readAt: {
+          [db.Op.eq]: null,
+        },
+        userId,
+      },
+      transaction,
+    },
+  );
+  return updateCount;
+};
+
+exports.getUnreadCount = async (userId) => {
+  const unreadCount = await db.UserNotification.count({
+    where: {
+      userId,
+      readAt: {
+        [db.Op.eq]: null,
+      },
+    },
+  });
+
+  return unreadCount;
+};
