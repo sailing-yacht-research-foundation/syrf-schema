@@ -79,14 +79,14 @@ exports.getById = async (id) => {
   return result?.toJSON();
 };
 
-exports.getByIds = async (ids = [], transaction) => {
+exports.getByIds = async (ids = [], attributes) => {
   const result = await db.Group.findAll({
     where: {
       id: {
         [db.Op.in]: ids,
       },
     },
-    transaction,
+    attributes,
     raw: true,
   });
 
