@@ -4,6 +4,7 @@ const BaseError = require('./BaseError');
 const ValidationError = require('./ValidationError');
 const { Transaction } = require('sequelize');
 const turf = require('@turf/turf');
+const { dataSources } = require('../enums');
 
 exports.includeMeta = [
   {
@@ -211,3 +212,7 @@ exports.emptyPagingResponse = ({
 exports.excludeMeta = ['ownerId', 'createdById', 'updatedById', 'developerId'];
 
 exports.removeDomainFromUrl = (url) => url.replace(/^.*\/\/[^\/]+\//, '');
+
+exports.isScrapedSource = (source) => {
+  return source && ![dataSources.SYRF, dataSources.IMPORT].includes(source);
+};
