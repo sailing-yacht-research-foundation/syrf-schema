@@ -238,6 +238,19 @@ exports.getById = async (id, transaction) => {
   }
   return data;
 };
+exports.getByIds = async (ids = [], attributes) => {
+  const result = await db.CalendarEvent.findAll({
+    where: {
+      id: {
+        [db.Op.in]: ids,
+      },
+    },
+    attributes,
+    raw: true,
+  });
+
+  return result;
+};
 
 exports.getCompetitionUnitsById = async (id, params = {}, transaction) => {
   if (!id) return null;
