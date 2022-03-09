@@ -200,8 +200,8 @@ exports.getFollowSummary = async (userId) => {
   };
 };
 
-exports.getTopCountryUser = async (paging, { locale, userId }) => {
-  let where = Object.assign({}, locale ? { locale } : {}, {
+exports.getTopCountryUser = async (paging, { country, userId }) => {
+  let where = Object.assign({}, country ? { country } : {}, {
     ['$follower.followerId$']: {
       [Op.eq]: null, // Only show top user not followed yet
     },
@@ -214,7 +214,7 @@ exports.getTopCountryUser = async (paging, { locale, userId }) => {
         'name',
         'avatar',
         'isPrivate',
-        'locale',
+        'country',
         [
           db.sequelize.literal(
             `(SELECT COUNT(*) FROM "UserFollowers" AS "folDB" WHERE "UserProfile"."id" = "folDB"."userId" AND "folDB"."status" = '${followerStatus.accepted}')`,
@@ -244,8 +244,8 @@ exports.getTopCountryUser = async (paging, { locale, userId }) => {
   return result;
 };
 
-exports.getTopVelocityUser = async (paging, { locale, userId }) => {
-  let where = Object.assign({}, locale ? { locale } : {}, {
+exports.getTopVelocityUser = async (paging, { country, userId }) => {
+  let where = Object.assign({}, country ? { country } : {}, {
     ['$follower.followerId$']: {
       [Op.eq]: null, // Only show top gaining follower that user not followed / request (if private) to follow yet
     },
@@ -258,7 +258,7 @@ exports.getTopVelocityUser = async (paging, { locale, userId }) => {
         'name',
         'avatar',
         'isPrivate',
-        'locale',
+        'country',
         [
           db.sequelize.literal(
             `(SELECT COUNT(*) FROM "UserFollowers" AS "folDB" WHERE "UserProfile"."id" = "folDB"."userId" AND "folDB"."status" = '${
@@ -281,7 +281,6 @@ exports.getTopVelocityUser = async (paging, { locale, userId }) => {
       ],
       where,
       subQuery: false,
-      logging: console.log,
     },
     {
       ...paging,
@@ -300,7 +299,7 @@ exports.searchFollowedUser = async ({ page, size, name }, userId) => {
       'name',
       'avatar',
       'isPrivate',
-      'locale',
+      'country',
       'bio',
       'sailingNumber',
     ],

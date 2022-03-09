@@ -125,7 +125,7 @@ exports.getAll = async (paging, params) => {
       {
         model: db.UserProfile,
         as: 'profile',
-        attributes: ['id', 'name', 'locale', 'avatar'],
+        attributes: ['id', 'name', 'country', 'avatar'],
       },
     ];
   } else {

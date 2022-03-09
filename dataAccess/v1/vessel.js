@@ -223,7 +223,7 @@ exports.getAllRegisteredInEvent = async (eventId, paging = {}) => {
                 {
                   model: db.UserProfile,
                   as: 'profile',
-                  attributes: ['id', 'name', 'locale', 'avatar'],
+                  attributes: ['id', 'name', 'country', 'avatar'],
                 },
               ],
             },
