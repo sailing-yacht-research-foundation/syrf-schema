@@ -18,7 +18,7 @@ module.exports = {
           {
             type: Sequelize.DataTypes.STRING,
             allowNull: false,
-            default: 'en',
+            defaultValue: 'en',
           },
           { transaction },
         );

@@ -105,8 +105,13 @@ module.exports = (sequelize) => {
       phone_number: {
         type: DataTypes.STRING,
       },
-      locale: {
+      country: {
         type: DataTypes.STRING,
+      },
+      language: {
+        type: DataTypes.STRING,
+        allowNull: false,
+        defaultValue: 'en',
       },
       email: {
         type: DataTypes.STRING,
