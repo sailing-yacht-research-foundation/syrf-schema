@@ -281,7 +281,6 @@ exports.getTopVelocityUser = async (paging, { locale, userId }) => {
       ],
       where,
       subQuery: false,
-      logging: console.log,
     },
     {
       ...paging,
