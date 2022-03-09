@@ -201,6 +201,9 @@ module.exports = (sequelize) => {
         type: DataTypes.ARRAY(DataTypes.STRING),
         comment: 'FCM registration token for logged in device',
       },
+      lastLocation: {
+        type: DataTypes.GEOMETRY('POINT', 4326),
+      },
     },
     {
       modelName: 'UserProfile',
