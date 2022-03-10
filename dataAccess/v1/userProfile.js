@@ -147,16 +147,14 @@ exports.getNearbyUsers = async ({ lon, lat }, radius) => {
           db.Sequelize.fn(
             'ST_DWithin',
             db.Sequelize.literal('"lastLocation"'),
-            db.Sequelize.cast(
-              db.Sequelize.fn('ST_MakePoint', lon, lat),
-              'geography',
-            ),
+            db.Sequelize.literal(`ST_MakePoint(:lon,:lat)::geography`),
             radius,
           ),
           true,
         ),
       ],
     },
+    replacements: { lon: parseFloat(lon), lat: parseFloat(lat) },
   });
   return data;
 };
