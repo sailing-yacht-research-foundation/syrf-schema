@@ -137,3 +137,25 @@ exports.getPushSubscriptions = async (ids) => {
   });
   return data;
 };
+
+exports.getNearbyUsers = async ({ lon, lat }, radius) => {
+  const data = await db.UserProfile.findAll({
+    where: {
+      [db.Op.and]: [
+        db.Sequelize.where(
+          db.Sequelize.fn(
+            'ST_DWithin',
+            db.Sequelize.literal('"lastLocation"'),
+            db.Sequelize.cast(
+              db.Sequelize.fn('ST_MakePoint', lon, lat),
+              'geography',
+            ),
+            radius,
+          ),
+          true,
+        ),
+      ],
+    },
+  });
+  return data;
+};
