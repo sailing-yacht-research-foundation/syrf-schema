@@ -140,6 +140,7 @@ exports.getPushSubscriptions = async (ids) => {
 
 exports.getNearbyUsers = async ({ lon, lat }, radius) => {
   const data = await db.UserProfile.findAll({
+    attributes: ['id', 'name'],
     where: {
       [db.Op.and]: [
         db.Sequelize.where(
