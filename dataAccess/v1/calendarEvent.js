@@ -226,6 +226,7 @@ exports.getById = async (id, transaction) => {
     });
     data = {
       ...otherData,
+      location,
       lon: location?.coordinates?.[0],
       lat: location?.coordinates?.[1],
       editors: [...editors, ...editorsFromGroup],
