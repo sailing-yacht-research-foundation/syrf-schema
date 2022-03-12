@@ -21,3 +21,15 @@ exports.getById = async (userId) => {
   const settings = await db.UserSetting.findByPk(userId);
   return settings.toJSON();
 };
+
+exports.update = async (id, data, transaction) => {
+  const [updateCount, updatedData] = await db.UserSetting.update(data, {
+    where: {
+      id,
+    },
+    returning: true,
+    transaction,
+  });
+
+  return { updateCount, updatedData };
+};
