@@ -387,6 +387,25 @@ const notificationTypes = {
   ocsDetected: 'OCS_DETECTED',
 };
 
+const mobileOnlyNotificationTypes = [
+  'ocsDetected',
+  'newCompetitionAddedToEvent',
+  'competitionStartTracking',
+];
+
+const generalNotificationTypes = [
+  'userAddedToEventAdmin',
+  'userInvitedToGroup',
+  'userAddedToEventAdmin',
+  'userInvitedToPrivateRegatta',
+  'userNewFollower',
+  'eventInactivityDeletion',
+  'requestJoinGroup',
+  'userAchieveBadge',
+  'groupAchieveBadge',
+  'openEventNearbyCreated',
+];
+
 const geojsonProperties = {
   lat: 'lat',
   lon: 'lon',
@@ -404,7 +423,7 @@ const geojsonProperties = {
   instrumentSOGAccuracyMetersPerSecond: 'instrumentSOGAccuracyMetersPerSecond',
   instrumentHorizontalAccuracyMeters: 'instrumentHorizontalAccuracyMeters',
   instrumentVerticalAccuracyMeters: 'instrumentVerticalAccuracyMeters',
-}
+};
 
 module.exports = {
   competitionUnitStatus,
@@ -452,5 +471,7 @@ module.exports = {
   raceUpdateTypes,
   userRoles,
   notificationTypes,
+  mobileOnlyNotificationTypes,
+  generalNotificationTypes,
   geojsonProperties,
 };

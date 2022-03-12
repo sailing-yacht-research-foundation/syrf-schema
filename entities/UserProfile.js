@@ -72,6 +72,12 @@ class UserProfile extends ModelBase {
       foreignKey: 'userId',
       constraints: false,
     });
+
+    this.hasOne(models.UserSetting, {
+      as: 'setting',
+      foreignKey: 'id',
+      constraints: false,
+    });
   }
 }
 
