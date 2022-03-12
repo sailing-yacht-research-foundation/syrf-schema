@@ -384,6 +384,7 @@ const notificationTypes = {
   openEventNearbyCreated: 'OPEN_EVENT_NEARBY_CREATED',
   competitionStartTracking: 'COMPETITION_START_TRACKING', // For when race start queue kick off analysis engine
   newCompetitionAddedToEvent: 'NEW_COMPETITION_ADDED_TO_EVENT',
+  ocsDetected: 'OCS_DETECTED',
 };
 
 module.exports = {
