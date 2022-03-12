@@ -4,7 +4,11 @@ const BaseError = require('./BaseError');
 const ValidationError = require('./ValidationError');
 const { Transaction } = require('sequelize');
 const turf = require('@turf/turf');
-const { dataSources } = require('../enums');
+const {
+  dataSources,
+  generalNotificationTypes,
+  mobileOnlyNotificationTypes,
+} = require('../enums');
 
 exports.includeMeta = [
   {
@@ -215,4 +219,20 @@ exports.removeDomainFromUrl = (url) => url.replace(/^.*\/\/[^\/]+\//, '');
 
 exports.isScrapedSource = (source) => {
   return source && ![dataSources.SYRF, dataSources.IMPORT].includes(source);
+};
+
+exports.generateDefaultUserSettings = () => {
+  let generalSettings = {};
+  let mobileSettings = {};
+  generalNotificationTypes.forEach((key) => {
+    generalSettings[key] = true;
+    mobileSettings[key] = true;
+  });
+  mobileOnlyNotificationTypes.forEach((key) => {
+    mobileSettings[key] = true;
+  });
+  return {
+    generalSettings,
+    mobileSettings,
+  };
 };

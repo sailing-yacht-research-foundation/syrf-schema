@@ -11,3 +11,8 @@ exports.bulkCreate = async (data, transaction) => {
   });
   return result;
 };
+
+exports.insert = async (data, transaction) => {
+  const result = await db.UserSetting.create(data, { transaction });
+  return result;
+};
