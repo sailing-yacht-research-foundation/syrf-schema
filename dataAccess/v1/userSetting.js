@@ -33,3 +33,18 @@ exports.update = async (id, data, transaction) => {
 
   return { updateCount, updatedData };
 };
+
+exports.delete = async (id, transaction) => {
+  const data = await db.UserSetting.findByPk(id);
+
+  if (data) {
+    await db.UserSetting.destroy({
+      where: {
+        id,
+      },
+      transaction,
+    });
+  }
+
+  return data?.toJSON();
+};
