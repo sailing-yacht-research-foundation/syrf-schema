@@ -16,3 +16,8 @@ exports.insert = async (data, transaction) => {
   const result = await db.UserSetting.create(data, { transaction });
   return result;
 };
+
+exports.getById = async (userId) => {
+  const settings = await db.UserSetting.findByPk(userId);
+  return settings.toJSON();
+};
