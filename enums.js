@@ -179,6 +179,7 @@ const bullQueues = {
   raceUpdate: 'race_update',
   notification: 'notification',
   clearUntrackedRaces: 'clear_untracked_races',
+  warningUntrackedEvents: 'warning_untracked_events',
 };
 
 const externalServiceSources = {
@@ -377,6 +378,7 @@ const notificationTypes = {
   userAddedToEventAdmin: 'USER_ADDED_TO_EVENT_ADMIN',
   userInvitedToPrivateRegatta: 'USER_INVITED_TO_PRIVATE_REGATTA',
   userNewFollower: 'USER_NEW_FOLLOWER',
+  eventInactivityWarning: 'EVENT_INACTIVITY_WARNING',
   eventInactivityDeletion: 'EVENT_INACTIVITY_DELETION',
   requestJoinGroup: 'REQUEST_JOIN_GROUP',
   userAchieveBadge: 'USER_ACHIEVE_BADGE',
@@ -399,6 +401,7 @@ const generalNotificationTypes = [
   'userAddedToEventAdmin',
   'userInvitedToPrivateRegatta',
   'userNewFollower',
+  'eventInactivityWarning',
   'eventInactivityDeletion',
   'requestJoinGroup',
   'userAchieveBadge',

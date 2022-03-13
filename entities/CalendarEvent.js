@@ -50,6 +50,12 @@ class CalendarEvent extends ModelBase {
       foreignKey: 'calendarEventId',
       constraints: false,
     });
+
+    this.hasMany(models.TrackHistory, {
+      as: 'tracks',
+      foreignKey: 'calendarEventId',
+      constraints: false,
+    });
   }
 }
 
