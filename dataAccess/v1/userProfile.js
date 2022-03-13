@@ -155,7 +155,6 @@ exports.getPushSubscriptions = async (ids) => {
       'webpushSubscription',
       'mobilePushSubscription',
     ],
-    logging: console.log,
   });
   return data;
 };
