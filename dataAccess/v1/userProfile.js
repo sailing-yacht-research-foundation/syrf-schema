@@ -135,12 +135,23 @@ exports.getPushSubscriptions = async (ids) => {
         [Op.in]: ids,
       },
     },
+    include: [
+      {
+        model: db.UserSetting,
+        as: 'setting',
+        attributes: [
+          'emailNotificationSettings',
+          'browserNotificationSettings',
+          'mobileNotificationSettings',
+          'persistentNotificationSettings',
+        ],
+        required: false,
+      },
+    ],
     attributes: [
       'id',
       'email',
       'language',
-      'optInEmailNotification',
-      'optInMobileNotification',
       'webpushSubscription',
       'mobilePushSubscription',
     ],
