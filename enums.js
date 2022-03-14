@@ -387,6 +387,25 @@ const notificationTypes = {
   ocsDetected: 'OCS_DETECTED',
 };
 
+const geojsonProperties = {
+  lat: 'lat',
+  lon: 'lon',
+  elevation: 'elevation',
+  time: 'time',
+  sog: 'sog',
+  cog: 'cog',
+  twa: 'twa',
+  vmc: 'vmc',
+  vmg: 'vmg',
+  windSpeed: 'windSpeed',
+  windDirection: 'windDirection',
+  heading: 'heading',
+  instrumentCOGTrueAccuracyDegrees: 'instrumentCOGTrueAccuracyDegrees',
+  instrumentSOGAccuracyMetersPerSecond: 'instrumentSOGAccuracyMetersPerSecond',
+  instrumentHorizontalAccuracyMeters: 'instrumentHorizontalAccuracyMeters',
+  instrumentVerticalAccuracyMeters: 'instrumentVerticalAccuracyMeters',
+}
+
 module.exports = {
   competitionUnitStatus,
   calendarEventStatus,
@@ -433,4 +452,5 @@ module.exports = {
   raceUpdateTypes,
   userRoles,
   notificationTypes,
+  geojsonProperties,
 };
