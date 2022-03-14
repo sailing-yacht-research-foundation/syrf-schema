@@ -380,11 +380,11 @@ const notificationTypes = {
   userNewFollower: 'USER_NEW_FOLLOWER',
   eventInactivityWarning: 'EVENT_INACTIVITY_WARNING',
   eventInactivityDeletion: 'EVENT_INACTIVITY_DELETION',
-  requestJoinGroup: 'REQUEST_JOIN_GROUP',
-  userAchieveBadge: 'USER_ACHIEVE_BADGE',
-  groupAchieveBadge: 'GROUP_ACHIEVE_BADGE',
+  requestedJoinGroup: 'REQUEST_JOIN_GROUP',
+  userAchievedBadge: 'USER_ACHIEVE_BADGE',
+  groupAchievedBadge: 'GROUP_ACHIEVE_BADGE',
   openEventNearbyCreated: 'OPEN_EVENT_NEARBY_CREATED',
-  competitionStartTracking: 'COMPETITION_START_TRACKING', // For when race start queue kick off analysis engine
+  competitionStartingSoon: 'COMPETITION_START_TRACKING', // For when race start queue kick off analysis engine
   newCompetitionAddedToEvent: 'NEW_COMPETITION_ADDED_TO_EVENT',
   ocsDetected: 'OCS_DETECTED',
 };
@@ -392,7 +392,7 @@ const notificationTypes = {
 const mobileOnlyNotificationTypes = [
   'ocsDetected',
   'newCompetitionAddedToEvent',
-  'competitionStartTracking',
+  'competitionStartingSoon',
 ];
 
 const generalNotificationTypes = [
@@ -403,9 +403,9 @@ const generalNotificationTypes = [
   'userNewFollower',
   'eventInactivityWarning',
   'eventInactivityDeletion',
-  'requestJoinGroup',
-  'userAchieveBadge',
-  'groupAchieveBadge',
+  'requestedJoinGroup',
+  'userAchievedBadge',
+  'groupAchievedBadge',
   'openEventNearbyCreated',
 ];
 
