@@ -179,6 +179,7 @@ const bullQueues = {
   raceUpdate: 'race_update',
   notification: 'notification',
   clearUntrackedRaces: 'clear_untracked_races',
+  warningUntrackedEvents: 'warning_untracked_events',
 };
 
 const externalServiceSources = {
@@ -377,15 +378,36 @@ const notificationTypes = {
   userAddedToEventAdmin: 'USER_ADDED_TO_EVENT_ADMIN',
   userInvitedToPrivateRegatta: 'USER_INVITED_TO_PRIVATE_REGATTA',
   userNewFollower: 'USER_NEW_FOLLOWER',
+  eventInactivityWarning: 'EVENT_INACTIVITY_WARNING',
   eventInactivityDeletion: 'EVENT_INACTIVITY_DELETION',
-  requestJoinGroup: 'REQUEST_JOIN_GROUP',
-  userAchieveBadge: 'USER_ACHIEVE_BADGE',
-  groupAchieveBadge: 'GROUP_ACHIEVE_BADGE',
+  requestedJoinGroup: 'REQUEST_JOIN_GROUP',
+  userAchievedBadge: 'USER_ACHIEVE_BADGE',
+  groupAchievedBadge: 'GROUP_ACHIEVE_BADGE',
   openEventNearbyCreated: 'OPEN_EVENT_NEARBY_CREATED',
-  competitionStartTracking: 'COMPETITION_START_TRACKING', // For when race start queue kick off analysis engine
+  competitionStartingSoon: 'COMPETITION_START_TRACKING', // For when race start queue kick off analysis engine
   newCompetitionAddedToEvent: 'NEW_COMPETITION_ADDED_TO_EVENT',
   ocsDetected: 'OCS_DETECTED',
 };
+
+const mobileOnlyNotificationTypes = [
+  'ocsDetected',
+  'newCompetitionAddedToEvent',
+  'competitionStartingSoon',
+];
+
+const generalNotificationTypes = [
+  'userAddedToEventAdmin',
+  'userInvitedToGroup',
+  'userAddedToEventAdmin',
+  'userInvitedToPrivateRegatta',
+  'userNewFollower',
+  'eventInactivityWarning',
+  'eventInactivityDeletion',
+  'requestedJoinGroup',
+  'userAchievedBadge',
+  'groupAchievedBadge',
+  'openEventNearbyCreated',
+];
 
 const geojsonProperties = {
   lat: 'lat',
@@ -404,7 +426,7 @@ const geojsonProperties = {
   instrumentSOGAccuracyMetersPerSecond: 'instrumentSOGAccuracyMetersPerSecond',
   instrumentHorizontalAccuracyMeters: 'instrumentHorizontalAccuracyMeters',
   instrumentVerticalAccuracyMeters: 'instrumentVerticalAccuracyMeters',
-}
+};
 
 module.exports = {
   competitionUnitStatus,
@@ -452,5 +474,7 @@ module.exports = {
   raceUpdateTypes,
   userRoles,
   notificationTypes,
+  mobileOnlyNotificationTypes,
+  generalNotificationTypes,
   geojsonProperties,
 };

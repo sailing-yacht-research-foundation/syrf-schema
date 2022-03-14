@@ -72,6 +72,12 @@ class UserProfile extends ModelBase {
       foreignKey: 'userId',
       constraints: false,
     });
+
+    this.hasOne(models.UserSetting, {
+      as: 'setting',
+      foreignKey: 'id',
+      constraints: false,
+    });
   }
 }
 
@@ -181,16 +187,6 @@ module.exports = (sequelize) => {
       hasVerifiedStripePayment: {
         type: DataTypes.BOOLEAN,
         defaultValue: false,
-        allowNull: false,
-      },
-      optInEmailNotification: {
-        type: DataTypes.BOOLEAN,
-        defaultValue: true,
-        allowNull: false,
-      },
-      optInMobileNotification: {
-        type: DataTypes.BOOLEAN,
-        defaultValue: true,
         allowNull: false,
       },
       webpushSubscription: {

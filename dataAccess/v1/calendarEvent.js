@@ -10,6 +10,8 @@ const {
   conversionValues,
   groupMemberStatus,
   participantInvitationStatus,
+  calendarEventStatus,
+  dataSources,
 } = require('../../enums');
 const {
   includeMeta,
@@ -847,4 +849,94 @@ exports.getRelatedFiles = async (id, transaction) => {
   result.push(...competitionUnitFiles);
 
   return result;
+};
+
+exports.getUntrackedEvents = async (filterTimeStart, filterTimeEnd) => {
+  const result = await db.CalendarEvent.findAll({
+    where: {
+      approximateStartTime_utc: {
+        [db.Op.gte]: filterTimeStart,
+        [db.Op.lt]: filterTimeEnd,
+      },
+      status: {
+        [db.Op.in]: [
+          calendarEventStatus.SCHEDULED,
+          calendarEventStatus.ONGOING,
+          calendarEventStatus.COMPLETED,
+        ],
+      },
+      source: dataSources.SYRF,
+      '$tracks.id$': null,
+    },
+    subQuery: false,
+    include: [
+      {
+        model: db.TrackHistory,
+        as: 'tracks',
+        required: false,
+        attributes: ['id'],
+      },
+      {
+        model: db.UserProfile,
+        as: 'editors',
+        attributes: ['id'],
+        through: {
+          attributes: [],
+        },
+      },
+      {
+        model: db.Group,
+        as: 'groupEditors',
+        attributes: ['id'],
+        through: {
+          attributes: [],
+        },
+        include: [
+          {
+            model: db.GroupMember,
+            as: 'groupMember',
+            attributes: ['id', 'userId'],
+            include: [
+              {
+                as: 'member',
+                model: db.UserProfile,
+                attributes: ['id', 'name', 'avatar'],
+              },
+            ],
+            where: {
+              status: groupMemberStatus.accepted,
+            },
+          },
+        ],
+      },
+    ],
+    attributes: ['id', 'name', 'approximateStartTime_utc', 'status', 'ownerId'],
+  });
+
+  let data = result.map((t) => t.toJSON());
+  if (data.length > 0) {
+    data = data.map((record) => {
+      const { editors, groupEditors, ownerId, ...otherData } = record;
+      let editorsFromGroup = [];
+      groupEditors.forEach((group) => {
+        editorsFromGroup = [
+          ...editorsFromGroup,
+          ...group.groupMember.map((row) => {
+            return row.userId;
+          }),
+        ];
+      });
+      return {
+        ...otherData,
+        editors: Array.from(
+          new Set([
+            ownerId,
+            ...editors.map((row) => row.id),
+            ...editorsFromGroup,
+          ]),
+        ).filter((row) => row != null),
+      };
+    });
+  }
+  return data;
 };

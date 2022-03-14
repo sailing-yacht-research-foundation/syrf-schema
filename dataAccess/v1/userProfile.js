@@ -72,6 +72,16 @@ exports.getAllById = async (ids, attributes) => {
   });
 };
 
+exports.getAllRegisteredUser = async () => {
+  return await db.UserProfile.findAll({
+    where: {
+      signupType: userSignupType.REGISTERED,
+    },
+    attributes: ['id', 'email', 'name'],
+    raw: true,
+  });
+};
+
 exports.delete = async (sub, transaction) => {
   const data = await db.UserProfile.findByPk(sub);
 
@@ -125,12 +135,23 @@ exports.getPushSubscriptions = async (ids) => {
         [Op.in]: ids,
       },
     },
+    include: [
+      {
+        model: db.UserSetting,
+        as: 'setting',
+        attributes: [
+          'emailNotificationSettings',
+          'browserNotificationSettings',
+          'mobileNotificationSettings',
+          'persistentNotificationSettings',
+        ],
+        required: false,
+      },
+    ],
     attributes: [
       'id',
       'email',
       'language',
-      'optInEmailNotification',
-      'optInMobileNotification',
       'webpushSubscription',
       'mobilePushSubscription',
     ],
