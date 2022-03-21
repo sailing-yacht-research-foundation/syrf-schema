@@ -254,3 +254,15 @@ exports.addCrewTrackJson = async (data, transaction) => {
     transaction,
   });
 };
+
+exports.getActiveTrack = async (competitionUnitId, crewId, transaction) => {
+  return await db.VesselParticipantCrewTrackJson.findOne({
+    where: {
+      competitionUnitId,
+      vesselParticipantCrewId: crewId,
+      endTime: null,
+    },
+    raw: true,
+    transaction,
+  });
+};
