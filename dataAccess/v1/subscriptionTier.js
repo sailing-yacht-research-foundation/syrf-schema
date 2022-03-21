@@ -12,3 +12,11 @@ exports.getByCode = async (tierCode) => {
   });
   return result;
 };
+
+exports.getByStripeId = async (stripeProductId) => {
+  const result = await db.SubscriptionTier.findOne({
+    where: { stripeProductId },
+    raw: true,
+  });
+  return result;
+};
