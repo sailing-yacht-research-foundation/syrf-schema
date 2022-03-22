@@ -44,8 +44,10 @@ class ModelBase extends Model {
       draw,
       filters = [],
       multiSort = [],
+      customCountField = null,
     } = {},
   ) {
+    customCountField = customCountField || `"${this.name}"."id"`;
     let pagingSize = Math.max(size, 1);
     let pageQuery = Math.max(page, 1);
     let sortQuery = sort;
@@ -125,7 +127,7 @@ class ModelBase extends Model {
       this.count({
         ...params,
         attributes: [
-          [literal(`COUNT(DISTINCT("${this.name}"."id"))`), 'count'],
+          [literal(`COUNT(DISTINCT(${customCountField}))`), 'count'],
         ],
       }),
     ]);

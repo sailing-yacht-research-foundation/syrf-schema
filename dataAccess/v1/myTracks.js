@@ -88,7 +88,7 @@ exports.getMyTracks = async (userId, isPrivate, pagination) => {
         },
       ],
     },
-    pagination,
+    { ...pagination, customCountField: `"trackJson"."id"` },
   );
 
   return result;
@@ -251,6 +251,18 @@ exports.addMyTrack = async (id, data, transaction) => {
 exports.addCrewTrackJson = async (data, transaction) => {
   return await db.VesselParticipantCrewTrackJson.create(data, {
     validate: true,
+    transaction,
+  });
+};
+
+exports.getActiveTrack = async (competitionUnitId, crewId, transaction) => {
+  return await db.VesselParticipantCrewTrackJson.findOne({
+    where: {
+      competitionUnitId,
+      vesselParticipantCrewId: crewId,
+      endTime: null,
+    },
+    raw: true,
     transaction,
   });
 };
