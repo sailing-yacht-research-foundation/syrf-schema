@@ -88,7 +88,7 @@ exports.getMyTracks = async (userId, isPrivate, pagination) => {
         },
       ],
     },
-    pagination,
+    { ...pagination, customCountField: `"trackJson"."id"` },
   );
 
   return result;
