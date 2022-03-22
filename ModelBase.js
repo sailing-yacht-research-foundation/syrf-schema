@@ -47,9 +47,7 @@ class ModelBase extends Model {
       customCountField = null,
     } = {},
   ) {
-    customCountField = customCountField
-      ? customCountField
-      : `"${this.name}"."id"`;
+    customCountField = customCountField || `"${this.name}"."id"`;
     let pagingSize = Math.max(size, 1);
     let pageQuery = Math.max(page, 1);
     let sortQuery = sort;
