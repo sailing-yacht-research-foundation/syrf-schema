@@ -1,18 +1,19 @@
 export interface PaginationFilter {
-  field: string,
-  value: any,
-  opr: string
+  field: string;
+  value: any;
+  opr: string;
 }
 
 export interface PaginationRequest {
-  query: string,
-  page: number,
-  size: number,
-  sort: string,
-  draw: number,
-  srdir: -1 | 1,
-  multiSort: Array<[string,'ASC'|'DESC']>,
-  filters: PaginationFilter[],
+  query: string;
+  page: number;
+  size: number;
+  sort: string;
+  draw: number;
+  srdir: -1 | 1;
+  multiSort: Array<[string, 'ASC' | 'DESC']>;
+  filters: PaginationFilter[];
+  customCountField?: string;
 }
 
 export interface PaginationResponse<T> {
@@ -23,7 +24,6 @@ export interface PaginationResponse<T> {
   sort: string;
   srdir: string;
   q: string;
-  multiSort: Array<[string,'ASC'|'DESC']>,
-  filters: PaginationFilter[],
-
+  multiSort: Array<[string, 'ASC' | 'DESC']>;
+  filters: PaginationFilter[];
 }
