@@ -175,3 +175,69 @@ exports.getNearbyUsers = async ({ lon, lat }, radius) => {
   });
   return data;
 };
+
+exports.claimAnonymousUser = async (anonymousId, userId, transaction) => {
+  const claimCreatedBy = [
+    {
+      createdById: userId,
+    },
+    {
+      where: {
+        createdById: anonymousId,
+      },
+      transaction,
+    },
+  ];
+  const claimCreatedByAndUserProfile = [
+    {
+      createdById: userId,
+      userProfileId: userId,
+    },
+    {
+      where: {
+        userProfileId: anonymousId,
+      },
+      transaction,
+    },
+  ];
+
+  const result = await Promise.all([
+    db.CalendarEvent.update(
+      {
+        ownerId: userId,
+        createdById: userId,
+      },
+      {
+        where: {
+          ownerId: anonymousId,
+        },
+        transaction,
+      },
+    ),
+    db.VesselParticipantGroup.update(...claimCreatedBy),
+    db.Course.update(...claimCreatedBy),
+    db.CourseSequencedGeometry.update(...claimCreatedBy),
+    db.CourseUnsequencedTimedGeometry.update(...claimCreatedBy),
+    db.CourseUnsequencedUntimedGeometry.update(...claimCreatedBy),
+    db.CoursePoint.update(...claimCreatedBy),
+    db.CompetitionUnit.update(...claimCreatedBy),
+    db.Vessel.update(...claimCreatedBy),
+    db.VesselParticipant.update(...claimCreatedBy),
+    db.VesselParticipantCrew.update(...claimCreatedBy),
+    db.TrackHistory.update(...claimCreatedByAndUserProfile),
+    db.Participant.update(...claimCreatedByAndUserProfile),
+    db.MarkTracker.update(...claimCreatedByAndUserProfile),
+    db.VesselEditor.update(...claimCreatedByAndUserProfile),
+    db.UserNotification.update(
+      { userId },
+      {
+        where: {
+          userId,
+        },
+        transaction,
+      },
+    ),
+  ]);
+
+  return result.reduce((total, t) => total + t[0], 0);
+};
