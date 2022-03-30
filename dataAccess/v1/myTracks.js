@@ -266,3 +266,10 @@ exports.getActiveTrack = async (competitionUnitId, crewId, transaction) => {
     transaction,
   });
 };
+
+exports.getCrewTrackByTrackId = async (crewTrackJsonId, transaction) => {
+  return await db.VesselParticipantCrewTrackJson.findByPk(crewTrackJsonId, {
+    transaction,
+    raw: true,
+  });
+};
