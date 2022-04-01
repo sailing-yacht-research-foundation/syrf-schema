@@ -387,6 +387,7 @@ const notificationTypes = {
   competitionStartingSoon: 'COMPETITION_START_TRACKING', // For when race start queue kick off analysis engine
   newCompetitionAddedToEvent: 'NEW_COMPETITION_ADDED_TO_EVENT',
   ocsDetected: 'OCS_DETECTED',
+  kudosReceived: 'KUDOS_RECEIVED',
 };
 
 const mobileOnlyNotificationTypes = [
@@ -407,7 +408,15 @@ const generalNotificationTypes = [
   'userAchievedBadge',
   'groupAchievedBadge',
   'openEventNearbyCreated',
+  'kudosReceived',
 ];
+
+const kudosTypes = {
+  thumbsUp: 'THUMBS_UP',
+  applause: 'APPLAUSE',
+  star: 'STAR',
+  heart: 'HEART',
+};
 
 const geojsonProperties = {
   lat: 'lat',
@@ -477,4 +486,5 @@ module.exports = {
   mobileOnlyNotificationTypes,
   generalNotificationTypes,
   geojsonProperties,
+  kudosTypes,
 };
