@@ -98,6 +98,10 @@ module.exports = (sequelize) => {
       },
     },
     {
+      // Note: Required to add tableName with plural here, somehow there's weird result with table name
+      // when ending it with "metadata",  it doesn't convert to plural version on definition/load, but uses
+      // plurals when transacting (destroy, create, etc). Tested by changing to metadate works fine, weird!
+      tableName: 'VesselParticipantTrackMetadatas',
       modelName: 'VesselParticipantTrackMetadata',
       sequelize,
       timestamps: false,
