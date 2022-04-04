@@ -650,3 +650,54 @@ exports.getRelatedFiles = async (id, transaction) => {
 
   return result;
 };
+
+exports.getWithVesselParticipant = async (id, vesselParticipantId) => {
+  const result = await db.CompetitionUnit.findByPk(id, {
+    include: [
+      {
+        as: 'vesselParticipantGroup',
+        model: db.VesselParticipantGroup,
+        attributes: ['id', 'name'],
+        include: [
+          {
+            as: 'vesselParticipants',
+            model: db.VesselParticipant,
+            attributes: ['id'],
+            where: {
+              id: vesselParticipantId,
+            },
+            include: [
+              {
+                as: 'vessel',
+                model: db.Vessel,
+                attributes: ['id', 'publicName'],
+              },
+              {
+                // Note: Need to use crews instead of participants, or it will not return the details, only id.
+                // Not sure about the reason, might be because double defined and sequelize only works with the later.
+                // Maybe we can remove the definition if it's not used and keep only 1 to avoid confusion in the future?
+                as: 'crews',
+                model: db.Participant,
+                attributes: [
+                  'id',
+                  'invitationStatus',
+                  'userProfileId',
+                  'publicName',
+                ],
+                include: [
+                  {
+                    as: 'profile',
+                    model: db.UserProfile,
+                    attributes: ['id', 'name', 'email', 'avatar'],
+                  },
+                ],
+              },
+            ],
+          },
+        ],
+      },
+    ],
+  });
+
+  return result?.toJSON();
+};
