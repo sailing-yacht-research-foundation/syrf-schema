@@ -27,11 +27,11 @@ module.exports = {
                 'uuid to vesselParticipantTrackJsons, nullable, should be updated upon saving Competition data on AE',
             },
             competitionUnitId: {
-              type: DataTypes.UUID,
+              type: Sequelize.DataTypes.UUID,
               allowNull: false,
             },
             vesselParticipantId: {
-              type: DataTypes.UUID,
+              type: Sequelize.DataTypes.UUID,
               allowNull: false,
             },
             elapsedTime: {
