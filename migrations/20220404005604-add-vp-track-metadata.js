@@ -38,7 +38,7 @@ module.exports = {
               type: Sequelize.DataTypes.BIGINT,
               allowNull: false,
             },
-            timeRankInCompetition: {
+            rankElapsedTime: {
               type: Sequelize.DataTypes.INTEGER,
             },
             totalTraveledDistance: {
@@ -46,7 +46,7 @@ module.exports = {
               allowNull: false,
               defaultValue: 0,
             },
-            ttdRankInCompetition: {
+            rankTotalTraveledDistance: {
               type: Sequelize.DataTypes.INTEGER,
             },
             // SOG
@@ -65,7 +65,13 @@ module.exports = {
             bestSogLocation: {
               type: Sequelize.DataTypes.GEOMETRY('POINT', 4326),
             },
-            sogRankInCompetition: {
+            rankAvgSog: {
+              type: Sequelize.DataTypes.INTEGER,
+            },
+            rankBestSog: {
+              type: Sequelize.DataTypes.INTEGER,
+            },
+            rankWorstSog: {
               type: Sequelize.DataTypes.INTEGER,
             },
             // VMG
@@ -84,7 +90,13 @@ module.exports = {
             bestVmgLocation: {
               type: Sequelize.DataTypes.GEOMETRY('POINT', 4326),
             },
-            vmgRankInCompetition: {
+            rankAvgVmg: {
+              type: Sequelize.DataTypes.INTEGER,
+            },
+            rankBestVmg: {
+              type: Sequelize.DataTypes.INTEGER,
+            },
+            rankWorstVmg: {
               type: Sequelize.DataTypes.INTEGER,
             },
             // VMC
@@ -103,7 +115,13 @@ module.exports = {
             bestVmcLocation: {
               type: Sequelize.DataTypes.GEOMETRY('POINT', 4326),
             },
-            vmcRankInCompetition: {
+            rankAvgVmc: {
+              type: Sequelize.DataTypes.INTEGER,
+            },
+            rankBestVmc: {
+              type: Sequelize.DataTypes.INTEGER,
+            },
+            rankWorstVmc: {
               type: Sequelize.DataTypes.INTEGER,
             },
           },

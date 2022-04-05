@@ -28,7 +28,7 @@ module.exports = (sequelize) => {
         type: DataTypes.BIGINT,
         allowNull: false,
       },
-      timeRankInCompetition: {
+      rankElapsedTime: {
         type: DataTypes.INTEGER,
       },
       totalTraveledDistance: {
@@ -36,7 +36,7 @@ module.exports = (sequelize) => {
         allowNull: false,
         defaultValue: 0,
       },
-      ttdRankInCompetition: {
+      rankTotalTraveledDistance: {
         type: DataTypes.INTEGER,
       },
       // SOG
@@ -58,6 +58,15 @@ module.exports = (sequelize) => {
       sogRankInCompetition: {
         type: DataTypes.INTEGER,
       },
+      rankAvgSog: {
+        type: DataTypes.INTEGER,
+      },
+      rankBestSog: {
+        type: DataTypes.INTEGER,
+      },
+      rankWorstSog: {
+        type: DataTypes.INTEGER,
+      },
       // VMG
       worstVmg: {
         type: DataTypes.DOUBLE,
@@ -74,7 +83,13 @@ module.exports = (sequelize) => {
       bestVmgLocation: {
         type: DataTypes.GEOMETRY('POINT', 4326),
       },
-      vmgRankInCompetition: {
+      rankAvgVmg: {
+        type: DataTypes.INTEGER,
+      },
+      rankBestVmg: {
+        type: DataTypes.INTEGER,
+      },
+      rankWorstVmg: {
         type: DataTypes.INTEGER,
       },
       // VMC
@@ -94,6 +109,15 @@ module.exports = (sequelize) => {
         type: DataTypes.GEOMETRY('POINT', 4326),
       },
       vmcRankInCompetition: {
+        type: DataTypes.INTEGER,
+      },
+      rankAvgVmc: {
+        type: DataTypes.INTEGER,
+      },
+      rankBestVmc: {
+        type: DataTypes.INTEGER,
+      },
+      rankWorstVmc: {
         type: DataTypes.INTEGER,
       },
     },
