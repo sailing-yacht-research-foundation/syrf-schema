@@ -55,9 +55,6 @@ module.exports = (sequelize) => {
       bestSogLocation: {
         type: DataTypes.GEOMETRY('POINT', 4326),
       },
-      sogRankInCompetition: {
-        type: DataTypes.INTEGER,
-      },
       rankAvgSog: {
         type: DataTypes.INTEGER,
       },
@@ -107,9 +104,6 @@ module.exports = (sequelize) => {
       },
       bestVmcLocation: {
         type: DataTypes.GEOMETRY('POINT', 4326),
-      },
-      vmcRankInCompetition: {
-        type: DataTypes.INTEGER,
       },
       rankAvgVmc: {
         type: DataTypes.INTEGER,
