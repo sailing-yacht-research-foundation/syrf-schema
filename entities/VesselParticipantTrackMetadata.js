@@ -114,6 +114,9 @@ module.exports = (sequelize) => {
       rankWorstVmc: {
         type: DataTypes.INTEGER,
       },
+      generatedPolar: {
+        type: DataTypes.JSON,
+      },
     },
     {
       // Note: Required to add tableName with plural here, somehow there's weird result with table name

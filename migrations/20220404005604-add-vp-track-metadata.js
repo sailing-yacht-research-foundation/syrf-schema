@@ -124,6 +124,10 @@ module.exports = {
             rankWorstVmc: {
               type: Sequelize.DataTypes.INTEGER,
             },
+            // partial polar
+            generatedPolar: {
+              type: Sequelize.DataTypes.JSON,
+            },
           },
           {
             transaction,
