@@ -235,26 +235,11 @@ exports.getByStripeConnectedAccount = async (stripeConnectedAccountId) => {
 };
 
 exports.getValidOrganizerGroup = async (userId) => {
-  let where = {
-    visibility: {
-      [db.Op.in]: [groupVisibilities.private, groupVisibilities.moderated],
-    },
-    groupType: groupTypes.organization,
-    stripeConnectedAccountId: {
-      [db.Op.ne]: null,
-    },
-  };
-
   const result = await db.Group.findAll({
-    where,
-    attributes: [
-      'id',
-      'groupName',
-      'groupImage',
-      'visibility',
-      'groupType',
-      'stripeConnectedAccountId',
-    ],
+    where: {
+      groupType: groupTypes.organization,
+    },
+    attributes: ['id', 'groupName', 'groupImage', 'visibility', 'groupType'],
     include: [
       {
         as: 'groupMember',
