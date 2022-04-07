@@ -397,7 +397,7 @@ const mobileOnlyNotificationTypes = [
 ];
 
 const generalNotificationTypes = [
-  'userAddedToEventAdmin',
+  'userAddedToGroupAdmin',
   'userInvitedToGroup',
   'userAddedToEventAdmin',
   'userInvitedToPrivateRegatta',
