@@ -89,3 +89,13 @@ exports.getUnstoppedCU = async (userId) => {
 
   return result;
 };
+
+exports.getUsersPrivateTracks = async (userId, transaction) => {
+  return await db.CalendarEvent.findAll({
+    where: {
+      createdById: userId,
+      isPrivate: true,
+    },
+    transaction,
+  });
+};
