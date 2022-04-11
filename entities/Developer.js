@@ -1,7 +1,15 @@
 const { DataTypes } = require('sequelize');
 const ModelBase = require('../ModelBase');
 
-class Developer extends ModelBase {}
+class Developer extends ModelBase {
+  static associate(models) {
+    this.hasOne(models.UserProfile, {
+      as: 'userProfile',
+      foreignKey: 'developerAccountId',
+      constraints: false,
+    });
+  }
+}
 
 module.exports = (sequelize) => {
   Developer.init(

@@ -78,6 +78,12 @@ class UserProfile extends ModelBase {
       foreignKey: 'id',
       constraints: false,
     });
+
+    this.belongsTo(models.Developer, {
+      as: 'developerAccount',
+      constraints: false,
+      foreignKey: 'developerAccountId',
+    });
   }
 }
 
