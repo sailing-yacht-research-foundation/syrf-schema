@@ -34,3 +34,38 @@ exports.create = async ({ id, name, email } = {}, transaction) => {
     },
   );
 };
+
+exports.delete = async (id, transaction) => {
+  const relatedUser = (
+    await db.UserProfile.findOne({
+      where: {
+        developerAccountId: id,
+      },
+      transaction,
+    })
+  )?.toJSON();
+
+  return (
+    await Promise.all([
+      db.Developer.destroy({
+        where: {
+          id,
+        },
+        transaction,
+      }),
+      relatedUser?.id
+        ? db.UserProfile.update(
+            {
+              developerAccountId: null,
+            },
+            {
+              where: {
+                id: relatedUser.id,
+              },
+              transaction,
+            },
+          )
+        : Promise.resolve(),
+    ])
+  )[0];
+};
