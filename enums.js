@@ -437,6 +437,12 @@ const geojsonProperties = {
   instrumentVerticalAccuracyMeters: 'instrumentVerticalAccuracyMeters',
 };
 
+const trackingEvent = {
+  START_TRACKING: 'start_tracking',
+  STOP_TRACKING: 'stop_tracking',
+  DISCONNECTED: 'disconnected',
+};
+
 module.exports = {
   competitionUnitStatus,
   calendarEventStatus,
@@ -487,4 +493,5 @@ module.exports = {
   generalNotificationTypes,
   geojsonProperties,
   kudosTypes,
+  trackingEvent,
 };
