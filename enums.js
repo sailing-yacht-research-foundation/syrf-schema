@@ -388,6 +388,7 @@ const notificationTypes = {
   newCompetitionAddedToEvent: 'NEW_COMPETITION_ADDED_TO_EVENT',
   ocsDetected: 'OCS_DETECTED',
   kudosReceived: 'KUDOS_RECEIVED',
+  eventMessagesReceived: 'EVENT_MESSAGES_RECEIVED',
 };
 
 const mobileOnlyNotificationTypes = [
@@ -409,6 +410,7 @@ const generalNotificationTypes = [
   'groupAchievedBadge',
   'openEventNearbyCreated',
   'kudosReceived',
+  'eventMessagesReceived',
 ];
 
 const kudosTypes = {
