@@ -236,6 +236,11 @@ module.exports = (sequelize) => {
         allowNull: false,
         defaultValue: false,
       },
+      isSimulation: {
+        type: DataTypes.BOOLEAN,
+        allowNull: false,
+        defaultValue: false,
+      },
     },
     {
       modelName: 'CalendarEvent',
