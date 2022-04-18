@@ -34,3 +34,7 @@ export interface RelatedFile {
     | 'avatar_bucket';
   competitionUnitId?: string;
 }
+
+export interface VpGetAllByVpgOption {
+  vesselAttributes?: string[];
+}
