@@ -30,7 +30,7 @@ module.exports = (sequelize) => {
         allowNull: false,
       },
       notificationTitle: {
-        type: DataTypes.TEXT,
+        type: DataTypes.STRING,
         allowNull: false,
       },
       notificationMessage: {

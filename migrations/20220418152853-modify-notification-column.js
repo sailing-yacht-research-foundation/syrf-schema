@@ -14,14 +14,6 @@ module.exports = {
           { transaction },
         );
       }
-      if (tableInfo.notificationTitle) {
-        await queryInterface.changeColumn(
-          tableName,
-          'notificationTitle',
-          { type: Sequelize.TEXT, allowNull: false },
-          { transaction },
-        );
-      }
     });
   },
 
@@ -32,16 +24,6 @@ module.exports = {
         await queryInterface.changeColumn(
           tableName,
           'notificationMessage',
-          { type: Sequelize.STRING, allowNull: false },
-          {
-            transaction,
-          },
-        );
-      }
-      if (tableInfo.notificationTitle) {
-        await queryInterface.changeColumn(
-          tableName,
-          'notificationTitle',
           { type: Sequelize.STRING, allowNull: false },
           {
             transaction,
