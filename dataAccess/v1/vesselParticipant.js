@@ -207,7 +207,13 @@ exports.getByGroupParticipant = async (
   return result;
 };
 
-exports.getAllByVpg = async (vpgId) => {
+/**
+ *
+ * @param {string} vpgId
+ * @param {import('../../types/dataAccess').VpGetAllByVpgOption} options
+ * @returns
+ */
+exports.getAllByVpg = async (vpgId, options = {}) => {
   if (!vpgId) return [];
   const result = await db.VesselParticipant.findAll({
     where: {
@@ -217,7 +223,9 @@ exports.getAllByVpg = async (vpgId) => {
       {
         model: db.Vessel,
         as: 'vessel',
-        attributes: ['id', 'publicName'],
+        attributes: options.vesselAttributes
+          ? options.vesselAttributes
+          : ['id', 'publicName'],
         paranoid: false,
       },
     ],
@@ -458,7 +466,9 @@ exports.bulkCreateWithOptions = async (data, options) => {
 exports.getParticipantCrews = async (id, transaction) => {
   const results = await db.VesselParticipantCrew.findAll({
     where: {
-      vesselParticipantId: id,
+      vesselParticipantId: {
+        [Op.in]: [id].flat(),
+      },
     },
     include: [
       {

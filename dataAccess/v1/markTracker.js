@@ -14,7 +14,10 @@ const include = [
 exports.upsert = async (id, data = {}, transaction) => {
   if (!id) id = uuid.v4();
 
-  const [result] = await db.MarkTracker.upsert({ ...data, id }, { transaction });
+  const [result] = await db.MarkTracker.upsert(
+    { ...data, id },
+    { transaction },
+  );
 
   return result?.toJSON();
 };
@@ -76,4 +79,26 @@ exports.getEvent = async (id) => {
   });
 
   return result?.toJSON();
+};
+
+exports.getAllByEvent = async (eventId) => {
+  const result = await db.MarkTracker.findAll({
+    where: {
+      calendarEventId: eventId,
+    },
+  });
+
+  return result.map((t) => t.toJSON());
+};
+
+exports.bulkCreate = async (data, transaction) => {
+  if (data.length === 0) {
+    return [];
+  }
+  const result = await db.MarkTracker.bulkCreate(data, {
+    ignoreDuplicates: true,
+    validate: true,
+    transaction,
+  });
+  return result;
 };
