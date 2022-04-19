@@ -34,7 +34,7 @@ module.exports = (sequelize) => {
         allowNull: false,
       },
       notificationMessage: {
-        type: DataTypes.STRING,
+        type: DataTypes.TEXT,
         allowNull: false,
       },
       metadata: {
