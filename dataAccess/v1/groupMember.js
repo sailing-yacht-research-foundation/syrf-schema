@@ -398,3 +398,56 @@ exports.getMembersById = async (groupId) => {
   });
   return result.map((t) => t.toJSON());
 };
+
+exports.getGroupsByUserWithoutPaging = async ({
+  userId,
+  status,
+  groupQuery,
+}) => {
+  const where = {
+    userId,
+    status,
+  };
+
+  const result = await db.GroupMember.findAll({
+    where,
+    attributes: {
+      include: [
+        [
+          db.sequelize.literal(
+            `(SELECT COUNT(*) FROM "GroupMembers" AS "member" WHERE "GroupMember"."groupId" = "member"."groupId" AND "status" = :status)`,
+          ),
+          'memberCount',
+        ],
+      ],
+      exclude: [
+        'invitorId',
+        'createdAt',
+        'updatedAt',
+        'groupId',
+        'userId',
+        'email',
+      ],
+    },
+    include: [
+      {
+        as: 'group',
+        model: db.Group,
+        attributes: [
+          'id',
+          'groupName',
+          'groupImage',
+          'groupType',
+          'description',
+          'visibility',
+        ],
+        where: groupQuery,
+        required: !!groupQuery,
+      },
+    ],
+    replacements: {
+      status: groupMemberStatus.accepted,
+    },
+  });
+  return result;
+};
