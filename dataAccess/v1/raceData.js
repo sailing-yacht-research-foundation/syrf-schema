@@ -218,3 +218,21 @@ exports.getJsonTracksByCU = async (id) => {
 
   return result;
 };
+
+exports.getVPTrackJsonsByRaceId = async (competitionUnitId) => {
+  return db.VesselParticipantTrackJson.findAll({
+    where: {
+      competitionUnitId,
+    },
+    raw: true,
+  });
+};
+
+exports.getPointTrackJsonsByRaceId = async (competitionUnitId) => {
+  return db.CompetitionPointTrackJson.findAll({
+    where: {
+      competitionUnitId,
+    },
+    raw: true,
+  });
+};
