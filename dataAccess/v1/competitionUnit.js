@@ -704,7 +704,13 @@ exports.getWithVesselParticipant = async (id, vesselParticipantId) => {
   return result?.toJSON();
 };
 
-exports.getAllActiveSimulations = async () => {
+exports.getAllActiveSimulations = async ({ userId } = {}) => {
+  let eventWhere = {
+    isSimulation: true,
+  };
+
+  if (userId) eventWhere.ownerId = userId;
+
   const result = await db.CompetitionUnit.findAll({
     where: {
       status: competitionUnitStatus.ONGOING,
@@ -714,9 +720,7 @@ exports.getAllActiveSimulations = async () => {
         as: 'calendarEvent',
         model: db.CalendarEvent,
         required: true,
-        where: {
-          isSimulation: true,
-        },
+        where: eventWhere,
         attributes: [
           'id',
           'name',
