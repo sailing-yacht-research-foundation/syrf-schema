@@ -33,6 +33,8 @@ const include = [
       'location',
       'source',
       'ownerId',
+      'isSimulation',
+      'scrapedOriginalId',
     ],
     include: [
       {
