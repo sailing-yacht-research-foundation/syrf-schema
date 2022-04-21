@@ -703,3 +703,39 @@ exports.getWithVesselParticipant = async (id, vesselParticipantId) => {
 
   return result?.toJSON();
 };
+
+exports.getAllActiveSimulations = async () => {
+  const result = await db.CompetitionUnit.findAll({
+    where: {
+      status: competitionUnitStatus.ONGOING,
+    },
+    include: [
+      {
+        as: 'calendarEvent',
+        model: db.CalendarEvent,
+        required: true,
+        where: {
+          isSimulation: true,
+        },
+        attributes: [
+          'id',
+          'name',
+          'isPrivate',
+          'isOpen',
+          'status',
+          'allowRegistration',
+          'organizerGroupId',
+          'stripeProductId',
+          'stripePricingId',
+          'participatingFee',
+          'location',
+          'source',
+          'ownerId',
+          'isSimulation',
+          'scrapedOriginalId',
+        ],
+      },
+    ],
+  });
+  return result.map((t) => t.toJSON());
+};
