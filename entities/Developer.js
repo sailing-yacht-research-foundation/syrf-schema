@@ -2,6 +2,18 @@ const { DataTypes } = require('sequelize');
 const ModelBase = require('../ModelBase');
 
 class Developer extends ModelBase {
+  static associateBase(models) {
+    this.belongsTo(models.UserProfile, {
+      as: 'createdBy',
+      foreignKey: 'createdById',
+      constraints: false,
+    });
+    this.belongsTo(models.UserProfile, {
+      as: 'updatedBy',
+      foreignKey: 'updatedById',
+      constraints: false,
+    });
+  }
   static associate(models) {
     this.hasOne(models.UserProfile, {
       as: 'userProfile',
