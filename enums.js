@@ -389,6 +389,7 @@ const notificationTypes = {
   ocsDetected: 'OCS_DETECTED',
   kudosReceived: 'KUDOS_RECEIVED',
   eventMessagesReceived: 'EVENT_MESSAGES_RECEIVED',
+  simulationDeletion: 'SIMULATION_DELETION',
 };
 
 const mobileOnlyNotificationTypes = [
@@ -411,6 +412,7 @@ const generalNotificationTypes = [
   'openEventNearbyCreated',
   'kudosReceived',
   'eventMessagesReceived',
+  'simulationDeletion',
 ];
 
 const kudosTypes = {
