@@ -746,7 +746,14 @@ exports.getEventForScheduler = async (statusArray, filterDateStart) => {
   let order = [['approximateEndTime_utc', 'ASC']];
 
   const result = await db.CalendarEvent.findAll({
-    attributes: ['id', 'name', 'status', 'approximateEndTime_utc'],
+    attributes: [
+      'id',
+      'name',
+      'status',
+      'approximateEndTime_utc',
+      'isSimulation',
+      'ownerId',
+    ],
     include: [
       {
         model: db.CompetitionUnit,
@@ -765,12 +772,16 @@ exports.getEventForScheduler = async (statusArray, filterDateStart) => {
       status,
       approximateEndTime_utc: endTime,
       competitionUnit,
+      isSimulation,
+      ownerId,
     } = row;
     return {
       calendarEventId,
       calendarEventName,
       status,
       approximateEndTime_utc: endTime,
+      isSimulation,
+      ownerId,
       competitionUnits: competitionUnit.map((cUnit) => {
         const { id: competitionUnitId, status, name } = cUnit;
         return { competitionUnitId, status, name };
