@@ -56,6 +56,12 @@ class CalendarEvent extends ModelBase {
       foreignKey: 'calendarEventId',
       constraints: false,
     });
+
+    this.hasMany(models.Course, {
+      as: 'courses',
+      constraints: false,
+      foreignKey: 'calendarEventId',
+    });
   }
 }
 
