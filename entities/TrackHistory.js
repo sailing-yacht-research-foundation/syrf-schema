@@ -56,6 +56,14 @@ module.exports = (sequelize) => {
         allowNull: false,
         primaryKey: true,
       },
+      phoneModel: {
+        type: DataTypes.STRING,
+        allowNull: true,
+      },
+      phoneOS: {
+        type: DataTypes.STRING,
+        allowNull: true,
+      },
     },
     {
       modelName: 'TrackHistory',
