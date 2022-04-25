@@ -133,6 +133,16 @@ exports.getAll = async (paging, params) => {
     else return emptyPagingResponse(paging);
   }
 
+  if (
+    params.invitationStatus &&
+    Array.isArray(params.invitationStatus) &&
+    params.invitationStatus.length > 0
+  ) {
+    where.invitationStatus = {
+      [db.Op.in]: params.invitationStatus,
+    };
+  }
+
   let attributes = {
     where,
     include,
