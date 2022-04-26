@@ -126,6 +126,12 @@ const raceSetupType = {
   LOG: 'LOG',
 };
 
+const ocsStatuses = {
+  UNKNOWN: 'Unknown / before the start',
+  OCS: 'OCS',
+  nonOCS: 'non-OCS',
+};
+
 const openCompetitionConfig = {
   defaultDistance: 1, // in miles
 };
@@ -503,4 +509,5 @@ module.exports = {
   geojsonProperties,
   kudosTypes,
   trackingEvent,
+  ocsStatuses,
 };
