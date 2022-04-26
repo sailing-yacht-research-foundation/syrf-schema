@@ -176,7 +176,10 @@ exports.getNearbyUsers = async ({ lon, lat }, radius) => {
   return data;
 };
 
-exports.claimAnonymousUser = async (anonymousId, userId, transaction) => {
+exports.claimAnonymousUser = async (
+  { anonymousId, userId, defaultVesselId },
+  transaction,
+) => {
   const claimCreatedBy = [
     {
       createdById: userId,
@@ -221,8 +224,25 @@ exports.claimAnonymousUser = async (anonymousId, userId, transaction) => {
     db.CourseUnsequencedUntimedGeometry.update(...claimCreatedBy),
     db.CoursePoint.update(...claimCreatedBy),
     db.CompetitionUnit.update(...claimCreatedBy),
-    db.Vessel.update(...claimCreatedBy),
-    db.VesselParticipant.update(...claimCreatedBy),
+    db.Vessel.destroy({
+      where: {
+        createdById: anonymousId,
+      },
+      force: true,
+      transaction,
+    }),
+    db.VesselParticipant.update(
+      {
+        createdById: userId,
+        vesselId: defaultVesselId,
+      },
+      {
+        where: {
+          createdById: anonymousId,
+        },
+        transaction,
+      },
+    ),
     db.VesselParticipantCrew.update(...claimCreatedBy),
     db.TrackHistory.update(...claimCreatedByAndUserProfile),
     db.Participant.update(...claimCreatedByAndUserProfile),
