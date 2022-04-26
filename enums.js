@@ -386,14 +386,12 @@ const notificationTypes = {
   openEventNearbyCreated: 'OPEN_EVENT_NEARBY_CREATED',
   competitionStartingSoon: 'COMPETITION_START_TRACKING', // For when race start queue kick off analysis engine
   newCompetitionAddedToEvent: 'NEW_COMPETITION_ADDED_TO_EVENT',
-  ocsDetected: 'OCS_DETECTED',
   kudosReceived: 'KUDOS_RECEIVED',
   eventMessagesReceived: 'EVENT_MESSAGES_RECEIVED',
   simulationDeletion: 'SIMULATION_DELETION',
 };
 
 const mobileOnlyNotificationTypes = [
-  'ocsDetected',
   'newCompetitionAddedToEvent',
   'competitionStartingSoon',
 ];
