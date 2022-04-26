@@ -223,6 +223,7 @@ const vesselEvents = {
   outsideCrossing: 'VesselLineOutsideCrossing',
   polygonEnter: 'VesselPolygonEntered',
   polygonExit: 'VesselPolygonExited',
+  ocs: 'VesselOCS',
 };
 
 const boatSides = {

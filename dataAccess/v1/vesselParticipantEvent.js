@@ -11,3 +11,20 @@ exports.bulkCreate = async (data, transaction) => {
   });
   return result;
 };
+
+exports.getByCompetition = async ({ competitionUnitId, eventType }) => {
+  const result = await db.VesselParticipantEvent.findAll({
+    where: Object.assign(
+      {},
+      {
+        competitionUnitId,
+      },
+      eventType
+        ? {
+            eventType,
+          }
+        : {},
+    ),
+  });
+  return result;
+};
