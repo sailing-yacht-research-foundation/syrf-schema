@@ -147,6 +147,10 @@ module.exports = (sequelize) => {
       equipmentManualPdfs: {
         type: DataTypes.JSON,
       },
+      isDefaultVessel: {
+        type: DataTypes.BOOLEAN,
+        defaultValue: false,
+      },
     },
     {
       modelName: 'Vessel',
