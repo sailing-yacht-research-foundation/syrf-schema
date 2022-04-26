@@ -115,11 +115,21 @@ const searchIndex = {
 const raceSetupType = {
   START: 'START',
   STOP: 'STOP',
+  TRACKS: 'TRACKS',
   COMPETITION_UNIT_SYNC: 'COMPETITION_UNIT_SYNC',
   RESETUP: 'RESETUP',
   STOP_TRACKING: 'STOP_TRACKING',
   POSTPONE: 'POSTPONE',
   RESCHEDULE: 'RESCHEDULE',
+  START_TIME_UPDATE: 'START_TIME_UPDATE',
+  REQUEST_LIVE_OCS_STATUS: 'REQUEST_LIVE_OCS_STATUS',
+  LOG: 'LOG',
+};
+
+const ocsStatuses = {
+  UNKNOWN: 'Unknown / before the start',
+  OCS: 'OCS',
+  nonOCS: 'non-OCS',
 };
 
 const openCompetitionConfig = {
@@ -386,14 +396,12 @@ const notificationTypes = {
   openEventNearbyCreated: 'OPEN_EVENT_NEARBY_CREATED',
   competitionStartingSoon: 'COMPETITION_START_TRACKING', // For when race start queue kick off analysis engine
   newCompetitionAddedToEvent: 'NEW_COMPETITION_ADDED_TO_EVENT',
-  ocsDetected: 'OCS_DETECTED',
   kudosReceived: 'KUDOS_RECEIVED',
   eventMessagesReceived: 'EVENT_MESSAGES_RECEIVED',
   simulationDeletion: 'SIMULATION_DELETION',
 };
 
 const mobileOnlyNotificationTypes = [
-  'ocsDetected',
   'newCompetitionAddedToEvent',
   'competitionStartingSoon',
 ];
@@ -501,4 +509,5 @@ module.exports = {
   geojsonProperties,
   kudosTypes,
   trackingEvent,
+  ocsStatuses,
 };
