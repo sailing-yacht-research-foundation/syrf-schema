@@ -42,7 +42,7 @@ const include = [
       },
     ],
   },
-  // ...includeMeta,
+  ...includeMeta,
 ];
 
 exports.create = async (data, transaction) => {
@@ -601,6 +601,7 @@ exports.setAsDefaultVessel = async (vesselId, userId, transaction) => {
     {
       where: {
         createdById: userId,
+        isDefaultVessel: true,
       },
       transaction,
     },
