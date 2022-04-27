@@ -126,6 +126,17 @@ exports.getAll = async (paging, params) => {
         model: db.UserProfile,
         as: 'profile',
         attributes: ['id', 'name', 'country', 'avatar'],
+        include: [
+          {
+            model: db.ParticipationCharge,
+            as: 'participationCharge',
+            required: false,
+            attributes: ['paymentDate', 'checkoutSessionId'],
+            where: {
+              calendarEventId: params.calendarEventId,
+            },
+          },
+        ],
       },
     ];
   } else {
