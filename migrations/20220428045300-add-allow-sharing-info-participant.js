@@ -9,10 +9,10 @@ module.exports = {
   up: async (queryInterface, Sequelize) => {
     await queryInterface.sequelize.transaction(async (transaction) => {
       const table = await queryInterface.describeTable(tableName);
-      if (!table.allowShareInformations) {
+      if (!table.allowShareInformation) {
         await queryInterface.addColumn(
           tableName,
-          'allowShareInformations',
+          'allowShareInformation',
           {
             type: Sequelize.BOOLEAN,
             allowNull: false,
@@ -80,8 +80,8 @@ module.exports = {
       }
 
       const table = await queryInterface.describeTable(tableName);
-      if (table.allowShareInformations) {
-        await queryInterface.removeColumn(tableName, 'allowShareInformations', {
+      if (table.allowShareInformation) {
+        await queryInterface.removeColumn(tableName, 'allowShareInformation', {
           transaction,
         });
       }
