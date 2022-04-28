@@ -23,5 +23,5 @@ exports.getByParticipant = async (participantId) => {
     },
   });
 
-  return result.toJSON();
+  return result;
 };
