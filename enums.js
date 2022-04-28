@@ -459,6 +459,11 @@ const trackingEvent = {
   MARK_DISCONNECTED: 'mark_disconnected',
 };
 
+const waiverTypes = {
+  noticeOfRace: 'noticeOfRacePDF',
+  mediaWaiver: 'mediaWaiverPDF',
+  discalimer: 'disclaimerPDF',
+};
 module.exports = {
   competitionUnitStatus,
   calendarEventStatus,
@@ -511,4 +516,5 @@ module.exports = {
   kudosTypes,
   trackingEvent,
   ocsStatuses,
+  waiverTypes,
 };

@@ -20,6 +20,11 @@ class Participant extends ModelBase {
       foreignKey: 'calendarEventId',
       constraints: false,
     });
+    this.hasMany(models.ParticipantWaiverAgreement, {
+      as: 'waiverAgreements',
+      foreignKey: 'participantId',
+      constraints: false,
+    });
   }
 }
 
