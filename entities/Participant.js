@@ -52,6 +52,11 @@ module.exports = (sequelize) => {
         allowNull: false,
         defaultValue: participantInvitationStatus.INVITED,
       },
+      allowShareInformations: {
+        type: DataTypes.BOOLEAN,
+        allowNull: false,
+        defaultValue: false,
+      },
     },
     {
       modelName: 'Participant',
