@@ -372,7 +372,7 @@ exports.validateAdminsById = async (id, userId) => {
           ],
         },
       ],
-      attributes: ['id', 'createdById'],
+      attributes: ['id', 'createdById','isDefaultVessel'],
     });
 
     let data = vesselData?.toJSON();
