@@ -15,3 +15,13 @@ exports.insert = async (
 
   return result;
 };
+
+exports.getByParticipant = async (participantId) => {
+  const result = await db.ParticipantWaiverAgreement.findAll({
+    where: {
+      participantId,
+    },
+  });
+
+  return result.toJSON();
+};

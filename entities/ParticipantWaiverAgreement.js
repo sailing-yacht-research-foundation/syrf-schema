@@ -34,10 +34,6 @@ module.exports = (sequelize) => {
         type: DataTypes.DATE,
         allowNull: false,
       },
-      paymentDate: {
-        type: DataTypes.DATE,
-        allowNull: true,
-      },
     },
     {
       modelName: 'ParticipantWaiverAgreement',
