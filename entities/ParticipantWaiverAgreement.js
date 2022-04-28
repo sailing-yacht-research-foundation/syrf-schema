@@ -38,6 +38,7 @@ module.exports = (sequelize) => {
     {
       modelName: 'ParticipantWaiverAgreement',
       sequelize,
+      timestamps: false,
     },
   );
   return ParticipantWaiverAgreement;
