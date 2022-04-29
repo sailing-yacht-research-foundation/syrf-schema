@@ -670,6 +670,12 @@ exports.getAllWithShareableInfo = async (calendarEventId) => {
   const result = await db.Participant.findAll({
     where: {
       calendarEventId,
+      invitationStatus: {
+        [db.Op.in]: [
+          participantInvitationStatus.ACCEPTED,
+          participantInvitationStatus.SELF_REGISTERED,
+        ],
+      },
     },
     attributes: ['id', 'publicName', 'allowShareInformation'],
     include,
