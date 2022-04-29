@@ -659,6 +659,12 @@ exports.getAllWithShareableInfo = async (calendarEventId) => {
         },
       ],
     },
+    {
+      model: db.ParticipantWaiverAgreement,
+      as: 'waiverAgreements',
+      required: false,
+      attributes: ['waiverType', 'agreedAt'],
+    },
   ];
 
   const result = await db.Participant.findAll({
