@@ -676,3 +676,27 @@ exports.getAllWithShareableInfo = async (calendarEventId) => {
   });
   return result;
 };
+
+exports.getByIdWithVaccineAndPassport = async (participantId) => {
+  let include = [
+    {
+      model: db.UserProfile,
+      as: 'profile',
+      attributes: ['id', 'name'],
+      include: [
+        {
+          model: db.UserShareableInfo,
+          as: 'shareables',
+          required: false,
+          attributes: ['covidVaccinationCard', 'passportPhoto'],
+        },
+      ],
+    },
+  ];
+
+  const result = await db.Participant.findByPk(participantId, {
+    attributes: ['id', 'allowShareInformation'],
+    include,
+  });
+  return result;
+};
