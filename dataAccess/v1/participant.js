@@ -627,3 +627,46 @@ exports.getByUserAndRace = async (raceId, userId, transaction) => {
 
   return result?.toJSON();
 };
+
+exports.getAllWithShareableInfo = async (calendarEventId) => {
+  let include = [
+    {
+      model: db.UserProfile,
+      as: 'profile',
+      attributes: [
+        'id',
+        'name',
+        'email',
+        'birthdate',
+        'address',
+        'phone_number',
+        'phone_number_verified',
+      ],
+      include: [
+        {
+          model: db.ParticipationCharge,
+          as: 'participationCharge',
+          required: false,
+          attributes: ['paymentDate', 'checkoutSessionId'],
+          where: {
+            calendarEventId,
+          },
+        },
+        {
+          model: db.UserShareableInfo,
+          as: 'shareables',
+          required: false,
+        },
+      ],
+    },
+  ];
+
+  const result = await db.Participant.findAll({
+    where: {
+      calendarEventId,
+    },
+    attributes: ['id', 'publicName', 'allowShareInformation'],
+    include,
+  });
+  return result;
+};
