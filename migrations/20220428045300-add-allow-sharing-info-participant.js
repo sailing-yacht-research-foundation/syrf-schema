@@ -4,6 +4,7 @@ const { waiverTypes } = require('../enums');
 
 const tableName = 'Participants';
 const waiverAgreementTableName = 'ParticipantWaiverAgreements';
+const vpTableName = 'VesselParticipants';
 
 module.exports = {
   up: async (queryInterface, Sequelize) => {
@@ -60,6 +61,22 @@ module.exports = {
           },
         );
       }
+
+      const vpTable = await queryInterface.describeTable(vpTableName);
+      if (!vpTable.sailNumber) {
+        await queryInterface.addColumn(
+          tableName,
+          'sailNumber',
+          {
+            type: Sequelize.STRING,
+            comment:
+              'Value during joining competition/accepting ivnitation. Default to vessel sailNumber from frontends',
+          },
+          {
+            transaction,
+          },
+        );
+      }
     });
   },
 
@@ -82,6 +99,13 @@ module.exports = {
       const table = await queryInterface.describeTable(tableName);
       if (table.allowShareInformation) {
         await queryInterface.removeColumn(tableName, 'allowShareInformation', {
+          transaction,
+        });
+      }
+
+      const vpTable = await queryInterface.describeTable(vpTableName);
+      if (vpTable.sailNumber) {
+        await queryInterface.removeColumn(tableName, 'sailNumber', {
           transaction,
         });
       }
