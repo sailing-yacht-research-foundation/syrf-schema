@@ -20,6 +20,11 @@ class Participant extends ModelBase {
       foreignKey: 'calendarEventId',
       constraints: false,
     });
+    this.hasMany(models.ParticipantWaiverAgreement, {
+      as: 'waiverAgreements',
+      foreignKey: 'participantId',
+      constraints: false,
+    });
   }
 }
 
@@ -51,6 +56,11 @@ module.exports = (sequelize) => {
         type: DataTypes.ENUM(Object.values(participantInvitationStatus)),
         allowNull: false,
         defaultValue: participantInvitationStatus.INVITED,
+      },
+      allowShareInformation: {
+        type: DataTypes.BOOLEAN,
+        allowNull: false,
+        defaultValue: false,
       },
     },
     {

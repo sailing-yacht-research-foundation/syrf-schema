@@ -126,6 +126,17 @@ exports.getAll = async (paging, params) => {
         model: db.UserProfile,
         as: 'profile',
         attributes: ['id', 'name', 'country', 'avatar'],
+        include: [
+          {
+            model: db.ParticipationCharge,
+            as: 'participationCharge',
+            required: false,
+            attributes: ['paymentDate', 'checkoutSessionId'],
+            where: {
+              calendarEventId: params.calendarEventId,
+            },
+          },
+        ],
       },
     ];
   } else {
@@ -615,4 +626,83 @@ exports.getByUserAndRace = async (raceId, userId, transaction) => {
   );
 
   return result?.toJSON();
+};
+
+exports.getAllWithShareableInfo = async (calendarEventId) => {
+  let include = [
+    {
+      model: db.UserProfile,
+      as: 'profile',
+      attributes: [
+        'id',
+        'name',
+        'email',
+        'birthdate',
+        'address',
+        'phone_number',
+        'phone_number_verified',
+      ],
+      include: [
+        {
+          model: db.ParticipationCharge,
+          as: 'participationCharge',
+          required: false,
+          attributes: ['paymentDate', 'checkoutSessionId'],
+          where: {
+            calendarEventId,
+          },
+        },
+        {
+          model: db.UserShareableInfo,
+          as: 'shareables',
+          required: false,
+        },
+      ],
+    },
+    {
+      model: db.ParticipantWaiverAgreement,
+      as: 'waiverAgreements',
+      required: false,
+      attributes: ['waiverType', 'agreedAt'],
+    },
+  ];
+
+  const result = await db.Participant.findAll({
+    where: {
+      calendarEventId,
+      invitationStatus: {
+        [db.Op.in]: [
+          participantInvitationStatus.ACCEPTED,
+          participantInvitationStatus.SELF_REGISTERED,
+        ],
+      },
+    },
+    attributes: ['id', 'publicName', 'allowShareInformation'],
+    include,
+  });
+  return result;
+};
+
+exports.getByIdWithVaccineAndPassport = async (participantId) => {
+  let include = [
+    {
+      model: db.UserProfile,
+      as: 'profile',
+      attributes: ['id', 'name'],
+      include: [
+        {
+          model: db.UserShareableInfo,
+          as: 'shareables',
+          required: false,
+          attributes: ['covidVaccinationCard', 'passportPhoto'],
+        },
+      ],
+    },
+  ];
+
+  const result = await db.Participant.findByPk(participantId, {
+    attributes: ['id', 'allowShareInformation'],
+    include,
+  });
+  return result;
 };

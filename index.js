@@ -87,6 +87,8 @@ db.SubscriptionTier = require('./entities/SubscriptionTier')(sequelize);
 db.ParticipationCharge = require('./entities/ParticipationCharge')(sequelize);
 db.UserNotification = require('./entities/UserNotification')(sequelize);
 db.UserSetting = require('./entities/UserSetting')(sequelize);
+db.ParticipantWaiverAgreement =
+  require('./entities/ParticipantWaiverAgreement')(sequelize);
 
 for (const key in db) {
   if (Object.hasOwnProperty.call(db, key)) {

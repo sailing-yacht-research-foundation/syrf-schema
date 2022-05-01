@@ -74,6 +74,11 @@ module.exports = (sequelize) => {
         type: DataTypes.BOOLEAN,
         defaultValue: false,
       },
+      sailNumber: {
+        type: DataTypes.STRING,
+        comment:
+          'Value during joining competition/accepting ivnitation. Default to vessel sailNumber from frontends',
+      },
     },
     {
       modelName: 'VesselParticipant',
