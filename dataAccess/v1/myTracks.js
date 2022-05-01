@@ -79,16 +79,29 @@ exports.getMyTracks = async (userId, isPrivate, pagination) => {
             'startTime',
             'endTime',
           ],
-          required: false,
+          required: true,
           where: {
             competitionUnitId: {
               [db.Op.eq]: db.sequelize.col('TrackHistory.competitionUnitId'),
+            },
+            startTime: {
+              [db.Op.ne]: null, // to exclude old data with no crew track json
             },
           },
         },
       ],
     },
-    { ...pagination, customCountField: `"trackJson"."id"` },
+    {
+      ...pagination,
+      multiSort:
+        pagination.multiSort.length < 1 && !pagination.sort
+          ? [
+              ['trackJson', 'endTime', 'DESC NULLS FIRST'],
+              ['trackJson', 'startTime', 'DESC NULLS LAST'],
+            ]
+          : pagination.multiSort,
+      customCountField: `"trackJson"."id"`,
+    },
   );
 
   return result;
