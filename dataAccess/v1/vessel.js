@@ -22,11 +22,13 @@ const include = [
     through: {
       attributes: [],
     },
+    required: false,
     include: [
       {
         model: db.GroupMember,
         as: 'groupMember',
         attributes: ['id', 'userId'],
+        required: false,
         include: [
           {
             as: 'member',
@@ -103,10 +105,12 @@ exports.getAll = async (paging = {}, params) => {
   return result;
 };
 
-exports.getById = async (id) => {
+exports.getById = async (id, { paranoid = true } = {}) => {
   const result = await db.Vessel.findByPk(id, {
     include,
+    paranoid,
   });
+
   let data = result?.toJSON();
   if (data) {
     // Combining editors from groupEditors with regular editors
@@ -368,7 +372,7 @@ exports.validateAdminsById = async (id, userId) => {
           ],
         },
       ],
-      attributes: ['id', 'createdById'],
+      attributes: ['id', 'createdById','isDefaultVessel'],
     });
 
     let data = vesselData?.toJSON();
@@ -574,4 +578,46 @@ exports.getBulkVesselEditors = async (idList) => {
     vesselEditors[vesselId].groupEditors.push(group);
   });
   return vesselEditors;
+};
+
+exports.getUserDefaultVessel = async (userId) => {
+  const defaultVesselId = await db.Vessel.findOne({
+    where: {
+      createdById: userId,
+      isDefaultVessel: true,
+    },
+    include,
+  });
+
+  return defaultVesselId?.toJSON();
+};
+
+exports.setAsDefaultVessel = async (vesselId, userId, transaction) => {
+  if (!vesselId || !userId) return null;
+  await db.Vessel.update(
+    {
+      isDefaultVessel: false,
+    },
+    {
+      where: {
+        createdById: userId,
+        isDefaultVessel: true,
+      },
+      transaction,
+    },
+  );
+
+  const [result] = await db.Vessel.update(
+    {
+      isDefaultVessel: true,
+    },
+    {
+      where: {
+        id: vesselId,
+      },
+      transaction,
+    },
+  );
+
+  return result;
 };
