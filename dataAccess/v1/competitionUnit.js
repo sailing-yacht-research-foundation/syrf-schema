@@ -88,7 +88,6 @@ exports.getAll = async (paging, params) => {
   if (params.calendarEventId) {
     where.calendarEventId = params.calendarEventId;
   }
-
   // only allow list events without createdBy id if listing by position or by event
   if (!params.calendarEventId && !params.position) {
     if (params.userId) where.createdById = params.userId;
@@ -153,6 +152,14 @@ exports.getAll = async (paging, params) => {
   }
   if (params.eventStatus) {
     eventInclude.where.status = params.eventStatus;
+  }
+
+  if (
+    typeof params.includeSimulation !== 'boolean' ||
+    params.includeSimulation === false
+  ) {
+    eventInclude.where.isSimulation = false;
+    eventInclude.required = true;
   }
 
   if (typeof params.isOpen === 'boolean') {
