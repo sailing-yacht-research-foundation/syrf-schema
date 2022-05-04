@@ -114,4 +114,6 @@ db.sync = async (force = false) => {
   });
 };
 
+db.CalenderEvent = db.CalendarEvent; // Typo. Deprecated. Will be deleted once all reference to it has been removed
+
 module.exports = db;
