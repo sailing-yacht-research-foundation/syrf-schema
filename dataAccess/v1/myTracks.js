@@ -79,13 +79,9 @@ exports.getMyTracks = async (userId, isPrivate, pagination) => {
             'startTime',
             'endTime',
           ],
-          required: true,
           where: {
             competitionUnitId: {
               [db.Op.eq]: db.sequelize.col('TrackHistory.competitionUnitId'),
-            },
-            startTime: {
-              [db.Op.ne]: null, // to exclude old data with no crew track json
             },
           },
         },
