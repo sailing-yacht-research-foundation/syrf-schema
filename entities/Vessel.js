@@ -52,6 +52,8 @@ module.exports = (sequelize) => {
       },
       scope: {
         type: DataTypes.UUID,
+        comment:
+          'used to scope vessel. ex: scope a vessel to an event so it cant be used in other event',
       },
       bulkCreated: {
         type: DataTypes.BOOLEAN,
