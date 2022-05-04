@@ -750,3 +750,21 @@ exports.getAllActiveSimulations = async ({ userId } = {}) => {
   });
   return result.map((t) => t.toJSON());
 };
+
+exports.setCanceled = async (id, transaction) => {
+  const result = await db.CompetitionUnit.update(
+    {
+      endTime: new Date(),
+      isCompleted: true,
+      status: competitionUnitStatus.CANCELED,
+    },
+    {
+      where: {
+        id,
+      },
+      transaction,
+    },
+  );
+
+  return result[0];
+};
