@@ -176,7 +176,7 @@ exports.getById = async (id, transaction) => {
 
 exports.getByUserId = async (id, pagination, isPrivate = null) => {
   let eventInclude = {
-    model: db.CalenderEvent,
+    model: db.CalendarEvent,
     as: 'event',
     attributes: {
       exclude: [...excludeMeta, 'ics'],
