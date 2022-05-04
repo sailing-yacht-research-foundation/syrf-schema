@@ -107,7 +107,7 @@ exports.getById = async (id) => {
   const result = await db.TrackHistory.findByPk(id, {
     include: [
       {
-        model: db.CalenderEvent,
+        model: db.CalendarEvent,
         as: 'event',
         required: true,
         include: [
