@@ -3,6 +3,7 @@ const competitionUnitStatus = {
   ONGOING: 'ONGOING',
   COMPLETED: 'COMPLETED',
   POSTPONED: 'POSTPONED',
+  CANCELED: 'CANCELED',
 };
 
 const calendarEventStatus = {
