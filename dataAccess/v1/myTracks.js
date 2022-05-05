@@ -209,6 +209,8 @@ exports.getTracksGeoJson = async (trackId, userId) => {
     ? {
         storageKey: result.storageKey,
         vesselParticipantCrewId: result.vesselParticipantCrewId,
+        phoneModel: track.phoneModel,
+        phoneOS: track.phoneOS,
       }
     : null;
 };

@@ -372,6 +372,22 @@ exports.getByUserAndEvent = async (
         model: db.CalendarEvent,
         as: 'event',
       },
+      {
+        as: 'profile',
+        model: db.UserProfile,
+        attributes: ['id'],
+        include: [
+          {
+            model: db.ParticipationCharge,
+            as: 'participationCharge',
+            required: false,
+            attributes: ['paymentDate', 'checkoutSessionId'],
+            where: {
+              calendarEventId,
+            },
+          },
+        ],
+      },
     ],
     transaction,
   });
