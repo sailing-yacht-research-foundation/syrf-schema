@@ -94,6 +94,14 @@ exports.getAll = async (paging, params) => {
     else return emptyPagingResponse(paging);
   }
 
+  let eventInclude = {
+    as: 'calendarEvent',
+    model: db.CalendarEvent,
+    required: false,
+    where: {},
+    attributes: ['id', 'name', 'isPrivate'],
+  };
+
   if (params.position) {
     // Query by locations
     const [lon, lat] = params.position;
@@ -138,28 +146,21 @@ exports.getAll = async (paging, params) => {
         ),
       ],
     ];
+
+    if (
+      typeof params.includeSimulation !== 'boolean' ||
+      params.includeSimulation === false
+    ) {
+      eventInclude.where.isSimulation = false;
+      eventInclude.required = true;
+    }
   }
 
-  let eventInclude = {
-    as: 'calendarEvent',
-    model: db.CalendarEvent,
-    required: false,
-    where: {},
-    attributes: ['id', 'name', 'isPrivate'],
-  };
   if (params.status) {
     where.status = params.status;
   }
   if (params.eventStatus) {
     eventInclude.where.status = params.eventStatus;
-  }
-
-  if (
-    typeof params.includeSimulation !== 'boolean' ||
-    params.includeSimulation === false
-  ) {
-    eventInclude.where.isSimulation = false;
-    eventInclude.required = true;
   }
 
   if (typeof params.isOpen === 'boolean') {
