@@ -21,6 +21,13 @@ exports.getByEventAndUser = async (calendarEventId, userId) => {
   return result;
 };
 
+exports.getEventChargedCount = async (calendarEventId) => {
+  const paidParticipantCount = await db.ParticipationCharge.count({
+    where: { calendarEventId, paymentDate: { [db.Op.ne]: null } },
+  });
+  return paidParticipantCount;
+};
+
 exports.insert = async (
   { calendarEventId, userId, checkoutSessionId, expireDate },
   transaction,
