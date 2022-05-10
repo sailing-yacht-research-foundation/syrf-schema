@@ -15,7 +15,7 @@ module.exports = {
           tableName,
           'allowShareInformation',
           {
-            type: Sequelize.BOOLEAN,
+            type: Sequelize.DataTypes.BOOLEAN,
             allowNull: false,
             defaultValue: false,
           },

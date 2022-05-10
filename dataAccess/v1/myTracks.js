@@ -78,6 +78,7 @@ exports.getMyTracks = async (userId, isPrivate, pagination) => {
             'firstPosition',
             'startTime',
             'endTime',
+            'locationUpdateCount',
           ],
           where: {
             competitionUnitId: {

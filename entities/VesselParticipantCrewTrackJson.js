@@ -57,6 +57,9 @@ module.exports = (sequelize) => {
       endTime: {
         type: DataTypes.DATE,
       },
+      locationUpdateCount: {
+        type: DataTypes.INTEGER,
+      },
     },
     {
       modelName: 'VesselParticipantCrewTrackJson',

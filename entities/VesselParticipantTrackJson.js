@@ -39,6 +39,9 @@ module.exports = (sequelize) => {
       firstPosition: {
         type: DataTypes.GEOMETRY('POINT', 4326),
       },
+      locationUpdateCount: {
+        type: DataTypes.INTEGER,
+      },
     },
     {
       modelName: 'VesselParticipantTrackJson',
