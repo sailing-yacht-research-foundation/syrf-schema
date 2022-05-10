@@ -753,6 +753,7 @@ exports.getEventForScheduler = async (statusArray, filterDateStart) => {
       'approximateEndTime_utc',
       'isSimulation',
       'ownerId',
+      'scrapedOriginalId',
     ],
     include: [
       {
