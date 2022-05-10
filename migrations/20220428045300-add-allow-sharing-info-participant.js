@@ -15,7 +15,7 @@ module.exports = {
           tableName,
           'allowShareInformation',
           {
-            type: Sequelize.BOOLEAN,
+            type: Sequelize.DataTypes.BOOLEAN,
             allowNull: false,
             defaultValue: false,
           },
@@ -68,7 +68,7 @@ module.exports = {
           vpTableName,
           'sailNumber',
           {
-            type: Sequelize.STRING,
+            type: Sequelize.DataTypes.STRING,
             comment:
               'Value during joining competition/accepting ivnitation. Default to vessel sailNumber from frontends',
           },
