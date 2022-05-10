@@ -68,7 +68,7 @@ module.exports = {
           vpTableName,
           'sailNumber',
           {
-            type: Sequelize.STRING,
+            type: Sequelize.DataTypes.STRING,
             comment:
               'Value during joining competition/accepting ivnitation. Default to vessel sailNumber from frontends',
           },

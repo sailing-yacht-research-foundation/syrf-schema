@@ -15,6 +15,8 @@ module.exports = {
           'locationUpdateCount',
           {
             type: Sequelize.DataTypes.INTEGER,
+            comment:
+              'The count of location updates received for this crew track, should reflect the same value as geometry count of track geojson',
           },
           {
             transaction,
@@ -29,6 +31,8 @@ module.exports = {
           'locationUpdateCount',
           {
             type: Sequelize.DataTypes.INTEGER,
+            comment:
+              'The count of location updates received for this vessel track, should reflect the same value as geometry count of provided track geojson',
           },
           {
             transaction,
