@@ -784,7 +784,6 @@ exports.getWinds = async (id, transaction) => {
 exports.bulkWriteWinds = async (data = [], transaction) => {
   const result = await db.CompetitionUnitWind.bulkCreate(data, {
     transaction,
-    ignoreDuplicates: true,
     updateOnDuplicate: ['startTime', 'endTime'],
   });
 
