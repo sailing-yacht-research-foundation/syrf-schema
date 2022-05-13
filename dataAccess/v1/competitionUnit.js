@@ -770,12 +770,11 @@ exports.setCanceled = async (id, transaction) => {
   return result[0];
 };
 
-exports.getWinds = async (id, transaction) => {
+exports.getWinds = async (id) => {
   const result = await db.CompetitionUnitWind.findAll({
     where: {
       competitionUnitId: id,
     },
-    transaction,
   });
 
   return result.map((t) => t.toJSON());
