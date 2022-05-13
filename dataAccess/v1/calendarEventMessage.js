@@ -21,8 +21,21 @@ exports.getAllMessageByEvent = async (calendarEventId) => {
       {
         model: db.CalendarEventMessageRecipient,
         as: 'recipients',
-        attributes: ['id', 'recipientId'],
+        attributes: ['recipientId'],
         required: false,
+        include: [
+          {
+            model: db.UserProfile,
+            as: 'recipient',
+            attributes: ['name', 'avatar'],
+          },
+        ],
+      },
+      {
+        model: db.UserProfile,
+        as: 'sender',
+        attributes: ['name', 'avatar'],
+        required: true,
       },
     ],
     where: {
