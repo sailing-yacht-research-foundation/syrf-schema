@@ -89,6 +89,9 @@ db.UserNotification = require('./entities/UserNotification')(sequelize);
 db.UserSetting = require('./entities/UserSetting')(sequelize);
 db.ParticipantWaiverAgreement =
   require('./entities/ParticipantWaiverAgreement')(sequelize);
+db.CalendarEventMessage = require('./entities/CalendarEventMessage')(sequelize);
+db.CalendarEventMessageRecipient =
+  require('./entities/CalendarEventMessageRecipient')(sequelize);
 
 for (const key in db) {
   if (Object.hasOwnProperty.call(db, key)) {

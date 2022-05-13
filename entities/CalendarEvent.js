@@ -62,6 +62,11 @@ class CalendarEvent extends ModelBase {
       constraints: false,
       foreignKey: 'calendarEventId',
     });
+    this.hasMany(models.CalendarEventMessage, {
+      as: 'messsages',
+      foreignKey: 'calendarEventId',
+      constraints: false,
+    });
   }
 }
 
