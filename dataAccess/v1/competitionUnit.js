@@ -769,3 +769,22 @@ exports.setCanceled = async (id, transaction) => {
 
   return result[0];
 };
+
+exports.getWinds = async (id) => {
+  const result = await db.CompetitionUnitWind.findAll({
+    where: {
+      competitionUnitId: id,
+    },
+  });
+
+  return result.map((t) => t.toJSON());
+};
+
+exports.bulkWriteWinds = async (data = [], transaction) => {
+  const result = await db.CompetitionUnitWind.bulkCreate(data, {
+    transaction,
+    updateOnDuplicate: ['startTime', 'endTime'],
+  });
+
+  return result.map((t) => t.toJSON());
+};

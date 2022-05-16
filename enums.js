@@ -216,6 +216,7 @@ const redisKeyPrefixes = {
   VESSEL_ONBOARD_PHONE_VERIFY_CODE: 'vessel_onboard_phone_verify_code_',
   VESSEL_ONBOARD_PHONE_VERIFY_LOCK: 'vessel_onboard_phone_verify_lock_',
   VESSEL_ONBOARD_PHONE_VERIFY_ATTEMPT: 'vessel_onboard_phone_verify_attempt_',
+  RUNNING_SIMULATION: 'running_simulation_',
 };
 
 const vesselEvents = {
@@ -465,6 +466,11 @@ const waiverTypes = {
   mediaWaiver: 'mediaWaiverPDF',
   discalimer: 'disclaimerPDF',
 };
+
+const liveDataGossipType = {
+  SIMULATION_RESUME_REQUEST: 'SIMULATION_RESUME_REQUEST',
+};
+
 module.exports = {
   competitionUnitStatus,
   calendarEventStatus,
@@ -518,4 +524,5 @@ module.exports = {
   trackingEvent,
   ocsStatuses,
   waiverTypes,
+  liveDataGossipType,
 };
