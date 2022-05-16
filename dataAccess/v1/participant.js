@@ -650,7 +650,10 @@ exports.getByUserAndRace = async (raceId, userId, transaction) => {
   return result?.toJSON();
 };
 
-exports.getAllWithShareableInfo = async (calendarEventId) => {
+exports.getAllWithShareableInfo = async (
+  calendarEventId,
+  participantId = null,
+) => {
   let include = [
     {
       model: db.UserProfile,
@@ -690,15 +693,18 @@ exports.getAllWithShareableInfo = async (calendarEventId) => {
   ];
 
   const result = await db.Participant.findAll({
-    where: {
-      calendarEventId,
-      invitationStatus: {
-        [db.Op.in]: [
-          participantInvitationStatus.ACCEPTED,
-          participantInvitationStatus.SELF_REGISTERED,
-        ],
+    where: Object.assign(
+      {
+        calendarEventId,
+        invitationStatus: {
+          [db.Op.in]: [
+            participantInvitationStatus.ACCEPTED,
+            participantInvitationStatus.SELF_REGISTERED,
+          ],
+        },
       },
-    },
+      participantId ? { id: participantId } : {},
+    ),
     attributes: ['id', 'publicName', 'allowShareInformation'],
     include,
   });
