@@ -182,62 +182,75 @@ exports.getAllForEvent = async (userId, eventId, paging = {}) => {
 };
 
 exports.getAllRegisteredInEvent = async (eventId, paging = {}) => {
-  const result = await db.Vessel.findAllWithPaging(
+  const vps = (
+    await db.VesselParticipant.findAll(
+      {
+        attributes: ['id', 'vesselId'],
+        required: true,
+        include: [
+          {
+            model: db.VesselParticipantGroup,
+            as: 'group',
+            attributes: [
+              'id',
+              'name',
+              'vesselParticipantGroupId',
+              'calendarEventId',
+            ],
+            where: {
+              calendarEventId: eventId,
+            },
+          },
+          {
+            model: db.Participant,
+            as: 'crews',
+            attributes: ['id', 'publicName', 'invitationStatus'],
+            through: {
+              attributes: ['id'],
+            },
+            where: {
+              invitationStatus: {
+                [db.Op.in]: [
+                  participantInvitationStatus.ACCEPTED,
+                  participantInvitationStatus.SELF_REGISTERED,
+                ],
+              },
+            },
+            include: [
+              {
+                model: db.UserProfile,
+                as: 'profile',
+                attributes: ['id', 'name', 'country', 'avatar'],
+              },
+            ],
+          },
+        ],
+      },
+      paging,
+    )
+  ).map((t) => t.toJSON());
+
+  let result = await db.Vessel.findAllWithPaging(
     {
-      subQuery: false,
       attributes: {
         exclude: ['orcJsonPolars'],
       },
-      include: [
-        {
-          model: db.VesselParticipant,
-          as: 'vesselParticipants',
-          attributes: ['id'],
-          required: true,
-          include: [
-            {
-              model: db.VesselParticipantGroup,
-              as: 'group',
-              attributes: [
-                'id',
-                'name',
-                'vesselParticipantGroupId',
-                'calendarEventId',
-              ],
-              where: {
-                calendarEventId: eventId,
-              },
-            },
-            {
-              model: db.Participant,
-              as: 'crews',
-              attributes: ['id', 'publicName', 'invitationStatus'],
-              through: {
-                attributes: ['id'],
-              },
-              where: {
-                invitationStatus: {
-                  [db.Op.in]: [
-                    participantInvitationStatus.ACCEPTED,
-                    participantInvitationStatus.SELF_REGISTERED,
-                  ],
-                },
-              },
-              include: [
-                {
-                  model: db.UserProfile,
-                  as: 'profile',
-                  attributes: ['id', 'name', 'country', 'avatar'],
-                },
-              ],
-            },
-          ],
+      where: {
+        id: {
+          [db.Op.in]: vps.map((t) => t.vesselId),
         },
-      ],
+      },
     },
     paging,
   );
 
+  result.rows = result.rows.map((t) => {
+    const vessel = t.toJSON();
+    return {
+      ...vessel,
+      vesselParticipants: vps.filter((vp) => vp.vesselId === vessel.id),
+    };
+  });
   return result;
 };
 
@@ -372,7 +385,7 @@ exports.validateAdminsById = async (id, userId) => {
           ],
         },
       ],
-      attributes: ['id', 'createdById','isDefaultVessel'],
+      attributes: ['id', 'createdById', 'isDefaultVessel'],
     });
 
     let data = vesselData?.toJSON();
