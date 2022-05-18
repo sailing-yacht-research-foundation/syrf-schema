@@ -49,7 +49,6 @@ exports.getAllDocumentByEvent = async (
             ]
           : []),
       ],
-      logging: console.log,
     },
     paging,
   );
