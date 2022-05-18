@@ -25,3 +25,20 @@ exports.getByParticipant = async (participantId) => {
 
   return result;
 };
+
+exports.deleteByEventAndType = async (
+  { calendarEventId, waiverTypes },
+  transaction,
+) => {
+  const deletedCount = await db.ParticipantWaiverAgreement.delete({
+    where: {
+      calendarEventId,
+      waiverType: {
+        [db.Op.in]: waiverTypes,
+      },
+    },
+    transaction,
+  });
+
+  return deletedCount;
+};
