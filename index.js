@@ -92,6 +92,11 @@ db.ParticipantWaiverAgreement =
 db.CalendarEventMessage = require('./entities/CalendarEventMessage')(sequelize);
 db.CalendarEventMessageRecipient =
   require('./entities/CalendarEventMessageRecipient')(sequelize);
+db.CalendarEventDocument = require('./entities/CalendarEventDocument')(
+  sequelize,
+);
+db.ParticipantDocumentAgreement =
+  require('./entities/ParticipantDocumentAgreement')(sequelize);
 
 for (const key in db) {
   if (Object.hasOwnProperty.call(db, key)) {
