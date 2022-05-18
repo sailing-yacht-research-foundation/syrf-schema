@@ -83,27 +83,26 @@ exports.deleteAllDoc = async (calendarEventId, transaction) => {
     attributes: ['id', 'documentUrl'],
     raw: true,
   });
-  const [deletedCount, agreementDeleted] = await Promise.all(
-    db.CalendarEventDocument.destroy({
+  const deletedCount = await db.CalendarEventDocument.destroy({
+    where: {
+      calendarEventId,
+    },
+    transaction,
+  });
+  if (documentsToDelete.length > 0) {
+    await db.ParticipantDocumentAgreement.destroy({
       where: {
-        calendarEventId,
-      },
-      transaction,
-    }),
-    db.ParticipantDocumentAgreement.destroy({
-      where: {
-        id: {
+        documentId: {
           [db.Op.in]: documentsToDelete.map((row) => row.id),
         },
       },
       transaction,
-    }),
-  );
+    });
+  }
 
   return {
     documentsToDelete,
     deletedCount,
-    agreementDeleted,
   };
 };
 
