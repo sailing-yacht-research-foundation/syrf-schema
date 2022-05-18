@@ -32,21 +32,24 @@ exports.getAllDocumentByEvent = async (
           attributes: ['name', 'avatar'],
           required: true,
         },
-        participantId
-          ? {
-              model: db.Participant,
-              as: 'participants',
-              through: {
-                attributes: ['createdAt'],
+        ...(participantId
+          ? [
+              {
+                model: db.Participant,
+                as: 'participants',
+                through: {
+                  attributes: ['createdAt'],
+                },
+                attributes: ['id', 'userProfileId'],
+                required: false,
+                where: {
+                  id: participantId,
+                },
               },
-              attributes: ['id', 'userProfileId'],
-              required: false,
-              where: {
-                id: participantId,
-              },
-            }
-          : {},
+            ]
+          : []),
       ],
+      logging: console.log,
     },
     paging,
   );

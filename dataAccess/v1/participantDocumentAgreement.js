@@ -33,7 +33,7 @@ exports.getByDocument = async (documentId) => {
 };
 
 exports.deleteByDocument = async (documentId, transaction) => {
-  const deletedCount = await db.CalendarEventDocument.destroy({
+  const deletedCount = await db.ParticipantDocumentAgreement.destroy({
     where: {
       documentId,
     },
@@ -44,7 +44,7 @@ exports.deleteByDocument = async (documentId, transaction) => {
 };
 
 exports.deleteByParticipant = async (participantId, transaction) => {
-  const deletedCount = await db.CalendarEventDocument.destroy({
+  const deletedCount = await db.ParticipantDocumentAgreement.destroy({
     where: {
       participantId,
     },
