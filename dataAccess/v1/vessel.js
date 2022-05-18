@@ -181,33 +181,31 @@ exports.getAllForEvent = async (userId, eventId, paging = {}) => {
   return result;
 };
 
-exports.getAllRegisteredInEvent = async (eventId, paging = {}) => {
-  const vps = (
-    await db.VesselParticipant.findAll({
-      attributes: ['id', 'vesselId'],
-      include: [
-        {
-          model: db.VesselParticipantGroup,
-          as: 'group',
-          attributes: ['id'],
-          required: true,
-          where: {
-            calendarEventId: eventId,
-          },
-        },
-      ],
-    })
-  ).map((t) => t.toJSON());
+const getRegisteredInEventSubQuery = `
+(select 
+  "vesselId"
+from
+  "VesselParticipants" AS "vp"
+  INNER JOIN "VesselParticipantGroups" AS "vpg" ON "vp"."vesselParticipantGroupId" = "vpg"."id"
+  AND "vpg"."calendarEventId" = $eventId)`
+  .replace(/\n/g, ' ')
+  .replace(/\t/g, ' ')
+  .replace(/\s\s+/g, ' ');
 
+exports.getAllRegisteredInEvent = async (eventId, paging = {}) => {
   let result = await db.Vessel.findAllWithPaging(
     {
       attributes: {
         exclude: ['orcJsonPolars'],
       },
+      logging: console.log,
       where: {
         id: {
-          [db.Op.in]: vps.map((t) => t.vesselId),
+          [db.Op.in]: db.Sequelize.literal(getRegisteredInEventSubQuery),
         },
+      },
+      bind: {
+        eventId,
       },
     },
     paging,
