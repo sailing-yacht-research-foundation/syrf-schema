@@ -183,51 +183,20 @@ exports.getAllForEvent = async (userId, eventId, paging = {}) => {
 
 exports.getAllRegisteredInEvent = async (eventId, paging = {}) => {
   const vps = (
-    await db.VesselParticipant.findAll(
-      {
-        attributes: ['id', 'vesselId'],
-        required: true,
-        include: [
-          {
-            model: db.VesselParticipantGroup,
-            as: 'group',
-            attributes: [
-              'id',
-              'name',
-              'vesselParticipantGroupId',
-              'calendarEventId',
-            ],
-            where: {
-              calendarEventId: eventId,
-            },
+    await db.VesselParticipant.findAll({
+      attributes: ['id', 'vesselId'],
+      include: [
+        {
+          model: db.VesselParticipantGroup,
+          as: 'group',
+          attributes: ['id'],
+          required: true,
+          where: {
+            calendarEventId: eventId,
           },
-          {
-            model: db.Participant,
-            as: 'crews',
-            attributes: ['id', 'publicName', 'invitationStatus'],
-            through: {
-              attributes: ['id'],
-            },
-            where: {
-              invitationStatus: {
-                [db.Op.in]: [
-                  participantInvitationStatus.ACCEPTED,
-                  participantInvitationStatus.SELF_REGISTERED,
-                ],
-              },
-            },
-            include: [
-              {
-                model: db.UserProfile,
-                as: 'profile',
-                attributes: ['id', 'name', 'country', 'avatar'],
-              },
-            ],
-          },
-        ],
-      },
-      paging,
-    )
+        },
+      ],
+    })
   ).map((t) => t.toJSON());
 
   let result = await db.Vessel.findAllWithPaging(
@@ -244,13 +213,63 @@ exports.getAllRegisteredInEvent = async (eventId, paging = {}) => {
     paging,
   );
 
+  const vpWithCrews = (
+    await db.VesselParticipant.findAll({
+      attributes: ['id', 'vesselId'],
+      where: {
+        vesselId: {
+          [db.Op.in]: result.rows.map((t) => t.id),
+        },
+      },
+      include: [
+        {
+          model: db.VesselParticipantGroup,
+          as: 'group',
+          attributes: [
+            'id',
+            'name',
+            'vesselParticipantGroupId',
+            'calendarEventId',
+          ],
+          where: {
+            calendarEventId: eventId,
+          },
+        },
+        {
+          model: db.Participant,
+          as: 'crews',
+          attributes: ['id', 'publicName', 'invitationStatus'],
+          through: {
+            attributes: ['id'],
+          },
+          where: {
+            invitationStatus: {
+              [db.Op.in]: [
+                participantInvitationStatus.ACCEPTED,
+                participantInvitationStatus.SELF_REGISTERED,
+              ],
+            },
+          },
+          include: [
+            {
+              model: db.UserProfile,
+              as: 'profile',
+              attributes: ['id', 'name', 'country', 'avatar'],
+            },
+          ],
+        },
+      ],
+    })
+  ).map((t) => t.toJSON());
+
   result.rows = result.rows.map((t) => {
     const vessel = t.toJSON();
     return {
       ...vessel,
-      vesselParticipants: vps.filter((vp) => vp.vesselId === vessel.id),
+      vesselParticipants: vpWithCrews.filter((vp) => vp.vesselId === vessel.id),
     };
   });
+
   return result;
 };
 
