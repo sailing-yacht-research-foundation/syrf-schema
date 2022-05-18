@@ -25,6 +25,14 @@ class Participant extends ModelBase {
       foreignKey: 'participantId',
       constraints: false,
     });
+
+    this.belongsToMany(models.CalendarEventDocument, {
+      through: models.ParticipantDocumentAgreement,
+      as: 'documentAgreements',
+      constraints: false,
+      foreignKey: 'participantId',
+      otherKey: 'documentId',
+    });
   }
 }
 

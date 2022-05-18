@@ -25,3 +25,33 @@ exports.getByParticipant = async (participantId) => {
 
   return result;
 };
+
+exports.deleteByParticipantAndType = async (
+  { participantIds, waiverTypes },
+  transaction,
+) => {
+  const deletedCount = await db.ParticipantWaiverAgreement.destroy({
+    where: {
+      participantId: {
+        [db.Op.in]: participantIds,
+      },
+      waiverType: {
+        [db.Op.in]: waiverTypes,
+      },
+    },
+    transaction,
+  });
+
+  return deletedCount;
+};
+
+exports.deleteByParticipant = async (participantId, transaction) => {
+  const deletedCount = await db.ParticipantWaiverAgreement.destroy({
+    where: {
+      participantId,
+    },
+    transaction,
+  });
+
+  return deletedCount;
+};
