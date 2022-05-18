@@ -96,11 +96,16 @@ exports.deleteAllDoc = async (calendarEventId, transaction) => {
   };
 };
 
-exports.getByDocumentIsSigned = async (documentId, participantId) => {
+exports.getByDocumentIsSigned = async (
+  documentId,
+  calendarEventId,
+  participantId,
+) => {
   const result = await db.CalendarEventDocument.findOne({
     attributes: ['id', 'documentName', 'isRequired', 'documentUrl'],
     where: {
       id: documentId,
+      calendarEventId,
     },
     include: [
       {
