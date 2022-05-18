@@ -218,6 +218,7 @@ const redisKeyPrefixes = {
   VESSEL_ONBOARD_PHONE_VERIFY_LOCK: 'vessel_onboard_phone_verify_lock_',
   VESSEL_ONBOARD_PHONE_VERIFY_ATTEMPT: 'vessel_onboard_phone_verify_attempt_',
   RUNNING_SIMULATION: 'running_simulation_',
+  CU_LAST_STATE: 'lastknown:',
 };
 
 const vesselEvents = {
