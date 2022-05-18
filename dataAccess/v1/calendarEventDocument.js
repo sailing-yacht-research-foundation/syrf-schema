@@ -73,6 +73,27 @@ exports.delete = async ({ id, calendarEventId }, transaction) => {
   return data?.toJSON();
 };
 
+exports.deleteAllDoc = async (calendarEventId, transaction) => {
+  const documentsToDelete = await db.CalendarEventDocument.findAll({
+    where: {
+      calendarEventId,
+    },
+    attributes: ['id', 'documentUrl'],
+    raw: true,
+  });
+  const deletedCount = await db.CalendarEventDocument.destroy({
+    where: {
+      calendarEventId,
+    },
+    transaction,
+  });
+
+  return {
+    documentsToDelete,
+    deletedCount,
+  };
+};
+
 exports.getByDocumentIsSigned = async (documentId, participantId) => {
   const result = await db.CalendarEventDocument.findOne({
     attributes: ['id', 'documentName', 'isRequired', 'documentUrl'],

@@ -31,3 +31,25 @@ exports.getByDocument = async (documentId) => {
 
   return result;
 };
+
+exports.deleteByDocument = async (documentId, transaction) => {
+  const deletedCount = await db.CalendarEventDocument.destroy({
+    where: {
+      documentId,
+    },
+    transaction,
+  });
+
+  return deletedCount;
+};
+
+exports.deleteByParticipant = async (participantId, transaction) => {
+  const deletedCount = await db.CalendarEventDocument.destroy({
+    where: {
+      participantId,
+    },
+    transaction,
+  });
+
+  return deletedCount;
+};
