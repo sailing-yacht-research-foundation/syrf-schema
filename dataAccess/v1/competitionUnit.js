@@ -788,3 +788,15 @@ exports.bulkWriteWinds = async (data = [], transaction) => {
 
   return result.map((t) => t.toJSON());
 };
+
+exports.getAllByIds = async (ids = [], { attributes } = {}) => {
+  return await db.CompetitionUnit.findAll({
+    where: {
+      id: {
+        [Op.in]: ids,
+      },
+    },
+    attributes: Array.isArray(attributes) ? attributes : ['id'],
+    raw: true,
+  });
+};

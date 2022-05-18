@@ -181,62 +181,92 @@ exports.getAllForEvent = async (userId, eventId, paging = {}) => {
   return result;
 };
 
+const getRegisteredInEventSubQuery = `
+(select 
+  "vesselId"
+from
+  "VesselParticipants" AS "vp"
+  INNER JOIN "VesselParticipantGroups" AS "vpg" ON "vp"."vesselParticipantGroupId" = "vpg"."id"
+  AND "vpg"."calendarEventId" = $eventId)`
+  .replace(/\n/g, ' ')
+  .replace(/\t/g, ' ')
+  .replace(/\s\s+/g, ' ');
+
 exports.getAllRegisteredInEvent = async (eventId, paging = {}) => {
-  const result = await db.Vessel.findAllWithPaging(
+  let result = await db.Vessel.findAllWithPaging(
     {
-      subQuery: false,
       attributes: {
         exclude: ['orcJsonPolars'],
       },
+      logging: console.log,
+      where: {
+        id: {
+          [db.Op.in]: db.Sequelize.literal(getRegisteredInEventSubQuery),
+        },
+      },
+      bind: {
+        eventId,
+      },
+    },
+    paging,
+  );
+
+  const vpWithCrews = (
+    await db.VesselParticipant.findAll({
+      attributes: ['id', 'vesselId'],
+      where: {
+        vesselId: {
+          [db.Op.in]: result.rows.map((t) => t.id),
+        },
+      },
       include: [
         {
-          model: db.VesselParticipant,
-          as: 'vesselParticipants',
-          attributes: ['id'],
-          required: true,
+          model: db.VesselParticipantGroup,
+          as: 'group',
+          attributes: [
+            'id',
+            'name',
+            'vesselParticipantGroupId',
+            'calendarEventId',
+          ],
+          where: {
+            calendarEventId: eventId,
+          },
+        },
+        {
+          model: db.Participant,
+          as: 'crews',
+          attributes: ['id', 'publicName', 'invitationStatus'],
+          through: {
+            attributes: ['id'],
+          },
+          where: {
+            invitationStatus: {
+              [db.Op.in]: [
+                participantInvitationStatus.ACCEPTED,
+                participantInvitationStatus.SELF_REGISTERED,
+              ],
+            },
+          },
           include: [
             {
-              model: db.VesselParticipantGroup,
-              as: 'group',
-              attributes: [
-                'id',
-                'name',
-                'vesselParticipantGroupId',
-                'calendarEventId',
-              ],
-              where: {
-                calendarEventId: eventId,
-              },
-            },
-            {
-              model: db.Participant,
-              as: 'crews',
-              attributes: ['id', 'publicName', 'invitationStatus'],
-              through: {
-                attributes: ['id'],
-              },
-              where: {
-                invitationStatus: {
-                  [db.Op.in]: [
-                    participantInvitationStatus.ACCEPTED,
-                    participantInvitationStatus.SELF_REGISTERED,
-                  ],
-                },
-              },
-              include: [
-                {
-                  model: db.UserProfile,
-                  as: 'profile',
-                  attributes: ['id', 'name', 'country', 'avatar'],
-                },
-              ],
+              model: db.UserProfile,
+              as: 'profile',
+              attributes: ['id', 'name', 'country', 'avatar'],
             },
           ],
         },
       ],
-    },
-    paging,
-  );
+    })
+  ).map((t) => t.toJSON());
+
+  result.rows = result.rows.map((t) => {
+    const vessel = t.toJSON();
+    return {
+      ...vessel,
+      vesselParticipants: vpWithCrews.filter((vp) => vp.vesselId === vessel.id),
+    };
+  });
 
   return result;
 };
@@ -372,7 +402,7 @@ exports.validateAdminsById = async (id, userId) => {
           ],
         },
       ],
-      attributes: ['id', 'createdById','isDefaultVessel'],
+      attributes: ['id', 'createdById', 'isDefaultVessel'],
     });
 
     let data = vesselData?.toJSON();

@@ -191,6 +191,7 @@ const bullQueues = {
   notification: 'notification',
   clearUntrackedRaces: 'clear_untracked_races',
   warningUntrackedEvents: 'warning_untracked_events',
+  cleanupESDangling: 'cleanup_es_dangling',
 };
 
 const externalServiceSources = {
