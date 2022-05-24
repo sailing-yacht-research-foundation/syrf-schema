@@ -125,6 +125,7 @@ const raceSetupType = {
   START_TIME_UPDATE: 'START_TIME_UPDATE',
   REQUEST_LIVE_OCS_STATUS: 'REQUEST_LIVE_OCS_STATUS',
   LOG: 'LOG',
+  DISCARD: 'DISCARD',
 };
 
 const ocsStatuses = {
