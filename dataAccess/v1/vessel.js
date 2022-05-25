@@ -213,7 +213,7 @@ exports.getAllRegisteredInEvent = async (eventId, paging = {}) => {
 
   const vpWithCrews = (
     await db.VesselParticipant.findAll({
-      attributes: ['id', 'vesselId'],
+      attributes: ['id', 'vesselId', 'sailNumber'],
       where: {
         vesselId: {
           [db.Op.in]: result.rows.map((t) => t.id),
@@ -262,8 +262,10 @@ exports.getAllRegisteredInEvent = async (eventId, paging = {}) => {
 
   result.rows = result.rows.map((t) => {
     const vessel = t.toJSON();
+    const vp = vpWithCrews.filter((vp) => vp.vesselId === vessel.id);
     return {
       ...vessel,
+      sailNumber: vp[0]?.sailNumber ?? vessel.sailNumber,
       vesselParticipants: vpWithCrews.filter((vp) => vp.vesselId === vessel.id),
     };
   });
