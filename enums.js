@@ -125,6 +125,7 @@ const raceSetupType = {
   START_TIME_UPDATE: 'START_TIME_UPDATE',
   REQUEST_LIVE_OCS_STATUS: 'REQUEST_LIVE_OCS_STATUS',
   LOG: 'LOG',
+  DISCARD: 'DISCARD',
 };
 
 const ocsStatuses = {
@@ -210,7 +211,7 @@ const redisKeyPrefixes = {
   DEV_TOKEN: 'devtoken-',
   PHONE_VERIFY_CODE: 'phone_verify_code_',
   PHONE_VERIFY_LOCK: 'phone_verify_lock_',
-  PHONE_VERIFY_ATTEMP: 'phone_verify_attempt_',
+  PHONE_VERIFY_ATTEMPT: 'phone_verify_attempt_',
   VESSEL_SATELLITE_VERIFY_CODE: 'vessel_satellite_verify_code_',
   VESSEL_SATELLITE_VERIFY_LOCK: 'vessel_satellite_verify_lock_',
   VESSEL_SATELLITE_VERIFY_ATTEMPT: 'vessel_satellite_verify_attempt_',
