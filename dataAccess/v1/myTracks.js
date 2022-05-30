@@ -181,7 +181,7 @@ exports.getTracksByTrackId = async (trackId, timeFrom, timeTo) => {
   return result;
 };
 
-exports.getTracksGeoJson = async (trackId, userId) => {
+exports.getTracksGeoJson = async ({ trackId, trackJsonId }, userId) => {
   if (!trackId || !userId) return null;
 
   const track = await db.TrackHistory.findOne({
@@ -196,10 +196,17 @@ exports.getTracksGeoJson = async (trackId, userId) => {
   }
 
   const result = await db.VesselParticipantCrewTrackJson.findOne({
-    where: {
-      vesselParticipantCrewId: track.crewId,
-      competitionUnitId: track.competitionUnitId,
-    },
+    where: Object.assign(
+      {
+        vesselParticipantCrewId: track.crewId,
+        competitionUnitId: track.competitionUnitId,
+      },
+      trackJsonId
+        ? {
+            id: trackJsonId,
+          }
+        : {},
+    ),
     attributes: {
       exclude: ['id'],
     },
