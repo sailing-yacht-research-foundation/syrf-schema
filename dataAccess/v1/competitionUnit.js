@@ -178,7 +178,14 @@ exports.getAll = async (paging, params) => {
       attributes,
       where,
       replacements,
-      include: [eventInclude],
+      include: [
+        eventInclude,
+        {
+          model: db.Course,
+          as: 'course',
+          attributes: ['id', 'name'],
+        },
+      ],
     },
     { ...paging, customSort: order },
   );
