@@ -406,6 +406,7 @@ const notificationTypes = {
   eventMessagesReceived: 'EVENT_MESSAGES_RECEIVED',
   simulationDeletion: 'SIMULATION_DELETION',
   newEventDocumentUploaded: 'NEW_EVENT_DOCUMENT_UPLOADED',
+  newEventWaiverUploaded: 'NEW_EVENT_WAIVER_UPLOADED',
 };
 
 const mobileOnlyNotificationTypes = [
@@ -429,6 +430,7 @@ const generalNotificationTypes = [
   'eventMessagesReceived',
   'simulationDeletion',
   'newEventDocumentUploaded',
+  'newEventWaiverUploaded',
 ];
 
 const kudosTypes = {
