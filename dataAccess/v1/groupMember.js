@@ -451,3 +451,22 @@ exports.getGroupsByUserWithoutPaging = async ({
   });
   return result;
 };
+
+exports.getGroupMembersByUserIds = async (groupId, userIds) => {
+  let where = {
+    groupId,
+    userId: {
+      [db.Op.in]: userIds,
+    },
+  };
+
+  const result = await db.GroupMember.findAll({
+    where,
+    include: {
+      as: 'member',
+      model: db.UserProfile,
+      attributes: ['id', 'name', 'avatar'],
+    },
+  });
+  return result;
+};
