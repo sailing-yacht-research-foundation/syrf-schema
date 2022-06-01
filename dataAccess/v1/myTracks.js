@@ -287,8 +287,99 @@ exports.getActiveTrack = async (competitionUnitId, crewId, transaction) => {
 };
 
 exports.getCrewTrackByTrackId = async (crewTrackJsonId, transaction) => {
-  return await db.VesselParticipantCrewTrackJson.findByPk(crewTrackJsonId, {
+  return (
+    await db.VesselParticipantCrewTrackJson.findByPk(crewTrackJsonId, {
+      transaction,
+      include: [
+        {
+          model: db.VesselParticipantCrew,
+          as: 'crew',
+          attributes: ['id', 'vesselParticipantId'],
+          include: [
+            {
+              model: db.Participant,
+              as: 'participant',
+              attributes: ['id', 'userProfileId', 'calendarEventId'],
+            },
+          ],
+        },
+        {
+          model: db.CompetitionUnit,
+          as: 'competition',
+          attributes: ['id', 'name', 'startTime', 'endTime', 'status'],
+          include: [
+            {
+              model: db.CalendarEvent,
+              as: 'calendarEvent',
+              attributes: ['id', 'name', 'status'],
+            },
+          ],
+        },
+      ],
+    })
+  )?.toJSON();
+};
+
+exports.getActiveTrackByUserId = async (userId, paging) => {
+  const result = await db.VesselParticipantCrewTrackJson.findAllWithPaging(
+    {
+      where: {
+        endTime: null,
+      },
+      include: [
+        {
+          model: db.VesselParticipantCrew,
+          as: 'crew',
+          attributes: ['id', 'vesselParticipantId'],
+          required: true,
+          include: [
+            {
+              model: db.Participant,
+              as: 'participant',
+              required: true,
+              attributes: ['id', 'userProfileId', 'calendarEventId'],
+              where: {
+                userProfileId: userId,
+              },
+            },
+          ],
+        },
+        {
+          model: db.CompetitionUnit,
+          as: 'competition',
+          attributes: ['id', 'name', 'startTime', 'status'],
+          include: [
+            {
+              model: db.CalendarEvent,
+              as: 'calendarEvent',
+              attributes: ['id', 'name', 'status'],
+            },
+          ],
+        },
+      ],
+    },
+    {
+      ...paging,
+      multiSort:
+        !(paging.sort ?? null) &&
+        paging.multiSort.length < 1 &&
+        !(paging.customSort ?? null)
+          ? [
+              ['endTime', 'DESC NULLS FIRST'],
+              ['startTime', 'DESC NULLS LAST'],
+            ]
+          : paging.multiSort,
+    },
+  );
+
+  return result;
+};
+
+exports.updateTrack = async (trackId, data, transaction) => {
+  return await db.VesselParticipantCrewTrackJson.update(data, {
+    where: {
+      id: trackId,
+    },
     transaction,
-    raw: true,
   });
 };
