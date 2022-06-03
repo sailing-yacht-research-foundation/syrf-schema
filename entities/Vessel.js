@@ -57,6 +57,7 @@ module.exports = (sequelize) => {
       },
       bulkCreated: {
         type: DataTypes.BOOLEAN,
+        allowNull: false,
         defaultValue: false,
       },
       model: {
