@@ -189,22 +189,21 @@ exports.getByGroupParticipant = async (
   vesselParticipantGroupId,
   participantId,
 ) => {
-  const crew = await db.VesselParticipantCrew.findOne({
+  const result = await db.VesselParticipantCrew.findOne({
     where: {
       participantId,
     },
+    include: {
+      model: db.VesselParticipant,
+      as: 'vesselParticipant',
+      required: true,
+      where: {
+        vesselParticipantGroupId,
+      },
+    },
     attributes: ['id', 'vesselParticipantId'],
   });
-  if (!crew) {
-    return null;
-  }
-  const result = await db.VesselParticipant.findOne({
-    where: {
-      id: crew.vesselParticipantId,
-      vesselParticipantGroupId,
-    },
-  });
-  return result;
+  return result?.toJSON().vesselParticipant;
 };
 
 /**
