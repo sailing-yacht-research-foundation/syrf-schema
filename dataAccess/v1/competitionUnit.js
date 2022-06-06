@@ -334,6 +334,7 @@ exports.updateCountryCity = async (
             type: 'Point',
             coordinates: data.centerPoint,
           },
+      approximateStart_zone: data?.timezone,
     },
     {
       where: {
