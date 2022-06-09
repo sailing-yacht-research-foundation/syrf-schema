@@ -11,3 +11,23 @@ exports.bulkCreate = async (data, transaction) => {
   });
   return result;
 };
+
+exports.getByCompetitionAndVP = async (
+  competitionUnitId,
+  vesselParticipantId,
+) => {
+  const result = await db.VesselParticipantTrackJson.findOne({
+    where: {
+      competitionUnitId,
+      vesselParticipantId,
+    },
+    include: [
+      {
+        as: 'vesselParticipant',
+        model: db.VesselParticipant,
+        attributes: ['vesselParticipantGroupId'],
+      },
+    ],
+  });
+  return result?.toJSON();
+};

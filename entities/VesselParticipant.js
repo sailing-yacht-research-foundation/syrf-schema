@@ -46,6 +46,12 @@ class VesselParticipant extends ModelBase {
       foreignKey: 'vesselParticipantId',
       constraints: false,
     });
+
+    this.hasMany(models.VesselParticipantTrackJson, {
+      as: 'trackJsons',
+      foreignKey: 'vesselParticipantId',
+      constraints: false,
+    });
   }
 }
 
