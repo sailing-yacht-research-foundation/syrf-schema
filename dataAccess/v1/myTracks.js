@@ -1,5 +1,6 @@
 const uuid = require('uuid');
 const db = require('../../index');
+const { dataSources } = require('../../enums');
 
 const excludeMeta = ['ownerId', 'createdById', 'updatedById', 'developerId'];
 
@@ -93,7 +94,7 @@ exports.getMyTracks = async (userId, isPrivate, pagination) => {
       multiSort:
         pagination.multiSort.length < 1 && !pagination.sort
           ? [
-              ['trackJson', 'endTime', 'DESC NULLS FIRST'],
+              db.Sequelize.literal(`CASE WHEN event.source != '${dataSources.SYRF}' THEN "TrackHistory"."createdAt" ELSE "trackJson"."endTime" END DESC NULLS FIRST`),
               ['trackJson', 'startTime', 'DESC NULLS LAST'],
             ]
           : pagination.multiSort,
