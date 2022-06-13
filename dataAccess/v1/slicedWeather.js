@@ -18,3 +18,13 @@ exports.findExistingSlices = async ({ competitionUnitId, originalFileId }) => {
   });
   return result;
 };
+
+exports.findByCompetition = async (competitionUnitId) => {
+  const result = await db.SlicedWeather.findAll({
+    where: {
+      competitionUnitId,
+    },
+    raw: true,
+  });
+  return result;
+};
