@@ -157,7 +157,7 @@ module.exports = (sequelize) => {
         defaultValue: false,
       },
       bio: {
-        type: DataTypes.STRING,
+        type: DataTypes.TEXT,
       },
       sailingNumber: {
         type: DataTypes.STRING,
