@@ -375,6 +375,7 @@ const participatingFeeTypes = {
 const dataSources = {
   SYRF: 'SYRF',
   IMPORT: 'IMPORT',
+  CLAIM: 'CLAIM',
 };
 
 const raceUpdateTypes = {
