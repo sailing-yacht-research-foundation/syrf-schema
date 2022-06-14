@@ -1,6 +1,16 @@
-const { DataTypes, Model } = require('sequelize');
+const { DataTypes } = require('sequelize');
+const ModelBase = require('../ModelBase');
 
-class VesselParticipantTrackJson extends Model {}
+class VesselParticipantTrackJson extends ModelBase {
+  static associateBase() {}
+  static associate(models) {
+    this.belongsTo(models.VesselParticipant, {
+      as: 'vesselParticipant',
+      constraints: false,
+      foreignKey: 'vesselParticipantId',
+    });
+  }
+}
 
 module.exports = (sequelize) => {
   VesselParticipantTrackJson.init(
