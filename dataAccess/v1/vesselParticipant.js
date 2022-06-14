@@ -287,6 +287,7 @@ exports.delete = async (id, transaction) => {
           [db.Op.in]: id,
         },
       },
+      transaction,
     }),
     db.VesselParticipantCrew.destroy({
       where: {

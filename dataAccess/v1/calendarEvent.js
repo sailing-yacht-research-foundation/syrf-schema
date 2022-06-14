@@ -432,22 +432,18 @@ exports.delete = async (id, transaction) => {
       },
       transaction,
     }),
-    db.CalendarEvent.destroy(
-      {
-        where: {
-          id: id,
-        },
+    db.CalendarEvent.destroy({
+      where: {
+        id: id,
       },
       transaction,
-    ),
-    db.Vessel.destroy(
-      {
-        where: {
-          scope: id,
-        },
+    }),
+    db.Vessel.destroy({
+      where: {
+        scope: id,
       },
       transaction,
-    ),
+    }),
   ]);
 
   return data?.toJSON();
