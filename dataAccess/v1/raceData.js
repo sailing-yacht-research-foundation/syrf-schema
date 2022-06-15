@@ -1,28 +1,5 @@
 const db = require('../../index');
 
-exports.getTracksByCompetitionUnit = async (id, timeFrom, timeTo) => {
-  if (!id) return null;
-
-  const result = await db.VesselParticipantTrack.findAll({
-    where: {
-      competitionUnitId: id,
-      pingTime: {
-        [db.Op.between]: [timeFrom, timeTo],
-      },
-    },
-    attributes: {
-      exclude: ['id', 'competitionUnitId'],
-    },
-    order: [
-      ['vesselParticipantId', 'ASC'],
-      ['pingTime', 'ASC'],
-    ],
-    raw: true,
-  });
-
-  return result;
-};
-
 exports.getLegsByCompetitionUnit = async (id, timeFrom, timeTo) => {
   if (!id) return null;
 
@@ -94,26 +71,6 @@ exports.getCompetitionUnitResult = async (id) => {
   return result;
 };
 
-exports.getTracksByVesselParticipant = async (id, timeFrom, timeTo) => {
-  if (!id) return null;
-
-  const result = await db.VesselParticipantTrack.findAll({
-    where: {
-      vesselParticipantId: id,
-      pingTime: {
-        [db.Op.between]: [timeFrom, timeTo],
-      },
-    },
-    attributes: {
-      exclude: ['id', 'competitionUnitId', 'vesselParticipantId'],
-    },
-    order: [['pingTime', 'ASC']],
-    raw: true,
-  });
-
-  return result;
-};
-
 exports.getLegsByVesselParticipant = async (id, timeFrom, timeTo) => {
   if (!id) return null;
 
@@ -160,38 +117,6 @@ exports.getEventsByVesselParticipant = async (id, timeFrom, timeTo) => {
   });
 
   return result;
-};
-
-exports.getRaceTimeByCompetitionUnit = async (id) => {
-  if (!id) return null;
-
-  const result = await db.VesselParticipantTrack.findAll({
-    where: {
-      competitionUnitId: id,
-    },
-    attributes: [
-      [db.Sequelize.fn('min', db.Sequelize.col('pingTime')), 'startTime'],
-      [db.Sequelize.fn('max', db.Sequelize.col('pingTime')), 'endTime'],
-    ],
-  });
-
-  return result[0];
-};
-
-exports.getRaceTimeByVesselParticipant = async (id) => {
-  if (!id) return null;
-
-  const result = await db.VesselParticipantTrack.findAll({
-    where: {
-      vesselParticipantId: id,
-    },
-    attributes: [
-      [db.Sequelize.fn('min', db.Sequelize.col('pingTime')), 'startTime'],
-      [db.Sequelize.fn('max', db.Sequelize.col('pingTime')), 'endTime'],
-    ],
-  });
-
-  return result[0];
 };
 
 exports.getJsonTracksByVP = async (id) => {

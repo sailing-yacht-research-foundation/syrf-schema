@@ -244,7 +244,6 @@ exports.delete = async (id, transaction) => {
     db.SlicedWeather.destroy(param),
     db.VesselParticipantLeg.destroy(param),
     db.VesselParticipantTrackJson.destroy(param),
-    db.VesselParticipantTrack.destroy(param),
     db.SlicedWeather.destroy(param),
   ]);
 
