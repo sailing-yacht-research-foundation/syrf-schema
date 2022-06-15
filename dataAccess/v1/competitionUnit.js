@@ -239,7 +239,6 @@ exports.delete = async (id, transaction) => {
     db.TrackHistory.destroy(param),
     db.CompetitionResult.destroy(param),
     db.CompetitionLeg.destroy(param),
-    db.CompetitionPointTrack.destroy(param),
     db.CompetitionPointTrackJson.destroy(param),
     db.CompetitionUnitWind.destroy(param),
     db.SlicedWeather.destroy(param),
