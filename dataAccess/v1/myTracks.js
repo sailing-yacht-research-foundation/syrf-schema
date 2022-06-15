@@ -94,7 +94,9 @@ exports.getMyTracks = async (userId, isPrivate, pagination) => {
       multiSort:
         pagination.multiSort.length < 1 && !pagination.sort
           ? [
-              db.Sequelize.literal(`CASE WHEN event.source != '${dataSources.SYRF}' THEN "TrackHistory"."createdAt" ELSE "trackJson"."endTime" END DESC NULLS FIRST`),
+              db.Sequelize.literal(
+                `CASE WHEN event.source != '${dataSources.SYRF}' THEN "TrackHistory"."createdAt" ELSE "trackJson"."endTime" END DESC NULLS FIRST`,
+              ),
               ['trackJson', 'startTime', 'DESC NULLS LAST'],
             ]
           : pagination.multiSort,
@@ -157,29 +159,6 @@ exports.getById = async (id) => {
   });
 
   return result?.toJSON();
-};
-
-exports.getTracksByTrackId = async (trackId, timeFrom, timeTo) => {
-  if (!trackId) return null;
-
-  const track = await db.TrackHistory.findByPk(trackId);
-
-  const result = await db.VesselParticipantCrewTrack.findAll({
-    where: {
-      vesselParticipantCrewId: track.crewId,
-      competitionUnitId: track.competitionUnitId,
-      pingTime: {
-        [db.Op.between]: [timeFrom, timeTo],
-      },
-    },
-    attributes: {
-      exclude: ['id', 'vesselParticipantCrewId', 'competitionUnitId'],
-    },
-    order: [['pingTime', 'ASC']],
-    raw: true,
-  });
-
-  return result;
 };
 
 exports.getTracksGeoJson = async ({ trackId, trackJsonId }, userId) => {

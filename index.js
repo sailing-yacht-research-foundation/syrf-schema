@@ -44,9 +44,6 @@ db.VesselParticipantEvent = require('./entities/VesselParticipantEvent')(
   sequelize,
 );
 db.VesselParticipantLeg = require('./entities/VesselParticipantLeg')(sequelize);
-db.VesselParticipantTrack = require('./entities/VesselParticipantTrack')(
-  sequelize,
-);
 db.VesselParticipantTrackJson =
   require('./entities/VesselParticipantTrackJson')(sequelize);
 db.VesselParticipantTrackMetadata =
@@ -62,9 +59,6 @@ db.CompetitionPointTrackJson = require('./entities/CompetitionPointTrackJson')(
 );
 
 db.CompetitionLeg = require('./entities/CompetitionLeg')(sequelize);
-db.CompetitionPointTrack = require('./entities/CompetitionPointTrack')(
-  sequelize,
-);
 db.CompetitionUnitWind = require('./entities/CompetitionUnitWind')(sequelize);
 db.ExpeditionSubscription = require('./entities/ExpeditionSubscription')(
   sequelize,
