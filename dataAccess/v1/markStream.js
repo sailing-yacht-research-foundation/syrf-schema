@@ -7,14 +7,24 @@ exports.pushTrackerPoints = async (point = {}, competitionUnitId) => {
     (t) => t.id === point.id && t.competitionUnitId === competitionUnitId,
   );
 
-  if (index > -1) return;
-
-  markTrackerActivePoints.push({ ...point, competitionUnitId });
+  if (index > -1) {
+    markTrackerActivePoints[index] = { ...point, competitionUnitId };
+  } else {
+    markTrackerActivePoints.push({ ...point, competitionUnitId });
+  }
 };
 
 exports.removeTrackerPoints = async (competitionUnitId) => {
   markTrackerActivePoints = markTrackerActivePoints.filter(
     (t) => t.competitionUnitId !== competitionUnitId,
+  );
+};
+
+exports.removeTrackerPointsByCompetitionUnits = async (
+  competitionUnitIds = [],
+) => {
+  markTrackerActivePoints = markTrackerActivePoints.filter(
+    (t) => !competitionUnitIds.includes(t.competitionUnitId),
   );
 };
 
@@ -47,4 +57,61 @@ exports.validateStreamer = async (userProfileId, markTrackerId) => {
   });
 
   return result?.toJSON();
+};
+
+exports.getPointsByCourseId = async (courseId) => {
+  const pointAttr = ['id', 'properties', 'markTrackerId'];
+  const [sequenced, unsequenced, timed] = await Promise.all([
+    db.CourseSequencedGeometry.findAll({
+      where: {
+        courseId,
+      },
+      raw: true,
+      nest: true,
+      attributes: ['id'],
+      include: [
+        {
+          as: 'points',
+          model: db.CoursePoint,
+          attributes: pointAttr,
+        },
+      ],
+    }),
+    db.CourseUnsequencedUntimedGeometry.findAll({
+      where: {
+        courseId,
+      },
+      raw: true,
+      nest: true,
+      attributes: ['id'],
+      include: [
+        {
+          as: 'points',
+          model: db.CoursePoint,
+          attributes: pointAttr,
+        },
+      ],
+    }),
+    db.CourseUnsequencedTimedGeometry.findAll({
+      where: {
+        courseId,
+      },
+      raw: true,
+      nest: true,
+      attributes: ['id'],
+      include: [
+        {
+          as: 'points',
+          model: db.CoursePoint,
+          attributes: pointAttr,
+        },
+      ],
+    }),
+  ]);
+
+  return [
+    ...sequenced.map((t) => t.points),
+    ...unsequenced.map((t) => t.points),
+    ...timed.map((t) => t.points),
+  ].flat(1);
 };
