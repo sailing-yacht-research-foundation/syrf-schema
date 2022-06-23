@@ -23,8 +23,10 @@ export interface RelatedFile {
     | 'notice_of_race'
     | 'og_image'
     | 'vp_track_json'
+    | 'vp_calculated_track_json'
     | 'vp_simplified_track_json'
     | 'vp_crew_track_json'
+    | 'vp_point_track_json'
     | 'sliced_weather';
   path: string;
   bucket:
