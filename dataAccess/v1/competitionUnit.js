@@ -588,34 +588,39 @@ exports.getUntrackedRaces = async (filterDate, transaction) => {
  * @returns {import('../../types/dataAccess').RelatedFile[]}
  */
 exports.getRelatedFiles = async (id, transaction) => {
-  const [competitionUnit, vpTrackJson, pointTrackJson, slicedWeather] =
-    await Promise.all([
-      db.CompetitionUnit.findByPk(id, { transaction }),
-      db.VesselParticipantTrackJson.findAll({
-        where: {
-          competitionUnitId: id,
-        },
-        transaction,
-      }),
-      db.VesselParticipantCrewTrackJson.findAll({
-        where: {
-          competitionUnitId: id,
-        },
-        transaction,
-      }),
-      db.CompetitionPointTrackJson.findAll({
-        where: {
-          competitionUnitId: id,
-        },
-        transaction,
-      }),
-      db.SlicedWeather.findAll({
-        where: {
-          competitionUnitId: id,
-        },
-        transaction,
-      }),
-    ]);
+  const [
+    competitionUnit,
+    vpTrackJson,
+    vpCrewTrack,
+    pointTrackJson,
+    slicedWeather,
+  ] = await Promise.all([
+    db.CompetitionUnit.findByPk(id, { transaction }),
+    db.VesselParticipantTrackJson.findAll({
+      where: {
+        competitionUnitId: id,
+      },
+      transaction,
+    }),
+    db.VesselParticipantCrewTrackJson.findAll({
+      where: {
+        competitionUnitId: id,
+      },
+      transaction,
+    }),
+    db.CompetitionPointTrackJson.findAll({
+      where: {
+        competitionUnitId: id,
+      },
+      transaction,
+    }),
+    db.SlicedWeather.findAll({
+      where: {
+        competitionUnitId: id,
+      },
+      transaction,
+    }),
+  ]);
 
   const result = [];
 
@@ -627,6 +632,7 @@ exports.getRelatedFiles = async (id, transaction) => {
       path: removeDomainFromUrl(competitionUnit.openGraphImage),
       bucket: 'opengraph_image',
     });
+
   result.push(
     ...vpTrackJson
       .filter((t) => t.providedStorageKey)
@@ -646,7 +652,25 @@ exports.getRelatedFiles = async (id, transaction) => {
       })),
   );
   result.push(
+    ...vpTrackJson
+      .filter((t) => t.calculatedStorageKey)
+      .map((t) => ({
+        type: 'vp_calculated_track_json',
+        path: t.calculatedStorageKey,
+        bucket: 'individual_track',
+      })),
+  );
+  result.push(
     ...pointTrackJson
+      .filter((t) => t.storageKey)
+      .map((t) => ({
+        type: 'vp_point_track_json',
+        path: t.storageKey,
+        bucket: 'individual_track',
+      })),
+  );
+  result.push(
+    ...vpCrewTrack
       .filter((t) => t.storageKey)
       .map((t) => ({
         type: 'vp_crew_track_json',
