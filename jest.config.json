@@ -1,0 +1,12 @@
+{
+  "testEnvironment": "node",
+  "coveragePathIgnorePatterns": [
+    "node_modules",
+    "<rootDir>/entities",
+    "<rootDir>/migrations",
+    "<rootDir>/types"
+  ],
+  "setupFiles": ["dotenv/config"],
+  "setupFilesAfterEnv": ["<rootDir>/jestSetupAfterEnv.js"],
+  "coverageReporters": ["text", "text-summary", "html"]
+}
