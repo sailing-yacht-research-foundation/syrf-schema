@@ -522,7 +522,35 @@ exports.getEventEditors = async (id) => {
   };
 };
 
-exports.getUserEvents = async (paging, userId) => {
+exports.getUserEvents = async (paging, userId, { location } = {}) => {
+  let includeDistance = null;
+  let customSort = paging.customSort;
+
+  const sourceLocation = db.Sequelize.literal(`ST_MakePoint(:lon, :lat)`);
+
+  if (location) {
+    includeDistance = [
+      db.Sequelize.fn(
+        'ST_DistanceSphere',
+        db.Sequelize.literal('"location"'),
+        sourceLocation,
+      ),
+      'distance',
+    ];
+    customSort = [
+      db.Sequelize.literal(
+        `CASE WHEN "CalendarEvent"."status" in ('${calendarEventStatus.ONGOING}','${calendarEventStatus.SCHEDULED}') THEN 0 ELSE 1 END ASC`,
+      ),
+      [
+        db.Sequelize.literal(
+          `"location" <-> 'SRID=4326;POINT(:lon :lat)'::geometry`,
+        ),
+        'ASC',
+      ],
+      ...(customSort ?? []),
+    ];
+  }
+
   let where = {
     [db.Op.and]: [
       {
@@ -562,6 +590,7 @@ exports.getUserEvents = async (paging, userId) => {
 
   const result = await db.CalendarEvent.findAllWithPaging(
     {
+      attributes: { includeDistance },
       include: [
         {
           model: db.UserProfile,
@@ -614,6 +643,7 @@ exports.getUserEvents = async (paging, userId) => {
       ],
       replacements: {
         userId,
+        ...(location || {}),
       },
       where,
       order,
@@ -621,7 +651,7 @@ exports.getUserEvents = async (paging, userId) => {
       // Reference: https://stackoverflow.com/questions/43729254/sequelize-limit-and-offset-incorrect-placement-in-query
       subQuery: false,
     },
-    paging,
+    { ...paging, customSort },
   );
   const { count, rows, page, size } = result;
 
