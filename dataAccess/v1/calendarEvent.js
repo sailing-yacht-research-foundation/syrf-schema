@@ -590,7 +590,7 @@ exports.getUserEvents = async (paging, userId, { location } = {}) => {
 
   const result = await db.CalendarEvent.findAllWithPaging(
     {
-      attributes: { includeDistance },
+      attributes: { include: [includeDistance].filter((t) => !!t) },
       include: [
         {
           model: db.UserProfile,
