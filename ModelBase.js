@@ -96,6 +96,9 @@ class ModelBase extends Model {
           condition = Op.iLike;
           filterValue = `%${filterValue}%`;
           break;
+        case 'in':
+          condition = Op.in;
+          break;
 
         default:
           break;
