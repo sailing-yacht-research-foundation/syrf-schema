@@ -64,10 +64,10 @@ exports.upsert = async (id, data = {}, transaction) => {
 exports.getAll = async (paging, params) => {
   let where = {};
 
-  if (params.calendarEventId) {
+  if (params?.calendarEventId) {
     where.calendarEventId = params.calendarEventId;
   } else {
-    if (params.userId) where.createdById = params.userId;
+    if (params?.userId) where.createdById = params.userId;
     else return emptyPagingResponse(paging);
   }
 
@@ -171,14 +171,20 @@ exports.clear = async () => {
 exports.getUnregisteredVessel = async (paging, vesselParticipantGroupId) => {
   return await db.Vessel.findAllWithPaging(
     {
-      where: {
-        publicName: {
-          [Op.iLike]: `%${paging.query}%`,
+      where: Object.assign(
+        paging.query
+          ? {
+              publicName: {
+                [Op.iLike]: `%${paging.query}%`,
+              },
+            }
+          : {},
+        {
+          '$vesselParticipants.vesselId$': {
+            [Op.is]: null,
+          },
         },
-        '$vesselParticipants.vesselId$': {
-          [Op.is]: null,
-        },
-      },
+      ),
       subQuery: false,
       include: [
         {
@@ -204,14 +210,20 @@ exports.getUnregisteredParticipants = async (
 ) => {
   return await db.Participant.findAllWithPaging(
     {
-      where: {
-        publicName: {
-          [Op.iLike]: `%${paging.query}%`,
+      where: Object.assign(
+        paging.query
+          ? {
+              publicName: {
+                [Op.iLike]: `%${paging.query}%`,
+              },
+            }
+          : {},
+        {
+          '$vesselParticipants.id$': {
+            [Op.is]: null,
+          },
         },
-        '$vesselParticipants.id$': {
-          [Op.is]: null,
-        },
-      },
+      ),
       subQuery: false,
       include: [
         {
