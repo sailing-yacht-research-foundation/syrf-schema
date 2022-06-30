@@ -29,6 +29,7 @@ jest.mock('./index', () => {
     Vessel: createMockSequelizeModel(),
     VesselParticipant: createMockSequelizeModel(),
     VesselParticipantCrew: createMockSequelizeModel(),
+    VesselParticipantCrewTrackJson: createMockSequelizeModel(),
     VesselParticipantEvent: createMockSequelizeModel(),
     VesselParticipantGroup: createMockSequelizeModel(),
     VesselParticipantTrackMetadata: createMockSequelizeModel(),
