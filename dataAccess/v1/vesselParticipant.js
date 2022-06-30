@@ -89,10 +89,10 @@ exports.getAll = async (paging, params) => {
     };
   }
 
-  if (params.vesselParticipantGroupId) {
+  if (params?.vesselParticipantGroupId) {
     where.vesselParticipantGroupId = params.vesselParticipantGroupId;
   } else {
-    if (params.userId) where.createdById = params.userId;
+    if (params?.userId) where.createdById = params.userId;
     else return emptyPagingResponse(paging);
   }
 
