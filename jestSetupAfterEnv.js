@@ -23,6 +23,7 @@ jest.mock('./index', () => {
         };
       }),
     },
+    Sequelize: jest.requireActual('sequelize').Sequelize,
     Op: jest.requireActual('sequelize').Op,
     // Below should be each models mock, simpler to do it this way then to re-create mocked models with sequelize mock
     CompetitionUnit: createMockSequelizeModel(),

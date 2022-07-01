@@ -82,15 +82,15 @@ exports.upsert = async (id, data = {}, transaction = undefined) => {
   return result?.toJSON();
 };
 
-exports.getAll = async (paging = {}, params) => {
+exports.getAll = async (paging, params) => {
   let where = {};
 
   if (paging?.filters?.findIndex((t) => t.field === 'scope') < 0) {
-    if (params.userId) where.createdById = params.userId;
+    if (params?.userId) where.createdById = params.userId;
     else return emptyPagingResponse(paging);
   }
 
-  if (paging.query) {
+  if (paging?.query) {
     where.publicName = {
       [db.Op.like]: `%${paging.query}%`,
     };
@@ -199,7 +199,6 @@ exports.getAllRegisteredInEvent = async (eventId, paging = {}) => {
       attributes: {
         exclude: ['orcJsonPolars'],
       },
-      logging: console.log,
       where: {
         id: {
           [db.Op.in]: db.Sequelize.literal(getRegisteredInEventSubQuery),
@@ -263,11 +262,13 @@ exports.getAllRegisteredInEvent = async (eventId, paging = {}) => {
 
   result.rows = result.rows.map((t) => {
     const vessel = t.toJSON();
-    const vp = vpWithCrews.filter((vp) => vp.vesselId === vessel.id);
+    const vesselParticipants = vpWithCrews.filter(
+      (vp) => vp.vesselId === vessel.id,
+    );
     return {
       ...vessel,
-      sailNumber: vp[0]?.sailNumber ?? vessel.sailNumber,
-      vesselParticipants: vpWithCrews.filter((vp) => vp.vesselId === vessel.id),
+      sailNumber: vesselParticipants[0]?.sailNumber ?? vessel.sailNumber,
+      vesselParticipants,
     };
   });
 
