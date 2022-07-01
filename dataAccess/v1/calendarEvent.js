@@ -442,6 +442,7 @@ exports.delete = async (id, transaction) => {
       where: {
         scope: id,
       },
+      force: true,
       transaction,
     }),
   ]);
