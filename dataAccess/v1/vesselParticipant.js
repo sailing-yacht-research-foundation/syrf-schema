@@ -89,10 +89,10 @@ exports.getAll = async (paging, params) => {
     };
   }
 
-  if (params.vesselParticipantGroupId) {
+  if (params?.vesselParticipantGroupId) {
     where.vesselParticipantGroupId = params.vesselParticipantGroupId;
   } else {
-    if (params.userId) where.createdById = params.userId;
+    if (params?.userId) where.createdById = params.userId;
     else return emptyPagingResponse(paging);
   }
 
@@ -273,17 +273,17 @@ exports.delete = async (id, transaction) => {
   };
 
   const [count] = await Promise.all([
-    db.VesselParticipantTrackJson.destroy({
+    db.VesselParticipant.destroy({
       where: {
-        vesselParticipantId: {
+        id: {
           [db.Op.in]: id,
         },
       },
       transaction,
     }),
-    db.VesselParticipant.destroy({
+    db.VesselParticipantTrackJson.destroy({
       where: {
-        id: {
+        vesselParticipantId: {
           [db.Op.in]: id,
         },
       },
@@ -418,6 +418,9 @@ exports.addParticipant = async (
   participantIds = [],
   transaction,
 ) => {
+  if (participantIds.length === 0) {
+    return [];
+  }
   return await db.VesselParticipantCrew.bulkCreate(
     participantIds.map((t) => ({
       vesselParticipantId,
