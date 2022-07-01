@@ -13,11 +13,19 @@ const {
   getByVesselIdAndSource,
   bulkCreate,
   bulkCreateWithOptions,
+  addEditors,
+  addGroupEditors,
+  removeAllEditors,
+  removeAllGroupEditors,
+  validateAdminsById,
 } = require('../../dataAccess/v1/vessel');
 
 const db = require('../../index');
 const { emptyPagingResponse } = require('../../utils/utils');
-const { participantInvitationStatus } = require('../../enums');
+const {
+  participantInvitationStatus,
+  groupMemberStatus,
+} = require('../../enums');
 
 describe('Vessel DAL', () => {
   const mockTransaction = db.sequelize.transaction();
@@ -663,6 +671,194 @@ describe('Vessel DAL', () => {
 
       expect(result).toEqual([]);
       expect(db.Vessel.bulkCreate).not.toHaveBeenCalled();
+    });
+  });
+
+  describe('addEditors', () => {
+    it('should bulkCreate VesselEditor when provided with array of editors', async () => {
+      const vesselId = uuid.v4();
+      const editors = Array(5)
+        .fill()
+        .map(() => uuid.v4());
+      const mockVesselEditors = editors.map((userProfileId) => {
+        return {
+          vesselId,
+          userProfileId,
+        };
+      });
+      db.VesselEditor.bulkCreate.mockResolvedValueOnce(mockVesselEditors);
+
+      const result = await addEditors(vesselId, editors, mockTransaction);
+
+      expect(result).toEqual(mockVesselEditors);
+      expect(db.VesselEditor.bulkCreate).toHaveBeenCalledWith(
+        mockVesselEditors,
+        {
+          ignoreDuplicates: true,
+          validate: true,
+          transaction: mockTransaction,
+        },
+      );
+    });
+
+    it('should not call any DB operation when provided with empty array', async () => {
+      const result = await addEditors(uuid.v4(), [], mockTransaction);
+
+      expect(result).toEqual([]);
+      expect(db.VesselEditor.bulkCreate).not.toHaveBeenCalled();
+    });
+  });
+
+  describe('addGroupEditors', () => {
+    it('should bulkCreate VesselGroupEditor when provided with array of groups', async () => {
+      const vesselId = uuid.v4();
+      const groups = Array(3)
+        .fill()
+        .map(() => uuid.v4());
+      const mockGroupEditors = groups.map((groupId) => {
+        return {
+          vesselId,
+          groupId,
+        };
+      });
+      db.VesselGroupEditor.bulkCreate.mockResolvedValueOnce(mockGroupEditors);
+
+      const result = await addGroupEditors(vesselId, groups, mockTransaction);
+
+      expect(result).toEqual(mockGroupEditors);
+      expect(db.VesselGroupEditor.bulkCreate).toHaveBeenCalledWith(
+        mockGroupEditors,
+        {
+          ignoreDuplicates: true,
+          validate: true,
+          transaction: mockTransaction,
+        },
+      );
+    });
+
+    it('should not call any DB operation when provided with empty array', async () => {
+      const result = await addGroupEditors(uuid.v4(), [], mockTransaction);
+
+      expect(result).toEqual([]);
+      expect(db.VesselGroupEditor.bulkCreate).not.toHaveBeenCalled();
+    });
+  });
+
+  describe('removeAllEditors', () => {
+    it('should call destroy on VesselEditor for the selected vessel', async () => {
+      const vesselId = uuid.v4();
+      db.VesselEditor.destroy.mockResolvedValueOnce(1);
+
+      const result = await removeAllEditors(vesselId, mockTransaction);
+
+      expect(result).toEqual(1);
+      expect(db.VesselEditor.destroy).toHaveBeenCalledWith({
+        where: { vesselId },
+        transaction: mockTransaction,
+      });
+    });
+  });
+
+  describe('removeAllGroupEditors', () => {
+    it('should call destroy on VesselGroupEditor for the selected vessel', async () => {
+      const vesselId = uuid.v4();
+      db.VesselGroupEditor.destroy.mockResolvedValueOnce(1);
+
+      const result = await removeAllGroupEditors(vesselId, mockTransaction);
+
+      expect(result).toEqual(1);
+      expect(db.VesselGroupEditor.destroy).toHaveBeenCalledWith({
+        where: { vesselId },
+        transaction: mockTransaction,
+      });
+    });
+  });
+
+  describe('validateAdminsById', () => {
+    it('should return vessel detail, and whether user is owner/editor', async () => {
+      const vesselId = uuid.v4();
+      const userId = uuid.v4();
+      const data = {
+        id: vesselId,
+        publicName: `Vessel of ${faker.name.findName()}`,
+        lengthInMeters: faker.datatype.number({ max: 100 }),
+        editors: [{ id: uuid.v4() }],
+        createdById: userId,
+        groupEditors: [
+          {
+            id: uuid.v4(),
+            groupMember: [
+              {
+                id: uuid.v4(),
+                userId,
+              },
+            ],
+          },
+        ],
+      };
+      db.Vessel.findByPk.mockResolvedValueOnce({ toJSON: () => data });
+
+      const result = await validateAdminsById(vesselId, userId);
+
+      expect(result).toEqual({
+        isOwner: true,
+        isEditor: true,
+        vessel: data,
+      });
+      expect(db.Vessel.findByPk).toHaveBeenCalledWith(vesselId, {
+        include: expect.arrayContaining([
+          expect.objectContaining({
+            as: 'editors',
+            attributes: expect.arrayContaining(['id']),
+          }),
+          expect.objectContaining({
+            as: 'groupEditors',
+            attributes: expect.arrayContaining(['id']),
+            include: expect.arrayContaining([
+              {
+                as: 'groupMember',
+                attributes: expect.arrayContaining(['userId']),
+                where: {
+                  status: groupMemberStatus.accepted,
+                },
+              },
+            ]),
+          }),
+        ]),
+        attributes: expect.arrayContaining([
+          'id',
+          'createdById',
+          'isDefaultVessel',
+        ]),
+      });
+    });
+    it('should return falses when vessel not found', async () => {
+      const vesselId = uuid.v4();
+      const userId = uuid.v4();
+      db.Vessel.findByPk.mockResolvedValueOnce(undefined);
+
+      const result = await validateAdminsById(vesselId, userId);
+
+      expect(result).toEqual({
+        isOwner: false,
+        isEditor: false,
+        vessel: undefined,
+      });
+      expect(db.Vessel.findByPk).toHaveBeenCalledWith(
+        vesselId,
+        expect.anything(),
+      );
+    });
+
+    it('should return default values if provided id is falsy', async () => {
+      const result = await validateAdminsById(null, uuid.v4());
+
+      expect(result).toEqual({
+        isOwner: false,
+        isEditor: false,
+        vessel: undefined,
+      });
+      expect(db.Vessel.findByPk).not.toHaveBeenCalled();
     });
   });
 });

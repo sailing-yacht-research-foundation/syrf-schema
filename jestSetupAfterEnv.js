@@ -29,6 +29,8 @@ jest.mock('./index', () => {
     CompetitionUnit: createMockSequelizeModel(),
     Participant: createMockSequelizeModel(),
     Vessel: createMockSequelizeModel(),
+    VesselEditor: createMockSequelizeModel(),
+    VesselGroupEditor: createMockSequelizeModel(),
     VesselLifeRaft: createMockSequelizeModel(),
     VesselParticipant: createMockSequelizeModel(),
     VesselParticipantCrew: createMockSequelizeModel(),
