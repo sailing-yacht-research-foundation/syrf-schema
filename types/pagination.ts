@@ -16,6 +16,7 @@ export interface PaginationRequest {
   filters: PaginationFilter[];
   customCountField?: string;
   forceDefaultSort?: boolean;
+  defaultSort: Array<[string | any, 'ASC' | 'DESC']>;
 }
 
 export interface PaginationResponse<T> {

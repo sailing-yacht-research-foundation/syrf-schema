@@ -525,7 +525,7 @@ exports.getEventEditors = async (id) => {
 
 exports.getUserEvents = async (paging, userId, { location } = {}) => {
   let includeDistance = null;
-  let customSort = paging.customSort;
+  let defaultSort = undefined;
 
   const sourceLocation = db.Sequelize.literal(`ST_MakePoint(:lon, :lat)`);
 
@@ -538,7 +538,7 @@ exports.getUserEvents = async (paging, userId, { location } = {}) => {
       ),
       'distance',
     ];
-    customSort = [
+    defaultSort = [
       db.Sequelize.literal(
         `CASE WHEN "CalendarEvent"."status" in ('${calendarEventStatus.ONGOING}','${calendarEventStatus.SCHEDULED}') THEN 0 ELSE 1 END ASC`,
       ),
@@ -548,7 +548,6 @@ exports.getUserEvents = async (paging, userId, { location } = {}) => {
         ),
         'ASC',
       ],
-      ...(customSort ?? []),
     ];
   }
 
@@ -573,7 +572,7 @@ exports.getUserEvents = async (paging, userId, { location } = {}) => {
       },
     ],
   };
-  let order = [];
+
   if (paging.query) {
     where[db.Op.or] = [
       {
@@ -647,14 +646,14 @@ exports.getUserEvents = async (paging, userId, { location } = {}) => {
         ...(location || {}),
       },
       where,
-      order,
+
       // Note: This line here is the key for this query to work without having to use aggregate subquery in attributes. For future reference so we don't waste time looking for ways to query with paging
       // Reference: https://stackoverflow.com/questions/43729254/sequelize-limit-and-offset-incorrect-placement-in-query
       subQuery: false,
     },
-    { ...paging, customSort },
+    { ...paging, defaultSort },
   );
-  const { count, rows, page, size } = result;
+  const { rows } = result;
 
   const formattedRows = [];
   rows.forEach((row) => {
@@ -670,10 +669,8 @@ exports.getUserEvents = async (paging, userId, { location } = {}) => {
   });
 
   return {
-    count,
+    ...result,
     rows: formattedRows,
-    page,
-    size,
   };
 };
 
