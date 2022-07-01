@@ -2,6 +2,7 @@ export interface PaginationFilter {
   field: string;
   value: any;
   opr: string;
+  isNested?: boolean;
 }
 
 export interface PaginationRequest {
@@ -14,6 +15,7 @@ export interface PaginationRequest {
   multiSort: Array<[string, 'ASC' | 'DESC']>;
   filters: PaginationFilter[];
   customCountField?: string;
+  forceDefaultSort?: boolean;
 }
 
 export interface PaginationResponse<T> {

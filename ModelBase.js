@@ -45,6 +45,7 @@ class ModelBase extends Model {
       filters = [],
       multiSort = [],
       customCountField = null,
+      forceDefaultSort = false,
     } = {},
   ) {
     customCountField = customCountField || `"${this.name}"."id"`;
@@ -72,6 +73,7 @@ class ModelBase extends Model {
 
       let condition = null;
       let filterValue = filter.value;
+      const field = filter.isNested ? `$${filter.field}$` : filter.field;
 
       switch (filter.opr) {
         case 'gte':
@@ -105,7 +107,7 @@ class ModelBase extends Model {
       }
       if (condition)
         conditions.push({
-          [filter.field]: {
+          [field]: {
             [condition]: filterValue,
           },
         });
@@ -145,7 +147,7 @@ class ModelBase extends Model {
       q: query,
       draw: draw,
       filters,
-      multiSort,
+      multiSort: forceDefaultSort ? [] : multiSort,
     };
   }
 }
