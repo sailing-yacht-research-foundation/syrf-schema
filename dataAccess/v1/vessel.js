@@ -135,7 +135,7 @@ exports.getById = async (id, { paranoid = true } = {}) => {
   return data;
 };
 
-exports.delete = async (id, transaction) => {
+exports.delete = async (id, { force = false } = {}, transaction) => {
   const data = await db.Vessel.findByPk(id, {
     include,
   });
@@ -145,6 +145,7 @@ exports.delete = async (id, transaction) => {
       where: {
         id: id,
       },
+      force,
       transaction,
     });
   }
@@ -652,4 +653,23 @@ exports.setAsDefaultVessel = async (vesselId, userId, transaction) => {
   );
 
   return result;
+};
+
+exports.getVesselParticipants = async (id) => {
+  const vps = await db.VesselParticipant.findAll({
+    where: {
+      vesselId: {
+        [db.Op.in]: Array.isArray(id) ? id : [id],
+      },
+    },
+    order: [['vesselId', 'asc']],
+    include: [
+      {
+        model: db.VesselParticipantGroup,
+        as: 'group',
+      },
+    ],
+  });
+
+  return vps.map((t) => t?.toJSON());
 };
