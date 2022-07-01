@@ -8,6 +8,7 @@ const createMockSequelizeModel = () => {
     destroy: jest.fn(),
     update: jest.fn(),
     count: jest.fn(),
+    create: jest.fn(),
     bulkCreate: jest.fn(),
   };
 };
@@ -27,6 +28,7 @@ jest.mock('./index', () => {
     CompetitionUnit: createMockSequelizeModel(),
     Participant: createMockSequelizeModel(),
     Vessel: createMockSequelizeModel(),
+    VesselLifeRaft: createMockSequelizeModel(),
     VesselParticipant: createMockSequelizeModel(),
     VesselParticipantCrew: createMockSequelizeModel(),
     VesselParticipantCrewTrackJson: createMockSequelizeModel(),
