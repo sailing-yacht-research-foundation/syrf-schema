@@ -18,6 +18,12 @@ const {
   removeAllEditors,
   removeAllGroupEditors,
   validateAdminsById,
+  removeUsersFromEditor,
+  removeGroupsFromEditor,
+  getUserVessels,
+  getBulkVesselEditors,
+  getUserDefaultVessel,
+  setAsDefaultVessel,
 } = require('../../dataAccess/v1/vessel');
 
 const db = require('../../index');
@@ -859,6 +865,395 @@ describe('Vessel DAL', () => {
         vessel: undefined,
       });
       expect(db.Vessel.findByPk).not.toHaveBeenCalled();
+    });
+  });
+
+  describe('removeUsersFromEditor', () => {
+    it('should remove users from VesselEditor table of a vessel', async () => {
+      const vesselId = uuid.v4();
+      const mockUsers = Array(3)
+        .fill()
+        .map(() => uuid.v4());
+      db.VesselEditor.destroy.mockResolvedValueOnce(mockUsers.length);
+
+      const result = await removeUsersFromEditor(
+        vesselId,
+        mockUsers,
+        mockTransaction,
+      );
+
+      expect(result).toEqual(mockUsers.length);
+      expect(db.VesselEditor.destroy).toHaveBeenCalledWith({
+        where: {
+          vesselId,
+          userProfileId: {
+            [db.Op.in]: mockUsers,
+          },
+        },
+        transaction: mockTransaction,
+      });
+    });
+  });
+
+  describe('removeGroupsFromEditor', () => {
+    it('should remove groups from VesselGroupEditor table of a vessel', async () => {
+      const vesselId = uuid.v4();
+      const mockGroups = Array(2)
+        .fill()
+        .map(() => uuid.v4());
+      db.VesselGroupEditor.destroy.mockResolvedValueOnce(mockGroups.length);
+
+      const result = await removeGroupsFromEditor(
+        vesselId,
+        mockGroups,
+        mockTransaction,
+      );
+
+      expect(result).toEqual(mockGroups.length);
+      expect(db.VesselGroupEditor.destroy).toHaveBeenCalledWith({
+        where: {
+          vesselId,
+          groupId: {
+            [db.Op.in]: mockGroups,
+          },
+        },
+        transaction: mockTransaction,
+      });
+    });
+  });
+
+  describe('getUserVessels', () => {
+    const userId = uuid.v4();
+    const paging = { page: 1, size: 10, query: '' };
+    const mockAllVessel = {
+      count: 3,
+      rows: [
+        {
+          id: uuid.v4(),
+          publicName: `Vessel of ${faker.name.findName()}`,
+          lengthInMeters: faker.datatype.number({ max: 100 }),
+          editors: [],
+          groupEditors: [],
+        },
+        {
+          id: uuid.v4(),
+          publicName: `Vessel of ${faker.name.findName()}`,
+          lengthInMeters: faker.datatype.number({ max: 100 }),
+          editors: [
+            {
+              id: userId,
+              name: faker.name.findName(),
+            },
+          ],
+          groupEditors: [],
+        },
+        {
+          id: uuid.v4(),
+          publicName: `Vessel of ${faker.name.findName()}`,
+          lengthInMeters: faker.datatype.number({ max: 100 }),
+          editors: [],
+          groupEditors: [
+            {
+              id: uuid.v4(),
+              groupName: `Group ${faker.name.findName()}`,
+              groupMember: [{ id: uuid.v4(), userId }],
+            },
+          ],
+        },
+      ],
+      page: 1,
+      size: 10,
+      sort: 'updatedAt',
+      srdir: 'DESC',
+      q: '',
+      filters: [],
+    };
+    const defaultWhereExpectation = {
+      [db.Op.and]: [
+        {
+          [db.Op.or]: [
+            { createdById: userId },
+            db.Sequelize.where(db.Sequelize.literal(`"editors"."id"`), {
+              [db.Op.ne]: null,
+            }),
+            db.Sequelize.where(
+              db.Sequelize.literal(`"groupEditors->groupMember"."userId"`),
+              {
+                [db.Op.ne]: null,
+              },
+            ),
+          ],
+        },
+      ],
+    };
+    const includeExpectation = expect.arrayContaining([
+      expect.objectContaining({
+        as: 'editors',
+        where: {
+          id: userId,
+        },
+        required: false,
+      }),
+      expect.objectContaining({
+        as: 'groupEditors',
+        include: [
+          expect.objectContaining({
+            as: 'groupMember',
+            where: {
+              userId,
+              status: groupMemberStatus.accepted,
+            },
+          }),
+        ],
+        required: false,
+      }),
+    ]);
+    beforeAll(() => {
+      db.Vessel.findAllWithPaging.mockResolvedValue({
+        ...mockAllVessel,
+        rows: mockAllVessel.rows.map((row) => {
+          return {
+            editors: row.editors,
+            groupEditors: row.groupEditors,
+            toJSON: () => row,
+          };
+        }),
+      });
+    });
+    afterAll(() => {
+      db.Vessel.findAllWithPaging.mockReset();
+    });
+    it('should query vessels that are either owned by the user, or user is editor or member of group that has editor access to the vessels', async () => {
+      const result = await getUserVessels(paging, userId);
+
+      expect(result).toEqual({
+        count: mockAllVessel.count,
+        rows: mockAllVessel.rows.map((row) => {
+          return { ...row, isEditor: expect.any(Boolean) };
+        }),
+        page: mockAllVessel.page,
+        size: mockAllVessel.size,
+      });
+      expect(db.Vessel.findAllWithPaging).toHaveBeenCalledWith(
+        {
+          include: includeExpectation,
+          replacements: {
+            userId,
+          },
+          where: defaultWhereExpectation,
+          subQuery: false,
+        },
+        paging,
+      );
+    });
+
+    it('should add iLike queries on publicName and model when provided with non-empty query', async () => {
+      const queriedPaging = { ...paging, query: 'test' };
+      const result = await getUserVessels(queriedPaging, userId);
+
+      expect(result).toEqual({
+        count: mockAllVessel.count,
+        rows: mockAllVessel.rows.map((row) => {
+          return { ...row, isEditor: expect.any(Boolean) };
+        }),
+        page: mockAllVessel.page,
+        size: mockAllVessel.size,
+      });
+      expect(db.Vessel.findAllWithPaging).toHaveBeenCalledWith(
+        {
+          include: includeExpectation,
+          replacements: {
+            userId,
+          },
+          where: {
+            ...defaultWhereExpectation,
+            [db.Op.or]: expect.arrayContaining([
+              {
+                publicName: {
+                  [db.Op.iLike]: `%${queriedPaging.query}%`,
+                },
+              },
+              {
+                model: {
+                  [db.Op.iLike]: `%${queriedPaging.query}%`,
+                },
+              },
+            ]),
+          },
+          subQuery: false,
+        },
+        queriedPaging,
+      );
+    });
+  });
+
+  describe('getBulkVesselEditors', () => {
+    it('should return editors and group editors of vessels', async () => {
+      const vesselIds = Array(3)
+        .fill()
+        .map(() => uuid.v4());
+      const vesselEditors = [
+        {
+          vesselId: vesselIds[0],
+          user: {
+            id: uuid.v4(),
+            name: faker.name.findName(),
+            avatar: faker.random.numeric(2),
+          },
+        },
+        {
+          vesselId: vesselIds[1],
+          user: {
+            id: uuid.v4(),
+            name: faker.name.findName(),
+            avatar: faker.random.numeric(2),
+          },
+        },
+        {
+          vesselId: vesselIds[0],
+          user: {
+            id: uuid.v4(),
+            name: faker.name.findName(),
+            avatar: faker.random.numeric(2),
+          },
+        },
+      ];
+      const groupEditors = [
+        {
+          vesselId: vesselIds[0],
+          group: {
+            id: uuid.v4(),
+            groupName: faker.name.findName(),
+            groupImage: faker.internet.url(),
+          },
+        },
+        {
+          vesselId: vesselIds[1],
+          group: {
+            id: uuid.v4(),
+            groupName: faker.name.findName(),
+            groupImage: faker.internet.url(),
+          },
+        },
+        {
+          vesselId: vesselIds[2],
+          group: {
+            id: uuid.v4(),
+            groupName: faker.name.findName(),
+            groupImage: faker.internet.url(),
+          },
+        },
+      ];
+      db.VesselEditor.findAll.mockResolvedValueOnce(vesselEditors);
+      db.VesselGroupEditor.findAll.mockResolvedValueOnce(groupEditors);
+
+      const result = await getBulkVesselEditors(vesselIds);
+
+      expect(result).toEqual(
+        expect.objectContaining({
+          [vesselIds[0]]: {
+            editors: [vesselEditors[0].user, vesselEditors[2].user],
+            groupEditors: [groupEditors[0].group],
+          },
+          [vesselIds[1]]: {
+            editors: [vesselEditors[1].user],
+            groupEditors: [groupEditors[1].group],
+          },
+          [vesselIds[2]]: {
+            editors: [],
+            groupEditors: [groupEditors[2].group],
+          },
+        }),
+      );
+      expect(db.VesselEditor.findAll).toHaveBeenCalledWith({
+        where: {
+          vesselId: {
+            [db.Op.in]: vesselIds,
+          },
+        },
+        include: [
+          expect.objectContaining({
+            as: 'user',
+            attributes: expect.arrayContaining(['id', 'name', 'avatar']),
+          }),
+        ],
+      });
+    });
+  });
+
+  describe('getUserDefaultVessel', () => {
+    it('should return vessel of user that has isDefaultVessel value set to true', async () => {
+      const userId = uuid.v4();
+      const mockVessel = {
+        id: uuid.v4(),
+        publicName: `Vessel of ${faker.name.findName()}`,
+        lengthInMeters: faker.datatype.number({ max: 100 }),
+        createdById: userId,
+        isDefaultVessel: true,
+      };
+      db.Vessel.findOne.mockResolvedValueOnce({ toJSON: () => mockVessel });
+
+      const result = await getUserDefaultVessel(userId);
+
+      expect(result).toEqual(mockVessel);
+      expect(db.Vessel.findOne).toHaveBeenCalledWith({
+        where: {
+          createdById: userId,
+          isDefaultVessel: true,
+        },
+        include: defaultIncludeExpectation,
+      });
+    });
+  });
+
+  describe('setAsDefaultVessel', () => {
+    it('should set isDefaultVessel of all user vessel to false, and update one selected vessel to true', async () => {
+      const userId = uuid.v4();
+      const vesselId = uuid.v4();
+      db.Vessel.update.mockResolvedValueOnce([10]);
+      db.Vessel.update.mockResolvedValueOnce([1]);
+
+      const result = await setAsDefaultVessel(
+        vesselId,
+        userId,
+        mockTransaction,
+      );
+
+      expect(result).toEqual(1);
+      expect(db.Vessel.update).toHaveBeenCalledWith(
+        {
+          isDefaultVessel: false,
+        },
+        {
+          where: {
+            createdById: userId,
+            isDefaultVessel: true,
+          },
+          transaction: mockTransaction,
+        },
+      );
+      expect(db.Vessel.update).toHaveBeenLastCalledWith(
+        {
+          isDefaultVessel: true,
+        },
+        {
+          where: {
+            id: vesselId,
+          },
+          transaction: mockTransaction,
+        },
+      );
+    });
+
+    it('should do nothing and return null when not provided with either vesselId or userId', async () => {
+      const result = await setAsDefaultVessel(
+        uuid.v4(),
+        undefined,
+        mockTransaction,
+      );
+
+      expect(result).toEqual(null);
+      expect(db.Vessel.update).not.toHaveBeenCalled();
     });
   });
 });

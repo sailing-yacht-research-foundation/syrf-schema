@@ -467,11 +467,11 @@ exports.getUserVessels = async (paging, userId) => {
       {
         [db.Op.or]: [
           { createdById: userId },
-          db.sequelize.where(db.sequelize.literal(`"editors"."id"`), {
+          db.Sequelize.where(db.Sequelize.literal(`"editors"."id"`), {
             [db.Op.ne]: null,
           }),
-          db.sequelize.where(
-            db.sequelize.literal(`"groupEditors->groupMember"."userId"`),
+          db.Sequelize.where(
+            db.Sequelize.literal(`"groupEditors->groupMember"."userId"`),
             {
               [db.Op.ne]: null,
             },
@@ -480,7 +480,6 @@ exports.getUserVessels = async (paging, userId) => {
       },
     ],
   };
-  let order = [];
   if (paging.query) {
     where[db.Op.or] = [
       {
@@ -536,7 +535,6 @@ exports.getUserVessels = async (paging, userId) => {
         userId,
       },
       where,
-      order,
       subQuery: false,
     },
     paging,
