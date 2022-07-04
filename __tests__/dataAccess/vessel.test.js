@@ -347,7 +347,7 @@ describe('Vessel DAL', () => {
       db.Vessel.destroy.mockReset();
     });
 
-    it('should fetch detail if provided with non-array id, call destroy on VesselParticipant, and other children tables', async () => {
+    it('should fetch detail and call destroy on vessel table', async () => {
       const result = await deleteVessel(mockVessel.id, mockTransaction);
 
       expect(result).toEqual(mockVessel);
