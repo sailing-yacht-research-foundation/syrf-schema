@@ -112,7 +112,7 @@ exports.update = async (
   const updateParams = Object.assign(
     {},
     ivsChannelName ? { ivsChannelName } : {},
-    privateStream ? { privateStream } : {},
+    privateStream !== undefined ? { privateStream } : {},
     isLive !== undefined ? { isLive } : {},
     latencyMode ? { latencyMode } : {},
     ivsType ? { ivsType } : {},
