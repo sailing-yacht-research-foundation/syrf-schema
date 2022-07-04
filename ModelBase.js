@@ -45,6 +45,7 @@ class ModelBase extends Model {
       filters = [],
       multiSort = [],
       customCountField = null,
+      defaultSort = null,
     } = {},
   ) {
     customCountField = customCountField || `"${this.name}"."id"`;
@@ -53,12 +54,10 @@ class ModelBase extends Model {
     let sortQuery = sort;
     let srdirQuery = srdir;
 
-    if (!sortQuery) sortQuery = 'updatedAt'; //default sort by latest update
-
     if (srdirQuery) {
       srdirQuery = srdirQuery < 0 ? 'DESC' : 'ASC';
     } else {
-      srdirQuery = 'DESC';
+      srdirQuery = 'ASC';
     }
 
     let conditions = [];
@@ -72,6 +71,7 @@ class ModelBase extends Model {
 
       let condition = null;
       let filterValue = filter.value;
+      const field = filter.isNested ? `$${filter.field}$` : filter.field;
 
       switch (filter.opr) {
         case 'gte':
@@ -105,22 +105,39 @@ class ModelBase extends Model {
       }
       if (condition)
         conditions.push({
-          [filter.field]: {
+          [field]: {
             [condition]: filterValue,
           },
         });
     });
 
-    let paginationSorts = [[sortQuery, srdirQuery]];
-    if (multiSort?.length > 0) paginationSorts = multiSort;
+    let order = null;
+    let defaultSortUsed = false;
+    switch (true) {
+      case Array.isArray(customSort):
+        order = customSort;
+        break;
+      case multiSort?.length > 0:
+        order = multiSort;
+        break;
+      case !!sortQuery:
+        order = [[sortQuery, srdirQuery]];
+        break;
+      case defaultSort?.length > 0:
+        order = defaultSort;
+        defaultSortUsed = true;
+        break;
+      default:
+        order = [['updatedAt', 'DESC']];
+        defaultSortUsed = true;
+        break;
+    }
 
     let params = {
       limit: pagingSize,
       offset: pagingSize * (pageQuery - 1),
       ...attribute,
-      order: Array.isArray(customSort)
-        ? [...customSort, ...paginationSorts]
-        : paginationSorts,
+      order,
     };
 
     if (filters.length > 0) params.where = { [Op.and]: conditions };
@@ -140,8 +157,8 @@ class ModelBase extends Model {
       rows: result,
       page,
       size: pagingSize,
-      sort: sortQuery,
-      srdir: srdirQuery,
+      sort: defaultSortUsed ? 'default' : sortQuery,
+      srdir: defaultSortUsed ? null : srdirQuery,
       q: query,
       draw: draw,
       filters,

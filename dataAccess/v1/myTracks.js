@@ -27,6 +27,7 @@ exports.getMyTracks = async (userId, isPrivate, pagination) => {
     calendarEvent.where = { isPrivate };
   }
 
+  const useDefaultSort = pagination.multiSort.length < 1 && !pagination.sort;
   const result = await db.TrackHistory.findAllWithPaging(
     {
       include: [
@@ -91,15 +92,12 @@ exports.getMyTracks = async (userId, isPrivate, pagination) => {
     },
     {
       ...pagination,
-      multiSort:
-        pagination.multiSort.length < 1 && !pagination.sort
-          ? [
-              db.Sequelize.literal(
-                `CASE WHEN event.source != '${dataSources.SYRF}' THEN "TrackHistory"."createdAt" ELSE "trackJson"."endTime" END DESC NULLS FIRST`,
-              ),
-              ['trackJson', 'startTime', 'DESC NULLS LAST'],
-            ]
-          : pagination.multiSort,
+      defaultSort: [
+        db.Sequelize.literal(
+          `CASE WHEN event.source != '${dataSources.SYRF}' THEN "TrackHistory"."createdAt" ELSE "trackJson"."endTime" END DESC NULLS FIRST`,
+        ),
+        ['trackJson', 'startTime', 'DESC NULLS LAST'],
+      ],
       customCountField: `"trackJson"."id"`,
     },
   );
@@ -340,15 +338,10 @@ exports.getActiveTrackByUserId = async (userId, paging) => {
     },
     {
       ...paging,
-      multiSort:
-        !(paging.sort ?? null) &&
-        paging.multiSort.length < 1 &&
-        !(paging.customSort ?? null)
-          ? [
-              ['endTime', 'DESC NULLS FIRST'],
-              ['startTime', 'DESC NULLS LAST'],
-            ]
-          : paging.multiSort,
+      defaultSort: [
+        ['endTime', 'DESC NULLS FIRST'],
+        ['startTime', 'DESC NULLS LAST'],
+      ],
     },
   );
 

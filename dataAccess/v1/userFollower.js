@@ -238,7 +238,7 @@ exports.getTopCountryUser = async (paging, { country, userId }) => {
     },
     {
       ...paging,
-      customSort: [[db.sequelize.literal('"followerCount"'), 'DESC']],
+      defaultSort: [[db.sequelize.literal('"followerCount"'), 'DESC']],
     },
   );
   return result;
@@ -284,7 +284,7 @@ exports.getTopVelocityUser = async (paging, { country, userId }) => {
     },
     {
       ...paging,
-      customSort: [[db.sequelize.literal('"followerGained"'), 'DESC']],
+      defaultSort: [[db.sequelize.literal('"followerGained"'), 'DESC']],
     },
   );
   return result;

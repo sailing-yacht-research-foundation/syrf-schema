@@ -187,7 +187,7 @@ exports.getAll = async (paging, params) => {
         },
       ],
     },
-    { ...paging, customSort: order },
+    { ...paging, defaultSort: order },
   );
   return result;
 };
