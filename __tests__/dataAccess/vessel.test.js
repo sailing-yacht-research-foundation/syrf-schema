@@ -24,6 +24,7 @@ const {
   getBulkVesselEditors,
   getUserDefaultVessel,
   setAsDefaultVessel,
+  getVesselParticipants,
 } = require('../../dataAccess/v1/vessel');
 
 const db = require('../../index');
@@ -348,7 +349,11 @@ describe('Vessel DAL', () => {
     });
 
     it('should fetch detail and call destroy on vessel table', async () => {
-      const result = await deleteVessel(mockVessel.id, mockTransaction);
+      const result = await deleteVessel(
+        mockVessel.id,
+        { force: true },
+        mockTransaction,
+      );
 
       expect(result).toEqual(mockVessel);
       expect(db.Vessel.destroy).toHaveBeenCalledTimes(1);
@@ -356,6 +361,25 @@ describe('Vessel DAL', () => {
         where: {
           id: mockVessel.id,
         },
+        force: true,
+        transaction: mockTransaction,
+      });
+    });
+
+    it('should not force delete when id not provided with the option', async () => {
+      const result = await deleteVessel(
+        mockVessel.id,
+        undefined,
+        mockTransaction,
+      );
+
+      expect(result).toEqual(mockVessel);
+      expect(db.Vessel.destroy).toHaveBeenCalledTimes(1);
+      expect(db.Vessel.destroy).toHaveBeenCalledWith({
+        where: {
+          id: mockVessel.id,
+        },
+        force: false,
         transaction: mockTransaction,
       });
     });
@@ -1254,6 +1278,67 @@ describe('Vessel DAL', () => {
 
       expect(result).toEqual(null);
       expect(db.Vessel.update).not.toHaveBeenCalled();
+    });
+  });
+
+  describe('getVesselParticipants', () => {
+    const vesselIds = Array(4)
+      .fill()
+      .map(() => uuid.v4());
+    const mockVPs = vesselIds.map((vesselId) => {
+      return {
+        id: uuid.v4(),
+        vesselId,
+      };
+    });
+    it('should return vessel participants of vessel', async () => {
+      db.VesselParticipant.findAll.mockResolvedValueOnce(
+        mockVPs.map((row) => {
+          return { toJSON: () => row };
+        }),
+      );
+
+      const result = await getVesselParticipants(vesselIds);
+
+      expect(result).toEqual(mockVPs);
+      expect(db.VesselParticipant.findAll).toHaveBeenCalledWith({
+        where: {
+          vesselId: {
+            [db.Op.in]: vesselIds,
+          },
+        },
+        order: [['vesselId', 'asc']],
+        include: [
+          expect.objectContaining({
+            as: 'group',
+          }),
+        ],
+      });
+    });
+    it('should convert input to array and findAll with single data array', async () => {
+      const expectedVP = mockVPs.filter((row) => row.vesselId === vesselIds[0]);
+      db.VesselParticipant.findAll.mockResolvedValueOnce(
+        expectedVP.map((row) => {
+          return { toJSON: () => row };
+        }),
+      );
+
+      const result = await getVesselParticipants(vesselIds[0]);
+
+      expect(result).toEqual(expectedVP);
+      expect(db.VesselParticipant.findAll).toHaveBeenCalledWith({
+        where: {
+          vesselId: {
+            [db.Op.in]: [vesselIds[0]],
+          },
+        },
+        order: [['vesselId', 'asc']],
+        include: [
+          expect.objectContaining({
+            as: 'group',
+          }),
+        ],
+      });
     });
   });
 });
