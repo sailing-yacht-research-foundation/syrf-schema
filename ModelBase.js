@@ -68,7 +68,10 @@ class ModelBase extends Model {
 
     filters.forEach((filter) => {
       if (!filter.field) return;
-
+      if (filter.opr === 'custom') {
+        conditions.push(filter.query);
+        return;
+      }
       let condition = null;
       let filterValue = filter.value;
       const field = filter.isNested ? `$${filter.field}$` : filter.field;
