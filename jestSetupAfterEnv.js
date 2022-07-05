@@ -28,6 +28,8 @@ jest.mock('./index', () => {
     // Below should be each models mock, simpler to do it this way then to re-create mocked models with sequelize mock
     CompetitionUnit: createMockSequelizeModel(),
     Participant: createMockSequelizeModel(),
+    UserProfile: createMockSequelizeModel(),
+    UserSetting: createMockSequelizeModel(),
     UserShareableInfo: createMockSequelizeModel(),
     UserStream: createMockSequelizeModel(),
     Vessel: createMockSequelizeModel(),
