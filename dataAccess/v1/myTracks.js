@@ -1,6 +1,7 @@
 const uuid = require('uuid');
 const db = require('../../index');
 const { dataSources } = require('../../enums');
+const { MY_TRACK_NAME_SEPARATOR } = require('../../constants');
 
 const excludeMeta = ['ownerId', 'createdById', 'updatedById', 'developerId'];
 
@@ -43,8 +44,9 @@ exports.getMyTracks = async (userId, isPrivate, pagination) => {
         nameFilter.opr === 'eq' ? nameFilter.value : `%${nameFilter.value}%`,
     };
 
+    // the separator used to join event name and competition unit name since webapp joins them with the ' - ' separator
     nameFilter.query = db.Sequelize.literal(
-      `CONCAT("event"."name",' - ',"competitionUnit"."name") ${dbOp} $filter_value`,
+      `CONCAT("event"."name",'${MY_TRACK_NAME_SEPARATOR}',"competitionUnit"."name") ${dbOp} $filter_value`,
     );
 
     nameFilter.isCustom = true;
@@ -138,7 +140,7 @@ exports.getMyTracks = async (userId, isPrivate, pagination) => {
           t.event?.name?.toLowerCase().trim()
       )
         name.push(t.competitionUnit?.name);
-      return { name: name.join(' - '), ...t };
+      return { name: name.join(MY_TRACK_NAME_SEPARATOR), ...t };
     }),
   };
 };
