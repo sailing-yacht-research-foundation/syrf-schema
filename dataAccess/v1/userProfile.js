@@ -1,6 +1,7 @@
 const { userSignupType } = require('../../enums');
 const db = require('../../index');
 const { Op } = require('../../index');
+
 exports.upsert = async (userProfile = {}, transaction) => {
   const [result] = await db.UserProfile.upsert(
     {
@@ -87,7 +88,6 @@ exports.delete = async (sub, transaction) => {
 
   if (data) {
     await db.UserProfile.destroy({
-      attributes: ['id', 'email', 'name'],
       where: {
         id: sub,
       },
@@ -259,5 +259,5 @@ exports.claimAnonymousUser = async (
     ),
   ]);
 
-  return result.reduce((total, t) => total + t[0], 0);
+  return result.reduce((total, t) => total + (Array.isArray(t) ? t[0] : t), 0);
 };
