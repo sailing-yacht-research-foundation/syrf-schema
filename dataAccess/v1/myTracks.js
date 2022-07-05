@@ -4,6 +4,13 @@ const { dataSources } = require('../../enums');
 
 const excludeMeta = ['ownerId', 'createdById', 'updatedById', 'developerId'];
 
+/**
+ *
+ * @param {String} userId
+ * @param {Boolean} isPrivate
+ * @param {import('../../types/pagination').PaginationRequest} pagination
+ * @returns
+ */
 exports.getMyTracks = async (userId, isPrivate, pagination) => {
   let calendarEvent = {
     model: db.CalendarEvent,
@@ -27,7 +34,28 @@ exports.getMyTracks = async (userId, isPrivate, pagination) => {
     calendarEvent.where = { isPrivate };
   }
 
-  const useDefaultSort = pagination.multiSort.length < 1 && !pagination.sort;
+  const nameFilter = pagination.filters.find((t) => t.field === 'name');
+  if (nameFilter) {
+    const dbOp = nameFilter.opr === 'eq' ? db.Op.eq : db.Op.iLike;
+
+    const filters = nameFilter.value
+      .split(' - ')
+      .map((t) =>
+        ['$event.name$', '$competitionUnit.name$'].map((f) => ({
+          [f]: {
+            [dbOp]: `%${t}%`,
+          },
+        })),
+      )
+      .flat();
+
+    nameFilter.query = {
+      [db.Op.or]: filters,
+    };
+
+    nameFilter.opr = 'custom';
+  }
+
   const result = await db.TrackHistory.findAllWithPaging(
     {
       include: [
@@ -92,6 +120,7 @@ exports.getMyTracks = async (userId, isPrivate, pagination) => {
     },
     {
       ...pagination,
+
       defaultSort: [
         db.Sequelize.literal(
           `CASE WHEN event.source != '${dataSources.SYRF}' THEN "TrackHistory"."createdAt" ELSE "trackJson"."endTime" END DESC NULLS FIRST`,

@@ -1,8 +1,9 @@
 export interface PaginationFilter {
   field: string;
-  value: any;
+  value: string | number | Date;
   opr: string;
   isNested?: boolean;
+  query?: object;
 }
 
 export interface PaginationRequest {
