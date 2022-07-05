@@ -4,6 +4,8 @@ export interface PaginationFilter {
   opr: string;
   isNested?: boolean;
   query?: object;
+  order?: ([any, any] | any)[];
+  isCustom?: boolean;
 }
 
 export interface PaginationRequest {

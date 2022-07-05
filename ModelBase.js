@@ -54,6 +54,8 @@ class ModelBase extends Model {
     let sortQuery = sort;
     let srdirQuery = srdir;
 
+    const filtersRelatedSort = [];
+
     if (srdirQuery) {
       srdirQuery = srdirQuery < 0 ? 'DESC' : 'ASC';
     } else {
@@ -68,10 +70,14 @@ class ModelBase extends Model {
 
     filters.forEach((filter) => {
       if (!filter.field) return;
-      if (filter.opr === 'custom') {
+      if (filter.isCustom) {
         conditions.push(filter.query);
+        if (filter.order?.length > 0) {
+          filtersRelatedSort.push(...filter.order);
+        }
         return;
       }
+
       let condition = null;
       let filterValue = filter.value;
       const field = filter.isNested ? `$${filter.field}$` : filter.field;
@@ -140,7 +146,7 @@ class ModelBase extends Model {
       limit: pagingSize,
       offset: pagingSize * (pageQuery - 1),
       ...attribute,
-      order,
+      order: [...filtersRelatedSort, ...order],
     };
 
     if (filters.length > 0) params.where = { [Op.and]: conditions };
@@ -164,7 +170,12 @@ class ModelBase extends Model {
       srdir: defaultSortUsed ? null : srdirQuery,
       q: query,
       draw: draw,
-      filters,
+      filters: filters.map((t) => ({
+        ...t,
+        query: undefined,
+        order: undefined,
+        isCustom: undefined,
+      })),
       multiSort,
     };
   }
