@@ -1,6 +1,7 @@
 const uuid = require('uuid');
 const db = require('../../index');
 const { dataSources } = require('../../enums');
+const { MY_TRACK_NAME_SEPARATOR } = require('../../constants');
 
 const excludeMeta = ['ownerId', 'createdById', 'updatedById', 'developerId'];
 
@@ -33,31 +34,27 @@ exports.getMyTracks = async (userId, isPrivate, pagination) => {
   if (isPrivate != null) {
     calendarEvent.where = { isPrivate };
   }
-
+  let replacements = undefined;
   const nameFilter = pagination.filters.find((t) => t.field === 'name');
   if (nameFilter) {
-    const dbOp = nameFilter.opr === 'eq' ? db.Op.eq : db.Op.iLike;
+    const dbOp = nameFilter.opr === 'eq' ? '=' : 'iLike';
 
-    const filters = nameFilter.value
-      .split(' - ')
-      .map((t) =>
-        ['$event.name$', '$competitionUnit.name$'].map((f) => ({
-          [f]: {
-            [dbOp]: `%${t}%`,
-          },
-        })),
-      )
-      .flat();
-
-    nameFilter.query = {
-      [db.Op.or]: filters,
+    replacements = {
+      filter_value:
+        nameFilter.opr === 'eq' ? nameFilter.value : `%${nameFilter.value}%`,
     };
 
-    nameFilter.opr = 'custom';
+    // the separator used to join event name and competition unit name since webapp joins them with the ' - ' separator
+    nameFilter.query = db.Sequelize.literal(
+      `CONCAT("event"."name",'${MY_TRACK_NAME_SEPARATOR}',"competitionUnit"."name") ${dbOp} $filter_value`,
+    );
+
+    nameFilter.isCustom = true;
   }
 
   const result = await db.TrackHistory.findAllWithPaging(
     {
+      bind: replacements,
       include: [
         calendarEvent,
         {
@@ -120,10 +117,9 @@ exports.getMyTracks = async (userId, isPrivate, pagination) => {
     },
     {
       ...pagination,
-
       defaultSort: [
         db.Sequelize.literal(
-          `CASE WHEN event.source != '${dataSources.SYRF}' THEN "TrackHistory"."createdAt" ELSE "trackJson"."endTime" END DESC NULLS FIRST`,
+          `CASE WHEN "event"."source" != '${dataSources.SYRF}' THEN "TrackHistory"."createdAt" ELSE "trackJson"."endTime" END DESC NULLS FIRST`,
         ),
         ['trackJson', 'startTime', 'DESC NULLS LAST'],
       ],
@@ -131,7 +127,22 @@ exports.getMyTracks = async (userId, isPrivate, pagination) => {
     },
   );
 
-  return result;
+  return {
+    ...result,
+    rows: result.rows.map((t) => {
+      t = t.toJSON();
+      let name = [];
+
+      if (t.event?.name) name.push(t.event?.name);
+      if (
+        t.competitionUnit?.name &&
+        t.competitionUnit?.name?.toLowerCase().trim() !==
+          t.event?.name?.toLowerCase().trim()
+      )
+        name.push(t.competitionUnit?.name);
+      return { name: name.join(MY_TRACK_NAME_SEPARATOR), ...t };
+    }),
+  };
 };
 
 exports.getById = async (id) => {
