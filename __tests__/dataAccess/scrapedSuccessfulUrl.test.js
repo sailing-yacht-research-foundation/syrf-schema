@@ -4,7 +4,6 @@ const uuid = require('uuid');
 const {
   create,
   getAll,
-  getByUrl,
   deleteByOriginalId,
   deleteByUrl,
 } = require('../../dataAccess/v1/scrapedSuccessfulUrl');
@@ -63,22 +62,6 @@ describe('Scraped Successful URL DAL', () => {
         raw: true,
         where: {
           source,
-        },
-      });
-    });
-  });
-
-  describe('getByUrl', () => {
-    it('should call findAll on ScrapedSuccessfulUrl table', async () => {
-      db.ScrapedSuccessfulUrl.findAll.mockResolvedValueOnce([mockSuccessUrl]);
-      const result = await getByUrl(mockSuccessUrl.url);
-
-      expect(result).toEqual([mockSuccessUrl]);
-      expect(db.ScrapedSuccessfulUrl.findAll).toHaveBeenCalledWith({
-        attributes: expect.arrayContaining(['url', 'originalId']),
-        raw: true,
-        where: {
-          url: mockSuccessUrl.url,
         },
       });
     });

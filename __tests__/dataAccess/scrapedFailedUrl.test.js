@@ -1,11 +1,7 @@
 const { faker } = require('@faker-js/faker');
 const uuid = require('uuid');
 
-const {
-  create,
-  getAll,
-  getByUrl,
-} = require('../../dataAccess/v1/scrapedFailedUrl');
+const { create, getAll } = require('../../dataAccess/v1/scrapedFailedUrl');
 
 const db = require('../../index');
 
@@ -55,22 +51,6 @@ describe('Scraped Failed URL DAL', () => {
         raw: true,
         where: {
           source,
-        },
-      });
-    });
-  });
-
-  describe('getByUrl', () => {
-    it('should call findAll on ScrapedFailedUrl table', async () => {
-      db.ScrapedFailedUrl.findAll.mockResolvedValueOnce([mockFailedUrl]);
-      const result = await getByUrl(mockFailedUrl.url);
-
-      expect(result).toEqual([mockFailedUrl]);
-      expect(db.ScrapedFailedUrl.findAll).toHaveBeenCalledWith({
-        attributes: expect.arrayContaining(['url', 'error']),
-        raw: true,
-        where: {
-          url: mockFailedUrl.url,
         },
       });
     });

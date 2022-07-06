@@ -18,16 +18,6 @@ exports.getAll = async (source) => {
   });
 };
 
-exports.getByUrl = async (url) => {
-  return await db.ScrapedSuccessfulUrl.findAll({
-    attributes: ['url', 'originalId'],
-    raw: true,
-    where: {
-      url,
-    },
-  });
-};
-
 exports.deleteByOriginalId = async ({ source, originalId }, transaction) => {
   await db.ScrapedSuccessfulUrl.destroy({
     where: {
