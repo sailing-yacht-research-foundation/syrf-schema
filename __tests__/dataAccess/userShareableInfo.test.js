@@ -64,6 +64,29 @@ describe('User Shareable Info', () => {
         transaction: mockTransaction,
       });
     });
+    it('should not throw error even if not provided with anything', async () => {
+      const userId = uuid.v4();
+      const data = {
+        userId,
+        emergencyContactName: faker.name.findName(),
+        emergencyContactPhone: faker.random.numeric(12),
+        emergencyContactEmail: faker.internet.email(),
+      };
+      db.UserShareableInfo.update.mockResolvedValueOnce([1, data]);
+
+      const result = await update(userId, undefined);
+
+      expect(result).toEqual([1, data]);
+      expect(db.UserShareableInfo.update).toHaveBeenCalledWith(
+        {},
+        {
+          where: {
+            userId,
+          },
+          undefined,
+        },
+      );
+    });
   });
 
   describe('getById', () => {
