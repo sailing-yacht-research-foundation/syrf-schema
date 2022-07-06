@@ -216,7 +216,7 @@ exports.getTopCountryUser = async (paging, { country, userId }) => {
         'isPrivate',
         'country',
         [
-          db.sequelize.literal(
+          db.Sequelize.literal(
             `(SELECT COUNT(*) FROM "UserFollowers" AS "folDB" WHERE "UserProfile"."id" = "folDB"."userId" AND "folDB"."status" = '${followerStatus.accepted}')`,
           ),
           'followerCount',
@@ -238,7 +238,7 @@ exports.getTopCountryUser = async (paging, { country, userId }) => {
     },
     {
       ...paging,
-      defaultSort: [[db.sequelize.literal('"followerCount"'), 'DESC']],
+      defaultSort: [[db.Sequelize.literal('"followerCount"'), 'DESC']],
     },
   );
   return result;
@@ -260,7 +260,7 @@ exports.getTopVelocityUser = async (paging, { country, userId }) => {
         'isPrivate',
         'country',
         [
-          db.sequelize.literal(
+          db.Sequelize.literal(
             `(SELECT COUNT(*) FROM "UserFollowers" AS "folDB" WHERE "UserProfile"."id" = "folDB"."userId" AND "folDB"."status" = '${
               followerStatus.accepted
             }' AND "folDB"."updatedAt" >= '${checkDate.toISOString()}')`,
@@ -284,7 +284,7 @@ exports.getTopVelocityUser = async (paging, { country, userId }) => {
     },
     {
       ...paging,
-      defaultSort: [[db.sequelize.literal('"followerGained"'), 'DESC']],
+      defaultSort: [[db.Sequelize.literal('"followerGained"'), 'DESC']],
     },
   );
   return result;

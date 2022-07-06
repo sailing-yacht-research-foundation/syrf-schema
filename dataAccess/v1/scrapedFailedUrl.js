@@ -15,14 +15,4 @@ exports.getAll = async (source) => {
       source,
     },
   });
-}
-
-exports.getByUrl = async (url) => {
-  return await db.ScrapedFailedUrl.findAll({
-    attributes: ['url', 'originalId'],
-    raw: true,
-    where: {
-      url,
-    },
-  });
-}
+};
