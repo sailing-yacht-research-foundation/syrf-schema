@@ -1,4 +1,4 @@
-const db = require('../../models');
+const db = require('../../index');
 
 var currentStreamSet = new Map();
 
@@ -110,7 +110,7 @@ exports.validateParticipantByCUId = async (userId, competitionUnitId) => {
 };
 
 exports.setStartedStreamFlag = async (crewId) => {
-  db.VesselParticipantCrew.update(
+  await db.VesselParticipantCrew.update(
     { startedStream: true },
     {
       where: {

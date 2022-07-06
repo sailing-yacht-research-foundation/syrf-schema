@@ -15,14 +15,16 @@ exports.getAll = async (source) => {
       source,
     },
   });
-}
+};
 
 exports.getByUrl = async (url) => {
   return await db.ScrapedFailedUrl.findAll({
-    attributes: ['url', 'originalId'],
+    // Can't find where this is used, but there's no originalId column, typo?
+    // Changing to error
+    attributes: ['url', 'error'],
     raw: true,
     where: {
       url,
     },
   });
-}
+};
