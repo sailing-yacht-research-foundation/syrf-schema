@@ -12,7 +12,7 @@ const {
 
 const db = require('../../index');
 
-describe('Race Data DAL', () => {
+describe('Participation Charge DAL', () => {
   const mockParticipationCharge = {
     id: uuid.v4(),
     userId: uuid.v4(),

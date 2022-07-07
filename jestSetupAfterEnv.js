@@ -38,6 +38,7 @@ jest.mock('./index', () => {
     CourseUnsequencedUntimedGeometry: createMockSequelizeModel(),
     MarkTracker: createMockSequelizeModel(),
     Participant: createMockSequelizeModel(),
+    ParticipantWaiverAgreement: createMockSequelizeModel(),
     ParticipationCharge: createMockSequelizeModel(),
     ScrapedFailedUrl: createMockSequelizeModel(),
     ScrapedSuccessfulUrl: createMockSequelizeModel(),
