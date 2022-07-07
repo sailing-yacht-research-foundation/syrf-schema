@@ -17,7 +17,7 @@ exports.getNotifications = async (userId, pagination) => {
         userId,
       },
     },
-    { ...pagination, sort: 'createdAt' },
+    { ...pagination, defaultSort: [['createdAt', 'DESC']] },
   );
 
   return result;
