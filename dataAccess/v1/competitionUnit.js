@@ -396,9 +396,12 @@ exports.getTracksCountByCompetition = async (competitionIds) => {
 };
 
 exports.update = async (id, data, transaction) => {
+  const ids = Array.isArray(id) ? id : [id];
   const [updateCount, updatedData] = await db.CompetitionUnit.update(data, {
     where: {
-      id,
+      id: {
+        [db.Op.in]: ids,
+      },
     },
     returning: true,
     transaction,
