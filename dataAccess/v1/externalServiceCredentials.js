@@ -59,7 +59,7 @@ exports.insert = async (
   return result;
 };
 
-exports.update = async (id, data = {}, transaction) => {
+exports.update = async (id, data, transaction) => {
   const [updateCount] = await db.ExternalServiceCredential.update(data, {
     where: {
       id,
