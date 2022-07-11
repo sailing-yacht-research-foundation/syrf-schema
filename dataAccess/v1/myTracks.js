@@ -53,7 +53,7 @@ exports.getMyTracks = async (userId, isPrivate, pagination) => {
     nameFilter.isCustom = true;
   }
 
-  let nameMultiSortIndex = pagination.multiSort.findIndex(
+  let nameMultiSortIndex = pagination.multiSort?.findIndex(
     (t) => t[0] === 'name',
   );
   if (nameMultiSortIndex > -1) {
