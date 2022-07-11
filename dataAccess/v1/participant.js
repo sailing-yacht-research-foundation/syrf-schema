@@ -274,7 +274,7 @@ exports.getEvent = async (id) => {
   return result?.toJSON();
 };
 
-const getRacesQuery = async (participantId) => {
+exports.getRacesQuery = async (participantId) => {
   const participant = await db.Participant.findByPk(participantId);
   if (!participant)
     throw new ValidationError(
@@ -344,7 +344,7 @@ const getRacesQuery = async (participantId) => {
 
 exports.getRaces = async (id, pagination) => {
   const result = await db.CompetitionUnit.findAllWithPaging(
-    await getRacesQuery(id),
+    await this.getRacesQuery(id),
     pagination,
   );
 
@@ -352,7 +352,7 @@ exports.getRaces = async (id, pagination) => {
 };
 
 exports.getRacesWithoutPaging = async (id) => {
-  const result = await db.CompetitionUnit.findAll(await getRacesQuery(id));
+  const result = await db.CompetitionUnit.findAll(await this.getRacesQuery(id));
 
   return result?.map((t) => t.toJSON());
 };

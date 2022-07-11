@@ -109,7 +109,7 @@ exports.getMyTracks = async (userId, isPrivate, pagination) => {
           ],
           where: {
             competitionUnitId: {
-              [db.Op.eq]: db.sequelize.col('TrackHistory.competitionUnitId'),
+              [db.Op.eq]: db.Sequelize.col('TrackHistory.competitionUnitId'),
             },
           },
         },
