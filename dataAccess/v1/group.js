@@ -44,7 +44,7 @@ exports.getAll = async (paging, { visibilities, userId, excludeBlocked }) => {
       attributes: {
         include: [
           [
-            db.sequelize.literal(
+            db.Sequelize.literal(
               `(SELECT COUNT(*) FROM "GroupMembers" AS "member" WHERE "Group"."id" = "member"."groupId")`,
             ),
             'memberCount',
@@ -57,12 +57,9 @@ exports.getAll = async (paging, { visibilities, userId, excludeBlocked }) => {
           model: db.GroupMember,
           attributes: ['status', 'isAdmin'],
           required: false,
-          where: Object.assign(
-            {},
-            {
-              userId,
-            },
-          ),
+          where: {
+            userId,
+          },
         },
       ],
       where,
@@ -80,6 +77,9 @@ exports.getById = async (id) => {
 };
 
 exports.getByIds = async (ids = [], attributes) => {
+  if (ids.length === 0) {
+    return [];
+  }
   const result = await db.Group.findAll({
     where: {
       id: {
@@ -105,7 +105,7 @@ exports.upsert = async (id, data = {}, transaction) => {
   return result?.toJSON();
 };
 
-exports.update = async (id, data = {}, transaction) => {
+exports.update = async (id, data, transaction) => {
   const [updateCount] = await db.Group.update(data, {
     where: {
       id,

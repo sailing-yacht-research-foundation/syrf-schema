@@ -11,7 +11,7 @@ exports.getById = async (id, transaction) => {
  * @param {*} transaction
  * @returns
  */
-exports.create = async ({ id, name, email } = {}, transaction) => {
+exports.create = async ({ id, name, email }, transaction) => {
   const developer = await db.Developer.create(
     {
       id: uuid.v4(),
@@ -31,6 +31,7 @@ exports.create = async ({ id, name, email } = {}, transaction) => {
       where: {
         id,
       },
+      transaction,
     },
   );
 };
