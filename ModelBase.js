@@ -51,7 +51,6 @@ class ModelBase extends Model {
     customCountField = customCountField || `"${this.name}"."id"`;
     let pagingSize = Math.max(size, 1);
     let pageQuery = Math.max(page, 1);
-    let sortQuery = sort;
     let srdirQuery = srdir;
 
     const filtersRelatedSort = [];
@@ -129,8 +128,8 @@ class ModelBase extends Model {
       case multiSort?.length > 0:
         order = multiSort;
         break;
-      case !!sortQuery:
-        order = [[sortQuery, srdirQuery]];
+      case !!sort:
+        order = sort?.custom ? [sort.custom] : [[sort, srdirQuery]];
         break;
       case defaultSort?.length > 0:
         order = defaultSort;
@@ -166,7 +165,7 @@ class ModelBase extends Model {
       rows: result,
       page,
       size: pagingSize,
-      sort: defaultSortUsed ? 'default' : sortQuery,
+      sort: defaultSortUsed ? 'default' : sort,
       srdir: defaultSortUsed ? null : srdirQuery,
       q: query,
       draw: draw,

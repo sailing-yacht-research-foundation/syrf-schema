@@ -258,6 +258,76 @@ describe('My Track DAL', () => {
         }),
       );
     });
+    it('should use custom literal sort if sorted by name field', async () => {
+      const paging = {
+        page: 1,
+        size: 10,
+        filters: [],
+        sort: 'name',
+        srdir: 1,
+      };
+      const trackHistories = {
+        count: 0,
+        rows: [],
+        page: 1,
+        size: 10,
+        sort: 'updatedAt',
+        srdir: 'ASC',
+        q: '',
+        filters: [],
+      };
+      db.TrackHistory.findAllWithPaging.mockResolvedValueOnce(trackHistories);
+
+      const result = await getMyTracks(userId, undefined, paging);
+
+      expect(result).toEqual(trackHistories);
+      expect(db.TrackHistory.findAllWithPaging).toHaveBeenCalledWith(
+        expect.any(Object),
+        expect.objectContaining({
+          ...paging,
+          customCountField: `"trackJson"."id"`,
+          sort: {
+            custom: db.Sequelize.literal(
+              `"event"."name" ASC, "competitionUnit"."name" ASC`,
+            ),
+            fieldName: 'name',
+          },
+        }),
+      );
+    });
+    it('should use custom literal sort if multi sorted by name field', async () => {
+      const paging = {
+        page: 1,
+        size: 10,
+        filters: [],
+        multiSort: [['name', 'ASC']],
+      };
+      const trackHistories = {
+        count: 0,
+        rows: [],
+        page: 1,
+        size: 10,
+        sort: 'updatedAt',
+        srdir: 'ASC',
+        q: '',
+        filters: [],
+      };
+      db.TrackHistory.findAllWithPaging.mockResolvedValueOnce(trackHistories);
+
+      const result = await getMyTracks(userId, undefined, paging);
+
+      expect(result).toEqual(trackHistories);
+      expect(db.TrackHistory.findAllWithPaging).toHaveBeenCalledWith(
+        expect.any(Object),
+        expect.objectContaining({
+          multiSort: [
+            db.Sequelize.literal(
+              `"event"."name" ASC, "competitionUnit"."name" ASC`,
+            ),
+          ],
+        }),
+      );
+    });
   });
 
   describe('getById', () => {

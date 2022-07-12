@@ -36,6 +36,7 @@ exports.getMyTracks = async (userId, isPrivate, pagination) => {
   }
   let replacements = undefined;
   const nameFilter = pagination.filters.find((t) => t.field === 'name');
+
   if (nameFilter) {
     const dbOp = nameFilter.opr === 'eq' ? '=' : 'iLike';
 
@@ -50,6 +51,29 @@ exports.getMyTracks = async (userId, isPrivate, pagination) => {
     );
 
     nameFilter.isCustom = true;
+  }
+
+  let nameMultiSortIndex = pagination.multiSort?.findIndex(
+    (t) => t[0] === 'name',
+  );
+  if (nameMultiSortIndex > -1) {
+    pagination.multiSort[nameMultiSortIndex] = db.Sequelize.literal(
+      `"event"."name" ${pagination.multiSort[
+        nameMultiSortIndex
+      ][1].toUpperCase()}, "competitionUnit"."name" ${pagination.multiSort[
+        nameMultiSortIndex
+      ][1].toUpperCase()}`,
+    );
+  }
+
+  if (pagination.sort === 'name') {
+    const srdirQuery = pagination.srdir < 0 ? 'DESC' : 'ASC';
+    pagination.sort = {
+      custom: db.Sequelize.literal(
+        `"event"."name" ${srdirQuery}, "competitionUnit"."name" ${srdirQuery}`,
+      ),
+      fieldName: pagination.sort,
+    };
   }
 
   const result = await db.TrackHistory.findAllWithPaging(
