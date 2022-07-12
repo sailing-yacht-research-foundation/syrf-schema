@@ -23,10 +23,12 @@ jest.mock('./index', () => {
           rollback: jest.fn(),
         };
       }),
+      query: jest.fn(),
     },
     Sequelize: jest.requireActual('sequelize').Sequelize,
     Op: jest.requireActual('sequelize').Op,
     // Below should be each models mock, simpler to do it this way then to re-create mocked models with sequelize mock
+    CalendarEditor: createMockSequelizeModel(),
     CalendarEvent: createMockSequelizeModel(),
     CompetitionPointTrackJson: createMockSequelizeModel(),
     CompetitionResult: createMockSequelizeModel(),
@@ -36,6 +38,9 @@ jest.mock('./index', () => {
     CourseSequencedGeometry: createMockSequelizeModel(),
     CourseUnsequencedTimedGeometry: createMockSequelizeModel(),
     CourseUnsequencedUntimedGeometry: createMockSequelizeModel(),
+    ExternalServiceCredential: createMockSequelizeModel(),
+    Group: createMockSequelizeModel(),
+    GroupMember: createMockSequelizeModel(),
     MarkTracker: createMockSequelizeModel(),
     Participant: createMockSequelizeModel(),
     ParticipantDocumentAgreement: createMockSequelizeModel(),

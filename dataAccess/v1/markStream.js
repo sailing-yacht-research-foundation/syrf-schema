@@ -2,7 +2,7 @@ const db = require('../../index');
 
 var markTrackerActivePoints = [];
 
-exports.pushTrackerPoints = async (point = {}, competitionUnitId) => {
+exports.pushTrackerPoints = async (point, competitionUnitId) => {
   let index = markTrackerActivePoints.findIndex(
     (t) => t.id === point.id && t.competitionUnitId === competitionUnitId,
   );
@@ -36,10 +36,6 @@ exports.getById = async (markTrackerId) => {
 
 exports.getAllPoints = async () => {
   return markTrackerActivePoints;
-};
-
-exports.clear = async () => {
-  markTrackerActivePoints.clear();
 };
 
 exports.validateStreamer = async (userProfileId, markTrackerId) => {

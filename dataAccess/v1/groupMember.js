@@ -181,7 +181,7 @@ exports.getGroupsByUserId = async (paging, { userId, status }) => {
       attributes: {
         include: [
           [
-            db.sequelize.literal(
+            db.Sequelize.literal(
               `(SELECT COUNT(*) FROM "GroupMembers" AS "member" WHERE "GroupMember"."groupId" = "member"."groupId" AND "status" = :status)`,
             ),
             'memberCount',
@@ -303,17 +303,15 @@ exports.getGroupMemberSummaries = async (
 };
 
 exports.getAllGroupsOfUser = async (userId) => {
-  const where = { userId };
-
   const result = await db.GroupMember.findAll({
-    where,
+    where: { userId },
     attributes: ['id', 'groupId', 'status', 'joinDate', 'isAdmin'],
     raw: true,
   });
   return result;
 };
 
-exports.update = async ({ id, status, userId }, data = {}, transaction) => {
+exports.update = async ({ id, status, userId }, data, transaction) => {
   const [updateCount] = await db.GroupMember.update(data, {
     where: {
       id,
@@ -404,17 +402,15 @@ exports.getGroupsByUserWithoutPaging = async ({
   status,
   groupQuery,
 }) => {
-  const where = {
-    userId,
-    status,
-  };
-
   const result = await db.GroupMember.findAll({
-    where,
+    where: {
+      userId,
+      status,
+    },
     attributes: {
       include: [
         [
-          db.sequelize.literal(
+          db.Sequelize.literal(
             `(SELECT COUNT(*) FROM "GroupMembers" AS "member" WHERE "GroupMember"."groupId" = "member"."groupId" AND "status" = :status)`,
           ),
           'memberCount',
@@ -453,15 +449,13 @@ exports.getGroupsByUserWithoutPaging = async ({
 };
 
 exports.getGroupMembersByUserIds = async (groupId, userIds) => {
-  let where = {
-    groupId,
-    userId: {
-      [db.Op.in]: userIds,
-    },
-  };
-
   const result = await db.GroupMember.findAll({
-    where,
+    where: {
+      groupId,
+      userId: {
+        [db.Op.in]: userIds,
+      },
+    },
     include: {
       as: 'member',
       model: db.UserProfile,

@@ -835,32 +835,35 @@ describe('Vessel DAL', () => {
         isEditor: true,
         vessel: data,
       });
-      expect(db.Vessel.findByPk).toHaveBeenCalledWith(vesselId, {
-        include: expect.arrayContaining([
-          expect.objectContaining({
-            as: 'editors',
-            attributes: expect.arrayContaining(['id']),
-          }),
-          expect.objectContaining({
-            as: 'groupEditors',
-            attributes: expect.arrayContaining(['id']),
-            include: expect.arrayContaining([
-              {
-                as: 'groupMember',
-                attributes: expect.arrayContaining(['userId']),
-                where: {
-                  status: groupMemberStatus.accepted,
-                },
-              },
-            ]),
-          }),
-        ]),
-        attributes: expect.arrayContaining([
-          'id',
-          'createdById',
-          'isDefaultVessel',
-        ]),
-      });
+      expect(db.Vessel.findByPk).toHaveBeenCalledWith(
+        vesselId,
+        expect.objectContaining({
+          include: expect.arrayContaining([
+            expect.objectContaining({
+              as: 'editors',
+              attributes: expect.arrayContaining(['id']),
+            }),
+            expect.objectContaining({
+              as: 'groupEditors',
+              attributes: expect.arrayContaining(['id']),
+              include: expect.arrayContaining([
+                expect.objectContaining({
+                  as: 'groupMember',
+                  attributes: expect.arrayContaining(['userId']),
+                  where: {
+                    status: groupMemberStatus.accepted,
+                  },
+                }),
+              ]),
+            }),
+          ]),
+          attributes: expect.arrayContaining([
+            'id',
+            'createdById',
+            'isDefaultVessel',
+          ]),
+        }),
+      );
     });
     it('should return falses when vessel not found', async () => {
       const vesselId = uuid.v4();
