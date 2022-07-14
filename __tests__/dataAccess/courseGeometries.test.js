@@ -428,10 +428,8 @@ describe('Course Geometries DAL', () => {
           geometryType: geometryType.POINT,
           order: 1,
           coordinates: [
-            [
-              Number(faker.address.longitude()),
-              Number(faker.address.latitude()),
-            ],
+            Number(faker.address.longitude()),
+            Number(faker.address.latitude()),
           ],
           points: [
             {
