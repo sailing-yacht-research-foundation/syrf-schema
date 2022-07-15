@@ -242,6 +242,9 @@ exports.getById = async (id, transaction) => {
   return data;
 };
 exports.getByIds = async (ids = [], attributes) => {
+  if (ids.length === 0) {
+    return [];
+  }
   const result = await db.CalendarEvent.findAll({
     where: {
       id: {
@@ -450,12 +453,6 @@ exports.delete = async (id, transaction) => {
   return data?.toJSON();
 };
 
-exports.getMyEvents = async (id, pagination) => {
-  const result = await db.CalendarEvent.findAllWithPaging({}, pagination);
-
-  return result?.toJSON();
-};
-
 exports.addOpenGraph = async (id, openGraphImage) => {
   await db.CalendarEvent.update(
     { openGraphImage },
@@ -556,16 +553,16 @@ exports.getUserEvents = async (paging, userId, { location } = {}) => {
       {
         [db.Op.or]: [
           { ownerId: userId },
-          db.sequelize.where(db.sequelize.literal(`"editors"."id"`), {
+          db.Sequelize.where(db.Sequelize.literal(`"editors"."id"`), {
             [db.Op.ne]: null,
           }),
-          db.sequelize.where(
-            db.sequelize.literal(`"groupEditors->groupMember"."userId"`),
+          db.Sequelize.where(
+            db.Sequelize.literal(`"groupEditors->groupMember"."userId"`),
             {
               [db.Op.ne]: null,
             },
           ),
-          db.sequelize.where(db.sequelize.literal(`"participants"."id"`), {
+          db.Sequelize.where(db.Sequelize.literal(`"participants"."id"`), {
             [db.Op.ne]: null,
           }),
         ],
@@ -795,7 +792,7 @@ exports.getEventForScheduler = async (statusArray, filterDateStart) => {
       id: calendarEventId,
       name: calendarEventName,
       status,
-      approximateEndTime_utc: endTime,
+      approximateEndTime_utc,
       competitionUnit,
       isSimulation,
       ownerId,
@@ -804,7 +801,7 @@ exports.getEventForScheduler = async (statusArray, filterDateStart) => {
       calendarEventId,
       calendarEventName,
       status,
-      approximateEndTime_utc: endTime,
+      approximateEndTime_utc,
       isSimulation,
       ownerId,
       competitionUnits: competitionUnit.map((cUnit) => {
