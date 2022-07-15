@@ -244,7 +244,6 @@ exports.delete = async (id, transaction) => {
     db.SlicedWeather.destroy(param),
     db.VesselParticipantLeg.destroy(param),
     db.VesselParticipantTrackJson.destroy(param),
-    db.SlicedWeather.destroy(param),
   ]);
 
   return !isMultiple ? data?.toJSON() : count;
@@ -340,7 +339,7 @@ exports.updateCountryCity = async (
           [Op.in]: competitionUnitIds,
         },
       },
-      transaction: transaction,
+      transaction,
     },
   );
 };
@@ -367,7 +366,7 @@ exports.getTracksCountByCompetition = async (competitionIds) => {
     attributes: [
       'id',
       [
-        db.sequelize.fn('count', db.sequelize.col('"vpTrackJsons"."id"')),
+        db.Sequelize.fn('count', db.Sequelize.col('"vpTrackJsons"."id"')),
         'trackCount',
       ],
     ],
@@ -442,6 +441,9 @@ exports.getUserRelationToCompetitionUnit = async (
   options = {},
   transaction,
 ) => {
+  if (ids.length === 0) {
+    return [];
+  }
   const result = await db.CompetitionUnit.findAll({
     ...options,
     where: {
@@ -591,50 +593,48 @@ exports.getUntrackedRaces = async (filterDate, transaction) => {
  * @returns {import('../../types/dataAccess').RelatedFile[]}
  */
 exports.getRelatedFiles = async (id, transaction) => {
-  const [
-    competitionUnit,
-    vpTrackJson,
-    vpCrewTrack,
-    pointTrackJson,
-    slicedWeather,
-  ] = await Promise.all([
-    db.CompetitionUnit.findByPk(id, { transaction }),
-    db.VesselParticipantTrackJson.findAll({
-      where: {
-        competitionUnitId: id,
-      },
-      transaction,
-    }),
-    db.VesselParticipantCrewTrackJson.findAll({
-      where: {
-        competitionUnitId: id,
-      },
-      transaction,
-    }),
-    db.CompetitionPointTrackJson.findAll({
-      where: {
-        competitionUnitId: id,
-      },
-      transaction,
-    }),
-    db.SlicedWeather.findAll({
-      where: {
-        competitionUnitId: id,
-      },
-      transaction,
-    }),
-  ]);
-
   const result = [];
 
+  const competitionUnit = await db.CompetitionUnit.findByPk(id, {
+    transaction,
+  });
   if (!competitionUnit) return result;
 
-  if (competitionUnit.openGraphImage)
+  const [vpTrackJson, vpCrewTrack, pointTrackJson, slicedWeather] =
+    await Promise.all([
+      db.VesselParticipantTrackJson.findAll({
+        where: {
+          competitionUnitId: id,
+        },
+        transaction,
+      }),
+      db.VesselParticipantCrewTrackJson.findAll({
+        where: {
+          competitionUnitId: id,
+        },
+        transaction,
+      }),
+      db.CompetitionPointTrackJson.findAll({
+        where: {
+          competitionUnitId: id,
+        },
+        transaction,
+      }),
+      db.SlicedWeather.findAll({
+        where: {
+          competitionUnitId: id,
+        },
+        transaction,
+      }),
+    ]);
+
+  if (competitionUnit.openGraphImage) {
     result.push({
       type: 'og_image',
       path: removeDomainFromUrl(competitionUnit.openGraphImage),
       bucket: 'opengraph_image',
     });
+  }
 
   result.push(
     ...vpTrackJson
@@ -814,6 +814,9 @@ exports.getWinds = async (id) => {
 };
 
 exports.bulkWriteWinds = async (data = [], transaction) => {
+  if (data.length === 0) {
+    return [];
+  }
   const result = await db.CompetitionUnitWind.bulkCreate(data, {
     transaction,
     updateOnDuplicate: ['startTime', 'endTime'],
@@ -823,6 +826,9 @@ exports.bulkWriteWinds = async (data = [], transaction) => {
 };
 
 exports.getAllByIds = async (ids = [], { attributes } = {}) => {
+  if (ids.length === 0) {
+    return [];
+  }
   return await db.CompetitionUnit.findAll({
     where: {
       id: {

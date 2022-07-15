@@ -140,26 +140,21 @@ const mapGeometries = (courseId, meta) => (t) => {
   };
 };
 
-const setSequencedGeometries = (
-  geometries = [],
-  courseId,
-  meta,
-  transaction,
-) => {
+const setSequencedGeometries = (geometries, courseId, meta, transaction) => {
   return db.CourseSequencedGeometry.bulkCreate(
     geometries.map(mapGeometries(courseId, meta)),
     { transaction },
   );
 };
 
-const setUntimedGeometries = (geometries = [], courseId, meta, transaction) => {
+const setUntimedGeometries = (geometries, courseId, meta, transaction) => {
   return db.CourseUnsequencedUntimedGeometry.bulkCreate(
     geometries.map(mapGeometries(courseId, meta)),
     { transaction },
   );
 };
 
-const setTimedGeometries = (geometries = [], courseId, meta, transaction) => {
+const setTimedGeometries = (geometries, courseId, meta, transaction) => {
   return db.CourseUnsequencedTimedGeometry.bulkCreate(
     geometries.map(mapGeometries(courseId, meta)),
     { transaction },
@@ -213,15 +208,18 @@ const clearGeometries = async (
     }),
   ];
 
-  task.push(
-    db.CoursePoint.destroy({
-      where: {
-        geometryId: {
-          [db.Op.in]: geometryIds,
+  if (geometryIds.length > 0) {
+    task.push(
+      db.CoursePoint.destroy({
+        where: {
+          geometryId: {
+            [db.Op.in]: geometryIds,
+          },
         },
-      },
-    }),
-  );
+      }),
+    );
+  }
+
   return await Promise.all(task);
 };
 
@@ -242,7 +240,10 @@ exports.upsert = async (id, data = {}, transaction) => {
 
   const meta = getMeta(data);
 
-  if (Array.isArray(data.courseSequencedGeometries)) {
+  if (
+    Array.isArray(data.courseSequencedGeometries) &&
+    data.courseSequencedGeometries.length > 0
+  ) {
     task.push(
       setSequencedGeometries(
         data.courseSequencedGeometries,
@@ -253,7 +254,10 @@ exports.upsert = async (id, data = {}, transaction) => {
     );
   }
 
-  if (Array.isArray(data.courseUnsequencedUntimedGeometry)) {
+  if (
+    Array.isArray(data.courseUnsequencedUntimedGeometry) &&
+    data.courseUnsequencedUntimedGeometry.length > 0
+  ) {
     task.push(
       setUntimedGeometries(
         data.courseUnsequencedUntimedGeometry,
@@ -264,7 +268,10 @@ exports.upsert = async (id, data = {}, transaction) => {
     );
   }
 
-  if (Array.isArray(data.courseSequencedGeometries)) {
+  if (
+    Array.isArray(data.courseUnsequencedTimedGeometry) &&
+    data.courseUnsequencedTimedGeometry.length > 0
+  ) {
     task.push(
       setTimedGeometries(
         data.courseUnsequencedTimedGeometry,
@@ -384,7 +391,7 @@ exports.getByCompetitionId = async (competitionUnitId, transaction) => {
       ],
       transaction,
     })
-  ).toJSON()?.course;
+  )?.toJSON()?.course;
 
   if (result)
     return {
@@ -448,24 +455,31 @@ exports.clear = async () => {
 };
 
 exports.clearPointsByGeometries = async (geometryIds = [], transaction) => {
-  await db.CoursePoint.destroy({
-    where: {
-      geometryId: { [db.Op.in]: geometryIds },
-    },
-    transaction,
-  });
+  if (geometryIds.length > 0) {
+    await db.CoursePoint.destroy({
+      where: {
+        geometryId: { [db.Op.in]: geometryIds },
+      },
+      transaction,
+    });
+  }
 };
 
 exports.clearPoints = async (ids = [], transaction) => {
-  await db.CoursePoint.destroy({
-    where: {
-      id: { [db.Op.in]: ids },
-    },
-    transaction,
-  });
+  if (ids.length > 0) {
+    await db.CoursePoint.destroy({
+      where: {
+        id: { [db.Op.in]: ids },
+      },
+      transaction,
+    });
+  }
 };
 
 exports.bulkInsertPoints = async (points = [], transaction) => {
+  if (points.length === 0) {
+    return [];
+  }
   return await db.CoursePoint.bulkCreate(points, { transaction });
 };
 
