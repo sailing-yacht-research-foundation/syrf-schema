@@ -193,6 +193,7 @@ const bullQueues = {
   clearUntrackedRaces: 'clear_untracked_races',
   warningUntrackedEvents: 'warning_untracked_events',
   cleanupESDangling: 'cleanup_es_dangling',
+  slicerQueue: 'slicer_queue',
 };
 
 const externalServiceSources = {
