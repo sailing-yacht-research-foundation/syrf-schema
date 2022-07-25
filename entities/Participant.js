@@ -33,6 +33,12 @@ class Participant extends ModelBase {
       foreignKey: 'participantId',
       otherKey: 'documentId',
     });
+
+    this.belongsTo(models.Vessel, {
+      as: 'vessel',
+      foreignKey: 'vesselId',
+      constraints: false,
+    });
   }
 }
 
@@ -59,6 +65,16 @@ module.exports = (sequelize) => {
       },
       userProfileId: {
         type: DataTypes.UUID,
+      },
+      vesselId: {
+        type: DataTypes.UUID,
+        comment:
+          'This is a temporary default storage to associate vessel with event, by default will be used when vp is created by this participant',
+      },
+      sailNumber: {
+        type: DataTypes.STRING,
+        comment:
+          'This is a temporary default storage to store vessel sail number for the event, by default will be used when vp is created by this participant',
       },
       invitationStatus: {
         type: DataTypes.ENUM(Object.values(participantInvitationStatus)),
