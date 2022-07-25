@@ -26,6 +26,8 @@ module.exports = {
           'vesselId',
           {
             type: Sequelize.UUID,
+            comment:
+              'This is a temporary default storage to associate vessel with event, by default will be used when vp is created by this participant',
           },
           {
             transaction,
@@ -39,6 +41,8 @@ module.exports = {
           'sailNumber',
           {
             type: Sequelize.STRING,
+            comment:
+              'This is a temporary default storage to store vessel sail number for the event, by default will be used when vp is created by this participant',
           },
           {
             transaction,
