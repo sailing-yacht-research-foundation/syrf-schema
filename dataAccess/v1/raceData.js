@@ -119,6 +119,19 @@ exports.getEventsByVesselParticipant = async (id, timeFrom, timeTo) => {
   return result;
 };
 
+exports.getRaceTimeByCompetitionUnit = async (id) => {
+  if (!id) return null;
+
+  const result = await db.CompetitionUnit.findAll({
+    where: {
+      id,
+    },
+    attributes: ['startTime', 'endTime'],
+  });
+
+  return result[0];
+};
+
 exports.getJsonTracksByVP = async (id) => {
   if (!id) return null;
 
