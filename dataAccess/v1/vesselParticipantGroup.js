@@ -24,7 +24,7 @@ const include = [
   },
   {
     model: db.CalendarEvent,
-    attributes: ['id', 'name', 'isOpen'],
+    attributes: ['id', 'name', 'isOpen', 'ownerId'],
     as: 'event',
     include: [
       {
