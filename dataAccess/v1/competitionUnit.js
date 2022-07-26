@@ -570,6 +570,7 @@ exports.getUntrackedRaces = async (filterDate, transaction) => {
             ],
           },
           source: dataSources.SYRF,
+          isSimulation: false,
         },
         include: [
           {
