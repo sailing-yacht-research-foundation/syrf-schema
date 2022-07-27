@@ -1413,6 +1413,7 @@ describe('Calendar Event DAL', () => {
             },
             source: dataSources.SYRF,
             '$tracks.id$': null,
+            isSimulation: false,
           },
           subQuery: false,
           include: expect.arrayContaining([
