@@ -246,4 +246,5 @@ exports.weatherSubmodelToModel = (submodel) => {
       return models[i].replaceAll('_', ' ');
     }
   }
+  return 'UNKNOWN';
 };
