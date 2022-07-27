@@ -900,6 +900,7 @@ exports.getUntrackedEvents = async (filterTimeStart, filterTimeEnd) => {
       },
       source: dataSources.SYRF,
       '$tracks.id$': null,
+      isSimulation: false,
     },
     subQuery: false,
     include: [
