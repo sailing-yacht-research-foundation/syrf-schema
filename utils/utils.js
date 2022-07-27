@@ -8,6 +8,7 @@ const {
   dataSources,
   generalNotificationTypes,
   mobileOnlyNotificationTypes,
+  weatherModels,
 } = require('../enums');
 
 exports.includeMeta = [
@@ -235,4 +236,14 @@ exports.generateDefaultUserSettings = () => {
     generalSettings,
     mobileSettings,
   };
+};
+
+exports.weatherSubmodelToModel = (submodel) => {
+  const models = Object.keys(weatherModels);
+  for (let i = 0; i < models.length; i++) {
+    const submodelList = weatherModels[models[i]];
+    if (submodelList.includes(submodel)) {
+      return models[i].replaceAll('_', ' ');
+    }
+  }
 };

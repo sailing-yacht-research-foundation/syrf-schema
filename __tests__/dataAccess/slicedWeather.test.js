@@ -7,7 +7,7 @@ const {
   findById,
   findWithPaging,
 } = require('../../dataAccess/v1/slicedWeather');
-const { slicedWeatherTypes } = require('../../enums');
+const { slicedWeatherTypes, weatherModels } = require('../../enums');
 
 const db = require('../../index');
 
@@ -160,16 +160,27 @@ describe('Sliced Weather DAL', () => {
         { ...paging, defaultSort: [['sliceDate', 'DESC']] },
       );
     });
-    it('should add fileType as where condition if provided', async () => {
+    it('should add fileType and model as where condition if provided', async () => {
       const paging = { page: 1, size: 10 };
       const competitionUnitId = uuid.v4();
       const fileType = slicedWeatherTypes.GRIB;
+      const model = weatherModels.GFS;
 
-      await findWithPaging(paging, { competitionUnitId, fileType });
+      await findWithPaging(paging, {
+        competitionUnitId,
+        fileType,
+        model,
+      });
 
       expect(db.SlicedWeather.findAllWithPaging).toHaveBeenCalledWith(
         {
-          where: { competitionUnitId, fileType },
+          where: {
+            competitionUnitId,
+            fileType,
+            model: {
+              [db.Op.in]: model,
+            },
+          },
         },
         { ...paging, defaultSort: [['sliceDate', 'DESC']] },
       );

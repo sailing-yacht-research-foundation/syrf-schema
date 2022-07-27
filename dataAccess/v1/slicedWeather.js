@@ -53,7 +53,10 @@ exports.findById = async (id) => {
   return result?.toJSON();
 };
 
-exports.findWithPaging = async (paging, { competitionUnitId, fileType }) => {
+exports.findWithPaging = async (
+  paging,
+  { competitionUnitId, fileType, model },
+) => {
   const result = await db.SlicedWeather.findAllWithPaging(
     {
       where: Object.assign(
@@ -61,6 +64,13 @@ exports.findWithPaging = async (paging, { competitionUnitId, fileType }) => {
           competitionUnitId,
         },
         fileType ? { fileType } : {},
+        model
+          ? {
+              model: {
+                [db.Op.in]: model,
+              },
+            }
+          : {},
       ),
     },
     { ...paging, defaultSort: [['sliceDate', 'DESC']] },
