@@ -19,12 +19,37 @@ exports.findExistingSlices = async ({ competitionUnitId, originalFileId }) => {
   return result;
 };
 
-exports.findByCompetition = async (competitionUnitId) => {
+exports.findByCompetition = async (competitionUnitId, fileType) => {
   const result = await db.SlicedWeather.findAll({
-    where: {
-      competitionUnitId,
-    },
+    where: Object.assign(
+      {
+        competitionUnitId,
+      },
+      fileType ? { fileType } : {},
+    ),
     raw: true,
   });
+  return result;
+};
+
+exports.findById = async (id) => {
+  const result = await db.SlicedWeather.findByPk(id, {
+    raw: true,
+  });
+  return result;
+};
+
+exports.findWithPaging = async (paging, { competitionUnitId, fileType }) => {
+  const result = await db.SlicedWeather.findAllWithPaging(
+    {
+      where: Object.assign(
+        {
+          competitionUnitId,
+        },
+        fileType ? { fileType } : {},
+      ),
+    },
+    { ...paging, defaultSort: [['sliceDate', 'DESC']] },
+  );
   return result;
 };

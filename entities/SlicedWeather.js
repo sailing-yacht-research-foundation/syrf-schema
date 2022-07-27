@@ -1,6 +1,16 @@
-const { DataTypes, Model } = require('sequelize');
+const { DataTypes } = require('sequelize');
+const ModelBase = require('../ModelBase');
 
-class SlicedWeather extends Model {}
+class SlicedWeather extends ModelBase {
+  static associateBase() {}
+  static associate(models) {
+    this.belongsTo(models.CompetitionUnit, {
+      as: 'competition',
+      constraints: false,
+      foreignKey: 'competitionUnitId',
+    });
+  }
+}
 
 module.exports = (sequelize) => {
   SlicedWeather.init(

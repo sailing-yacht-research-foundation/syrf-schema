@@ -479,6 +479,11 @@ const liveDataGossipType = {
   SIMULATION_RESUME_REQUEST: 'SIMULATION_RESUME_REQUEST',
 };
 
+const slicedWeatherTypes = {
+  GRIB: 'GRIB',
+  JSON: 'JSON',
+};
+
 module.exports = {
   competitionUnitStatus,
   calendarEventStatus,
@@ -533,4 +538,5 @@ module.exports = {
   ocsStatuses,
   waiverTypes,
   liveDataGossipType,
+  slicedWeatherTypes,
 };
