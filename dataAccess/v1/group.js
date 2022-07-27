@@ -133,6 +133,12 @@ exports.delete = async (id, transaction) => {
       },
       transaction,
     });
+    await db.VesselGroupEditor.destroy({
+      where: {
+        groupId: id,
+      },
+      transaction,
+    });
   }
 
   return data?.toJSON();
