@@ -47,7 +47,9 @@ describe('Sliced Weather DAL', () => {
   const mockTransaction = db.sequelize.transaction();
   beforeAll(() => {
     db.SlicedWeather.findAll.mockResolvedValue([mockSlicedWeather]);
-    db.SlicedWeather.findByPk.mockResolvedValue(mockSlicedWeather);
+    db.SlicedWeather.findByPk.mockResolvedValue({
+      toJSON: () => mockSlicedWeather,
+    });
   });
   afterEach(() => {
     jest.clearAllMocks();
@@ -130,7 +132,16 @@ describe('Sliced Weather DAL', () => {
 
       expect(result).toEqual(mockSlicedWeather);
       expect(db.SlicedWeather.findByPk).toHaveBeenCalledWith(id, {
-        raw: true,
+        include: expect.arrayContaining([
+          expect.objectContaining({
+            as: 'competitionUnit',
+            include: expect.arrayContaining([
+              expect.objectContaining({
+                as: 'calendarEvent',
+              }),
+            ]),
+          }),
+        ]),
       });
     });
   });

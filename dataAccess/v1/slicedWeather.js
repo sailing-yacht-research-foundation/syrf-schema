@@ -34,9 +34,23 @@ exports.findByCompetition = async (competitionUnitId, fileType) => {
 
 exports.findById = async (id) => {
   const result = await db.SlicedWeather.findByPk(id, {
-    raw: true,
+    include: [
+      {
+        model: db.CompetitionUnit,
+        as: 'competitionUnit',
+        attributes: ['createdById'],
+        required: true,
+        include: [
+          {
+            as: 'calendarEvent',
+            model: db.CalendarEvent,
+            attributes: ['isPrivate', 'status'],
+          },
+        ],
+      },
+    ],
   });
-  return result;
+  return result?.toJSON();
 };
 
 exports.findWithPaging = async (paging, { competitionUnitId, fileType }) => {

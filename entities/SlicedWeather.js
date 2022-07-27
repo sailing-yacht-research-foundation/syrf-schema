@@ -5,7 +5,7 @@ class SlicedWeather extends ModelBase {
   static associateBase() {}
   static associate(models) {
     this.belongsTo(models.CompetitionUnit, {
-      as: 'competition',
+      as: 'competitionUnit',
       constraints: false,
       foreignKey: 'competitionUnitId',
     });
