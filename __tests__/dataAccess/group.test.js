@@ -255,6 +255,12 @@ describe('Group DAL', () => {
         },
         transaction: mockTransaction,
       });
+      expect(db.VesselGroupEditor.destroy).toHaveBeenCalledWith({
+        where: {
+          groupId: groupData.id,
+        },
+        transaction: mockTransaction,
+      });
     });
     it('should skip destroy if group not found', async () => {
       db.Group.findByPk.mockResolvedValueOnce(undefined);
