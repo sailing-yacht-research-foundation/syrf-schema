@@ -4,7 +4,10 @@ const {
   bulkInsert,
   findExistingSlices,
   findByCompetition,
+  findById,
+  findWithPaging,
 } = require('../../dataAccess/v1/slicedWeather');
+const { slicedWeatherTypes, weatherModels } = require('../../enums');
 
 const db = require('../../index');
 
@@ -15,7 +18,7 @@ describe('Sliced Weather DAL', () => {
     startTime: new Date(),
     endTime: new Date(),
     s3Key: 'path/to/file',
-    fileType: 'JSON',
+    fileType: slicedWeatherTypes.JSON,
     boundingBox: {
       crs: {
         type: 'name',
@@ -44,13 +47,15 @@ describe('Sliced Weather DAL', () => {
   const mockTransaction = db.sequelize.transaction();
   beforeAll(() => {
     db.SlicedWeather.findAll.mockResolvedValue([mockSlicedWeather]);
+    db.SlicedWeather.findByPk.mockResolvedValue({
+      toJSON: () => mockSlicedWeather,
+    });
   });
   afterEach(() => {
     jest.clearAllMocks();
   });
   afterAll(() => {
     jest.resetAllMocks();
-    db.SlicedWeather.findAll.mockReset();
   });
 
   describe('bulkInsert', () => {
@@ -101,6 +106,84 @@ describe('Sliced Weather DAL', () => {
         },
         raw: true,
       });
+    });
+    it('should call findAll on SlicedWeather table with specified file type', async () => {
+      const competitionUnitId = uuid.v4();
+      const result = await findByCompetition(
+        competitionUnitId,
+        slicedWeatherTypes.JSON,
+      );
+
+      expect(result).toEqual([mockSlicedWeather]);
+      expect(db.SlicedWeather.findAll).toHaveBeenCalledWith({
+        where: {
+          competitionUnitId,
+          fileType: slicedWeatherTypes.JSON,
+        },
+        raw: true,
+      });
+    });
+  });
+
+  describe('findById', () => {
+    it('should call findByPk on SlicedWeather table', async () => {
+      const id = uuid.v4();
+      const result = await findById(id);
+
+      expect(result).toEqual(mockSlicedWeather);
+      expect(db.SlicedWeather.findByPk).toHaveBeenCalledWith(id, {
+        include: expect.arrayContaining([
+          expect.objectContaining({
+            as: 'competitionUnit',
+            include: expect.arrayContaining([
+              expect.objectContaining({
+                as: 'calendarEvent',
+              }),
+            ]),
+          }),
+        ]),
+      });
+    });
+  });
+
+  describe('findWithPaging', () => {
+    it('should call findAllWithPaging on SlicedWeather table', async () => {
+      const paging = { page: 1, size: 10 };
+      const competitionUnitId = uuid.v4();
+
+      await findWithPaging(paging, { competitionUnitId });
+
+      expect(db.SlicedWeather.findAllWithPaging).toHaveBeenCalledWith(
+        {
+          where: { competitionUnitId },
+        },
+        { ...paging, defaultSort: [['sliceDate', 'DESC']] },
+      );
+    });
+    it('should add fileType and model as where condition if provided', async () => {
+      const paging = { page: 1, size: 10 };
+      const competitionUnitId = uuid.v4();
+      const fileType = slicedWeatherTypes.GRIB;
+      const model = weatherModels.GFS;
+
+      await findWithPaging(paging, {
+        competitionUnitId,
+        fileType,
+        model,
+      });
+
+      expect(db.SlicedWeather.findAllWithPaging).toHaveBeenCalledWith(
+        {
+          where: {
+            competitionUnitId,
+            fileType,
+            model: {
+              [db.Op.in]: model,
+            },
+          },
+        },
+        { ...paging, defaultSort: [['sliceDate', 'DESC']] },
+      );
     });
   });
 });
