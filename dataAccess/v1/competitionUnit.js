@@ -502,6 +502,14 @@ exports.getUserRelationToCompetitionUnit = async (
         attributes: ['id', 'name', 'status'],
         include: [
           {
+            model: db.Participant,
+            as: 'participants',
+            required: false,
+            where: {
+              userProfileId: userId,
+            },
+          },
+          {
             model: db.UserProfile,
             as: 'editors',
             attributes: ['id', 'name', 'avatar'],
