@@ -858,6 +858,14 @@ describe('Competition Unit DAL', () => {
             as: 'calendarEvent',
             include: expect.arrayContaining([
               expect.objectContaining({
+                model: db.Participant,
+                as: 'participants',
+                required: false,
+                where: {
+                  userProfileId: userId,
+                },
+              }),
+              expect.objectContaining({
                 as: 'editors',
                 required: false,
                 where: {
