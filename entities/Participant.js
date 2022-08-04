@@ -86,6 +86,9 @@ module.exports = (sequelize) => {
         allowNull: false,
         defaultValue: false,
       },
+      trackerDistanceToBow: {
+        type: DataTypes.FLOAT,
+      },
     },
     {
       modelName: 'Participant',
