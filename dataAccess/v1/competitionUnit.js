@@ -99,7 +99,7 @@ exports.getAll = async (paging, params) => {
     model: db.CalendarEvent,
     required: false,
     where: {},
-    attributes: ['id', 'name', 'isPrivate'],
+    attributes: ['id', 'name', 'isPrivate', 'ownerId'],
   };
 
   if (params.position) {
@@ -181,6 +181,12 @@ exports.getAll = async (paging, params) => {
         through: {
           attributes: [],
         },
+      },
+      {
+        model: db.UserProfile,
+        as: 'owner',
+        attributes: ['id', 'name', 'avatar'],
+        required: false,
       },
       {
         model: db.Group,
