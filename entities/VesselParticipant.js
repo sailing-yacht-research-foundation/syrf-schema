@@ -85,6 +85,9 @@ module.exports = (sequelize) => {
         comment:
           'Value during joining competition/accepting ivnitation. Default to vessel sailNumber from frontends',
       },
+      trackerDistanceToBow: {
+        type: DataTypes.FLOAT,
+      },
     },
     {
       modelName: 'VesselParticipant',
