@@ -198,11 +198,12 @@ exports.getAll = async (paging, params) => {
         through: {
           attributes: [],
         },
+        required: false,
         include: [
           {
             model: db.GroupMember,
             as: 'groupMember',
-            required: false,
+            required: true,
             attributes: ['id', 'groupId', 'userId', 'isAdmin'],
             include: [
               {
