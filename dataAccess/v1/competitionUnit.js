@@ -181,6 +181,9 @@ exports.getAll = async (paging, params) => {
         through: {
           attributes: [],
         },
+        where: {
+          id: params.userId,
+        },
       },
       {
         model: db.UserProfile,
@@ -199,6 +202,7 @@ exports.getAll = async (paging, params) => {
           {
             model: db.GroupMember,
             as: 'groupMember',
+            required: false,
             attributes: ['id', 'groupId', 'userId', 'isAdmin'],
             include: [
               {
@@ -209,6 +213,7 @@ exports.getAll = async (paging, params) => {
             ],
             where: {
               status: groupMemberStatus.accepted,
+              userId: params.userId,
             },
           },
         ],
