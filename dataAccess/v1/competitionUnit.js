@@ -99,7 +99,7 @@ exports.getAll = async (paging, params) => {
     model: db.CalendarEvent,
     required: false,
     where: {},
-    attributes: ['id', 'name', 'isPrivate'],
+    attributes: ['id', 'name', 'isPrivate', 'ownerId'],
   };
 
   if (params.position) {
@@ -154,6 +154,72 @@ exports.getAll = async (paging, params) => {
       eventInclude.where.isSimulation = false;
       eventInclude.required = true;
     }
+
+    eventInclude.include = [
+      {
+        model: db.Participant,
+        as: 'participants',
+        attributes: [
+          'id',
+          'publicName',
+          'userProfileId',
+          'vesselId',
+          'sailNumber',
+          'invitationStatus',
+          'allowShareInformation',
+        ],
+        required: false,
+        where: {
+          userProfileId: params.userId,
+        },
+      },
+      {
+        model: db.UserProfile,
+        as: 'editors',
+        attributes: ['id', 'name', 'avatar'],
+        required: false,
+        through: {
+          attributes: [],
+        },
+        where: {
+          id: params.userId,
+        },
+      },
+      {
+        model: db.UserProfile,
+        as: 'owner',
+        attributes: ['id', 'name', 'avatar'],
+        required: false,
+      },
+      {
+        model: db.Group,
+        as: 'groupEditors',
+        attributes: ['id', 'groupName', 'groupImage'],
+        through: {
+          attributes: [],
+        },
+        required: false,
+        include: [
+          {
+            model: db.GroupMember,
+            as: 'groupMember',
+            required: true,
+            attributes: ['id', 'groupId', 'userId', 'isAdmin'],
+            include: [
+              {
+                as: 'member',
+                model: db.UserProfile,
+                attributes: ['id', 'name', 'avatar'],
+              },
+            ],
+            where: {
+              status: groupMemberStatus.accepted,
+              userId: params.userId,
+            },
+          },
+        ],
+      },
+    ];
   }
 
   if (params.status) {
