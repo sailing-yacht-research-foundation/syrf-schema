@@ -99,7 +99,7 @@ describe('Sliced Weather DAL', () => {
       const result = await findExistingSlices({
         competitionUnitId,
         originalFileId,
-        fileType: WEATHER_FILE_TYPES.grib,
+        fileType: 'GRIB',
       });
 
       expect(result).toEqual([mockSlicedWeather]);
@@ -107,7 +107,7 @@ describe('Sliced Weather DAL', () => {
         where: {
           competitionUnitId,
           originalFileId,
-          fileType: WEATHER_FILE_TYPES.grib,
+          fileType: 'GRIB',
         },
       });
     });
