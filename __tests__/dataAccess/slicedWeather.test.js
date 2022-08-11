@@ -1,4 +1,5 @@
 const uuid = require('uuid');
+const { WEATHER_FILE_TYPES } = require('../../../configs/general.config');
 
 const {
   bulkInsert,
@@ -89,6 +90,24 @@ describe('Sliced Weather DAL', () => {
         where: {
           competitionUnitId,
           originalFileId,
+        },
+      });
+    });
+    it('should have fileType on where condition if provided', async () => {
+      const competitionUnitId = uuid.v4();
+      const originalFileId = uuid.v4();
+      const result = await findExistingSlices({
+        competitionUnitId,
+        originalFileId,
+        fileType: WEATHER_FILE_TYPES.grib,
+      });
+
+      expect(result).toEqual([mockSlicedWeather]);
+      expect(db.SlicedWeather.findAll).toHaveBeenCalledWith({
+        where: {
+          competitionUnitId,
+          originalFileId,
+          fileType: WEATHER_FILE_TYPES.grib,
         },
       });
     });
