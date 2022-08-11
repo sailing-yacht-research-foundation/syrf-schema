@@ -1,5 +1,4 @@
 const uuid = require('uuid');
-const { WEATHER_FILE_TYPES } = require('../../../configs/general.config');
 
 const {
   bulkInsert,
