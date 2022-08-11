@@ -194,6 +194,7 @@ const bullQueues = {
   warningUntrackedEvents: 'warning_untracked_events',
   cleanupESDangling: 'cleanup_es_dangling',
   slicerQueue: 'slicer_queue',
+  era5Queue: 'era5_download_queue',
 };
 
 const externalServiceSources = {
