@@ -92,6 +92,24 @@ describe('Sliced Weather DAL', () => {
         },
       });
     });
+    it('should have fileType on where condition if provided', async () => {
+      const competitionUnitId = uuid.v4();
+      const originalFileId = uuid.v4();
+      const result = await findExistingSlices({
+        competitionUnitId,
+        originalFileId,
+        fileType: 'GRIB',
+      });
+
+      expect(result).toEqual([mockSlicedWeather]);
+      expect(db.SlicedWeather.findAll).toHaveBeenCalledWith({
+        where: {
+          competitionUnitId,
+          originalFileId,
+          fileType: 'GRIB',
+        },
+      });
+    });
   });
 
   describe('findByCompetition', () => {
