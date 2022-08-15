@@ -18,12 +18,13 @@ const {
   bulkCreate,
   bulkCreateWithOptions,
   getParticipantCrews,
+  getAllByCompetitionUnit,
 } = require('../../dataAccess/v1/vesselParticipant');
 
 const db = require('../../index');
 const { emptyPagingResponse } = require('../../utils/utils');
 
-describe('Vessel Participant Group', () => {
+describe('Vessel Participant', () => {
   const mockTransaction = db.sequelize.transaction();
   const defaultIncludeExpectation = expect.arrayContaining([
     expect.objectContaining({
@@ -461,6 +462,82 @@ describe('Vessel Participant Group', () => {
 
       expect(result).toEqual([]);
       expect(db.VesselParticipant.findAll).not.toHaveBeenCalled();
+    });
+  });
+
+  describe('getAllByCompetitionUnit', () => {
+    it('should run query to Competition Unit table for VP in the group and return requested attributes', async () => {
+      const competitionUnitId = uuid.v4();
+      const mockVPs = Array(5)
+        .fill()
+        .map(() => {
+          const vesselId = uuid.v4();
+          return {
+            id: uuid.v4(),
+            sailNumber: faker.datatype.string(),
+            vesselId,
+            vessel: {
+              id: vesselId,
+              publicName: `Vessel #${faker.random.numeric(2)}`,
+              sailNumber: `SS${faker.random.numeric(3)}`,
+            },
+          };
+        });
+
+      const mockCompetitionUnit = {
+        id: uuid.v4(),
+        group: {
+          id: uuid.v4(),
+          vesselParticipants: mockVPs,
+        },
+      };
+
+      db.CompetitionUnit.findOne.mockResolvedValueOnce({
+        toJSON: () => mockCompetitionUnit,
+      });
+
+      const result = await getAllByCompetitionUnit(competitionUnitId);
+
+      expect(result).toEqual(mockVPs);
+      expect(db.CompetitionUnit.findOne).toHaveBeenCalledWith({
+        where: {
+          id: competitionUnitId,
+        },
+        include: [
+          {
+            model: db.VesselParticipantGroup,
+            as: 'group',
+            attributes: {
+              exclude: ['createdById', 'updatedById', 'developerId'],
+            },
+            include: [
+              {
+                model: db.VesselParticipant,
+                as: 'vesselParticipants',
+                attributes: {
+                  exclude: ['createdById', 'updatedById', 'developerId'],
+                },
+                include: [
+                  {
+                    model: db.Vessel,
+                    as: 'vessel',
+                    attributes: ['id', 'publicName'],
+                    paranoid: false,
+                  },
+                ],
+              },
+            ],
+          },
+        ],
+      });
+    });
+
+    it('should return empty array when not found', async () => {
+      const competitionUnitId = uuid.v4();
+      db.CompetitionUnit.findOne.mockResolvedValueOnce(null);
+      const result = await getAllByCompetitionUnit(competitionUnitId);
+
+      expect(result).toEqual([]);
     });
   });
 

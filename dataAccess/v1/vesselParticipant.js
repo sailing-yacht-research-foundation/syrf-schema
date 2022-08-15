@@ -233,6 +233,46 @@ exports.getAllByVpg = async (vpgId, options = {}) => {
   return result;
 };
 
+/**
+ *
+ * @param {string} vpgId
+ * @returns
+ */
+exports.getAllByCompetitionUnit = async (competitionUnitId) => {
+  if (!competitionUnitId) return [];
+  const result = await db.CompetitionUnit.findOne({
+    where: {
+      id: competitionUnitId,
+    },
+    include: [
+      {
+        model: db.VesselParticipantGroup,
+        as: 'group',
+        attributes: { exclude: ['createdById', 'updatedById', 'developerId'] },
+        include: [
+          {
+            model: db.VesselParticipant,
+            as: 'vesselParticipants',
+            attributes: {
+              exclude: ['createdById', 'updatedById', 'developerId'],
+            },
+            include: [
+              {
+                model: db.Vessel,
+                as: 'vessel',
+                attributes: ['id', 'publicName'],
+                paranoid: false,
+              },
+            ],
+          },
+        ],
+      },
+    ],
+  });
+
+  return result?.toJSON()?.group?.vesselParticipants || [];
+};
+
 exports.getById = async (id) => {
   const result = await db.VesselParticipant.findByPk(id, {
     include,
