@@ -223,6 +223,10 @@ describe('Participant DAL', () => {
                 }),
               ]),
             }),
+            expect.objectContaining({
+              as: 'vessel',
+              attributes: ['publicName'],
+            }),
           ]),
           subQuery: false,
         },
