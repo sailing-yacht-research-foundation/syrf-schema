@@ -138,6 +138,11 @@ exports.getAll = async (paging, params) => {
           },
         ],
       },
+      {
+        model: db.Vessel,
+        as: 'vessel',
+        attributes: ['publicName'],
+      },
     ];
   } else {
     if (params.userId) where.createdById = params.userId;
