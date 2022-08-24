@@ -59,6 +59,11 @@ describe('Vessel DAL', () => {
         }),
       ]),
     }),
+    expect.objectContaining({
+      as: 'owner',
+      attributes: ['id', 'name', 'avatar'],
+      required: true,
+    }),
   ]);
   afterEach(() => {
     jest.clearAllMocks();
@@ -1033,6 +1038,11 @@ describe('Vessel DAL', () => {
           }),
         ],
         required: false,
+      }),
+      expect.objectContaining({
+        as: 'owner',
+        attributes: ['id', 'name', 'avatar'],
+        required: true,
       }),
     ]);
     beforeAll(() => {

@@ -42,6 +42,12 @@ const include = [
       },
     ],
   },
+  {
+    model: db.UserProfile,
+    as: 'owner',
+    attributes: ['id', 'name', 'avatar'],
+    required: true,
+  },
   ...includeMeta,
 ];
 
@@ -529,6 +535,12 @@ exports.getUserVessels = async (paging, userId) => {
             },
           ],
           required: false,
+        },
+        {
+          model: db.UserProfile,
+          as: 'owner',
+          attributes: ['id', 'name', 'avatar'],
+          required: true,
         },
       ],
       replacements: {
