@@ -23,6 +23,11 @@ class Vessel extends ModelBase {
       foreignKey: 'vesselId',
       otherKey: 'groupId',
     });
+    this.belongsTo(models.UserProfile, {
+      as: 'owner',
+      foreignKey: 'createdById',
+      constraints: false,
+    });
   }
 }
 
