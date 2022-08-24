@@ -62,7 +62,7 @@ describe('Vessel DAL', () => {
     expect.objectContaining({
       as: 'owner',
       attributes: ['id', 'name', 'avatar'],
-      required: true,
+      required: false,
     }),
   ]);
   afterEach(() => {

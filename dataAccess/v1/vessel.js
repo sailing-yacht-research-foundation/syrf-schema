@@ -46,7 +46,7 @@ const include = [
     model: db.UserProfile,
     as: 'owner',
     attributes: ['id', 'name', 'avatar'],
-    required: true,
+    required: false,
   },
   ...includeMeta,
 ];
