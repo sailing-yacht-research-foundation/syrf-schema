@@ -142,7 +142,7 @@ module.exports = (sequelize) => {
         type: DataTypes.BOOLEAN,
       },
       description: {
-        type: DataTypes.STRING(1000),
+        type: DataTypes.TEXT,
       },
       country: {
         type: DataTypes.STRING,

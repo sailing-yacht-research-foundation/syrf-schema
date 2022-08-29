@@ -105,7 +105,7 @@ module.exports = (sequelize) => {
         type: DataTypes.UUID,
       },
       description: {
-        type: DataTypes.STRING(1000),
+        type: DataTypes.TEXT,
       },
       approximateStartLocation: {
         type: DataTypes.GEOMETRY('POINT', 4326),
