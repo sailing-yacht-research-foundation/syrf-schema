@@ -195,6 +195,7 @@ const bullQueues = {
   cleanupESDangling: 'cleanup_es_dangling',
   slicerQueue: 'slicer_queue',
   era5Queue: 'era5_download_queue',
+  createThumbnail: 'create_thumbnail',
 };
 
 const externalServiceSources = {
@@ -398,7 +399,6 @@ const dataSources = {
   REGADATA: 'REGADATA',
   SAP: 'SAP',
   SWIFTSURE: 'SWIFTSURE',
-
 };
 
 const raceUpdateTypes = {
