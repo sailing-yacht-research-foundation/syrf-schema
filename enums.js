@@ -406,6 +406,7 @@ const raceUpdateTypes = {
   UPDATED: 'UPDATED',
   DELETED: 'DELETED',
   STATUS_CHANGED: 'STATUS_CHANGED',
+  RACE_STARTED: 'RACE_STARTED',
 };
 
 const userRoles = {
