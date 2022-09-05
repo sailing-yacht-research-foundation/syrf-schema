@@ -11,7 +11,13 @@ const include = [
   },
   {
     model: db.VesselParticipant,
-    attributes: ['id', 'vesselParticipantId'],
+    attributes: [
+      'id',
+      'vesselParticipantId',
+      'vesselId',
+      'sailNumber',
+      'trackerDistanceToBow',
+    ],
     as: 'vesselParticipants',
     include: [
       {
