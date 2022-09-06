@@ -14,6 +14,7 @@ const {
   getCrewTrackByTrackId,
   getActiveTrackByUserId,
   updateTrack,
+  deleteEmptyTracksByCompetitionUnitId,
 } = require('../../dataAccess/v1/myTracks');
 
 const db = require('../../index');
@@ -828,6 +829,49 @@ describe('My Track DAL', () => {
           transaction: mockTransaction,
         },
       );
+    });
+  });
+
+  describe('deleteEmptyTracksByCompetitionUnitId', () => {
+    it('should delete empty tracks by competition unit id', async () => {
+      const data = {
+        id: uuid.v4(),
+      };
+      const emptyTracks = Array.from(Array(10)).map(() => ({
+        vesselParticipantCrewId: uuid.v4(),
+      }));
+      db.VesselParticipantCrewTrackJson.findAll.mockResolvedValueOnce(
+        emptyTracks,
+      );
+
+      const arbitraryJson = JSON.parse(faker.datatype.json());
+      db.TrackHistory.destroy.mockResolvedValueOnce(arbitraryJson);
+      db.VesselParticipantCrewTrackJson.destroy.mockResolvedValueOnce(
+        arbitraryJson,
+      );
+
+      const result = await deleteEmptyTracksByCompetitionUnitId(
+        data.id,
+        mockTransaction,
+      );
+
+      expect(result).toEqual([arbitraryJson, arbitraryJson]);
+      expect(db.TrackHistory.destroy).toHaveBeenCalledWith({
+        where: {
+          competitionUnitId: data.id,
+          crewId: {
+            [db.Op.in]: emptyTracks.map((t) => t.vesselParticipantCrewId),
+          },
+        },
+        transaction: mockTransaction,
+      });
+      expect(db.VesselParticipantCrewTrackJson.destroy).toHaveBeenCalledWith({
+        where: {
+          competitionUnitId: data.id,
+          endTime: null,
+        },
+        transaction: mockTransaction,
+      });
     });
   });
 });
