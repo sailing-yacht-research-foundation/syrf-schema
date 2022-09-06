@@ -420,3 +420,35 @@ exports.updateTrack = async (trackId, data, transaction) => {
     transaction,
   });
 };
+
+exports.deleteEmptyTracksByCompetitionUnitId = async (
+  competitionUnitId,
+  transaction,
+) => {
+  const deletedTrackJson = await db.VesselParticipantCrewTrackJson.findAll({
+    where: {
+      competitionUnitId,
+      endTime: null,
+    },
+    raw: true,
+  });
+
+  return await Promise.all([
+    db.TrackHistory.destroy({
+      where: {
+        competitionUnitId,
+        crewId: {
+          [db.Op.in]: deletedTrackJson.map((t) => t.vesselParticipantCrewId),
+        },
+      },
+      transaction,
+    }),
+    db.VesselParticipantCrewTrackJson.destroy({
+      where: {
+        competitionUnitId,
+        endTime: null,
+      },
+      transaction,
+    }),
+  ]);
+};
