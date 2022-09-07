@@ -683,7 +683,7 @@ exports.getByScrapedOriginalIdAndSource = async (originalIds, source) => {
     where.scrapedOriginalId = originalIds;
   }
   return await db.CalendarEvent.findAll({
-    attributes: ['id', 'scrapedOriginalId'],
+    attributes: ['id', 'scrapedOriginalId', 'name', 'approximateStartTime', 'approximateEndTime'],
     where,
   });
 };
