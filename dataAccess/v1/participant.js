@@ -611,7 +611,7 @@ exports.getByUserAndRace = async (raceId, userId, transaction) => {
               model: db.VesselParticipant,
               as: 'vesselParticipants',
               required: true,
-              attributes: ['id', 'vesselParticipantId', 'vesselId'],
+              attributes: { exclude: excludeMeta },
               include: [
                 {
                   model: db.Vessel,

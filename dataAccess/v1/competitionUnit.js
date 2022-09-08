@@ -13,6 +13,7 @@ const {
   includeMeta,
   emptyPagingResponse,
   removeDomainFromUrl,
+  excludeMeta,
 } = require('../../utils/utils');
 
 const include = [
@@ -526,7 +527,7 @@ exports.getUserRelationToCompetitionUnit = async (
           {
             model: db.VesselParticipant,
             as: 'vesselParticipants',
-            attributes: ['id', 'vesselParticipantId', 'vesselId'],
+            attributes: { exclude: excludeMeta },
             include: [
               {
                 model: db.Vessel,
