@@ -452,3 +452,12 @@ exports.deleteEmptyTracksByCompetitionUnitId = async (
     }),
   ]);
 };
+
+exports.deleteTrackJsonById = async (id, transaction) => {
+  return db.VesselParticipantCrewTrackJson.destroy({
+    where: {
+      id,
+    },
+    transaction,
+  });
+};
