@@ -30,7 +30,11 @@ const {
 } = require('../../enums');
 
 const db = require('../../index');
-const { emptyPagingResponse, ValidationError } = require('../../utils/utils');
+const {
+  emptyPagingResponse,
+  ValidationError,
+  excludeMeta,
+} = require('../../utils/utils');
 
 describe('Participant DAL', () => {
   const mockParticipant = {
@@ -1036,11 +1040,7 @@ describe('Participant DAL', () => {
                 expect.objectContaining({
                   as: 'vesselParticipants',
                   required: true,
-                  attributes: expect.arrayContaining([
-                    'id',
-                    'vesselParticipantId',
-                    'vesselId',
-                  ]),
+                  attributes: { exclude: excludeMeta },
                   include: expect.arrayContaining([
                     expect.objectContaining({
                       as: 'vessel',
