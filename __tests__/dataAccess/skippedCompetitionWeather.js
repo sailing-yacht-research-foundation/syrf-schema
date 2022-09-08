@@ -25,7 +25,7 @@ describe('Skipped Slice Competition DAL', () => {
   });
 
   describe('create', () => {
-    it('should call create on ScrapedSuccessfulUrl table', async () => {
+    it('should call create on SkippedCompetitionWeather table', async () => {
       db.SkippedCompetitionWeather.create.mockResolvedValueOnce(mockData);
       const result = await create(mockData, mockTransaction);
 
