@@ -54,7 +54,7 @@ db.TrackHistory = require('./entities/TrackHistory')(sequelize);
 db.CoursePoint = require('./entities/CoursePoint')(sequelize);
 db.MarkTracker = require('./entities/MarkTracker')(sequelize);
 db.SlicedWeather = require('./entities/SlicedWeather')(sequelize);
-db.SkippedSliceCompetition = require('./entities/SkippedSliceCompetition')(
+db.SkippedCompetitionWeather = require('./entities/SkippedCompetitionWeather')(
   sequelize,
 );
 db.CompetitionPointTrackJson = require('./entities/CompetitionPointTrackJson')(

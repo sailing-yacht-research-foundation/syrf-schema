@@ -4,7 +4,7 @@ const uuid = require('uuid');
 const {
   create,
   checkSkippedCompetition,
-} = require('../../dataAccess/v1/skippedSliceCompetition');
+} = require('../../dataAccess/v1/skippedCompetitionWeather');
 
 const db = require('../../index');
 
@@ -26,35 +26,38 @@ describe('Skipped Slice Competition DAL', () => {
 
   describe('create', () => {
     it('should call create on ScrapedSuccessfulUrl table', async () => {
-      db.SkippedSliceCompetition.create.mockResolvedValueOnce(mockData);
+      db.SkippedCompetitionWeather.create.mockResolvedValueOnce(mockData);
       const result = await create(mockData, mockTransaction);
 
       expect(result).toEqual(mockData);
-      expect(db.SkippedSliceCompetition.create).toHaveBeenCalledWith(mockData, {
-        validate: true,
-        transaction: mockTransaction,
-      });
+      expect(db.SkippedCompetitionWeather.create).toHaveBeenCalledWith(
+        mockData,
+        {
+          validate: true,
+          transaction: mockTransaction,
+        },
+      );
     });
   });
 
   describe('checkSkippedCompetition', () => {
     it('should return true when data is found', async () => {
-      db.SkippedSliceCompetition.findOne.mockResolvedValueOnce(mockData);
+      db.SkippedCompetitionWeather.findOne.mockResolvedValueOnce(mockData);
       const result = await checkSkippedCompetition(mockData.competitionUnitId);
 
       expect(result).toEqual(true);
-      expect(db.SkippedSliceCompetition.findOne).toHaveBeenCalledWith({
+      expect(db.SkippedCompetitionWeather.findOne).toHaveBeenCalledWith({
         where: {
           competitionUnitId: mockData.competitionUnitId,
         },
       });
     });
     it('should return false when data is not found', async () => {
-      db.SkippedSliceCompetition.findOne.mockResolvedValueOnce(undefined);
+      db.SkippedCompetitionWeather.findOne.mockResolvedValueOnce(undefined);
       const result = await checkSkippedCompetition(mockData.competitionUnitId);
 
       expect(result).toEqual(false);
-      expect(db.SkippedSliceCompetition.findOne).toHaveBeenCalledWith({
+      expect(db.SkippedCompetitionWeather.findOne).toHaveBeenCalledWith({
         where: {
           competitionUnitId: mockData.competitionUnitId,
         },

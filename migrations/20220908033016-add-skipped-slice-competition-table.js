@@ -1,6 +1,6 @@
 'use strict';
 
-const tableName = 'SkippedSliceCompetitions';
+const tableName = 'SkippedCompetitionWeather';
 
 module.exports = {
   up: async (queryInterface, Sequelize) => {

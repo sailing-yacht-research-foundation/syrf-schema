@@ -57,7 +57,7 @@ jest.mock('./index', () => {
     ScrapedFailedUrl: createMockSequelizeModel(),
     ScrapedSuccessfulUrl: createMockSequelizeModel(),
     SlicedWeather: createMockSequelizeModel(),
-    SkippedSliceCompetition: createMockSequelizeModel(),
+    SkippedCompetitionWeather: createMockSequelizeModel(),
     SubscriptionTier: createMockSequelizeModel(),
     TrackHistory: createMockSequelizeModel(),
     UserFollower: createMockSequelizeModel(),

@@ -1,9 +1,9 @@
 const { Model, DataTypes } = require('sequelize');
 
-class SkippedSliceCompetition extends Model {}
+class SkippedCompetitionWeather extends Model {}
 
 module.exports = (sequelize) => {
-  SkippedSliceCompetition.init(
+  SkippedCompetitionWeather.init(
     {
       id: {
         type: DataTypes.UUID,
@@ -30,10 +30,10 @@ module.exports = (sequelize) => {
       },
     },
     {
-      modelName: 'SkippedSliceCompetition',
+      modelName: 'SkippedCompetitionWeather',
       sequelize,
       timestamps: false,
     },
   );
-  return SkippedSliceCompetition;
+  return SkippedCompetitionWeather;
 };
