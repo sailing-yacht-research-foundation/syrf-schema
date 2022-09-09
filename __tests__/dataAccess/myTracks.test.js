@@ -15,6 +15,7 @@ const {
   getActiveTrackByUserId,
   updateTrack,
   deleteEmptyTracksByCompetitionUnitId,
+  deleteTrackJsonById,
 } = require('../../dataAccess/v1/myTracks');
 
 const db = require('../../index');
@@ -872,6 +873,85 @@ describe('My Track DAL', () => {
         },
         transaction: mockTransaction,
       });
+    });
+  });
+
+  describe('deleteTrackJsonById', () => {
+    it('should delete tracks by id', async () => {
+      const mockTrackJson = {
+        id: uuid.v4(),
+        vesselParticipantCrewId: uuid.v4(),
+        competitionUnitId: uuid.v4(),
+      };
+
+      db.VesselParticipantCrewTrackJson.findByPk.mockResolvedValueOnce(
+        mockTrackJson,
+      );
+      db.VesselParticipantCrewTrackJson.count.mockResolvedValueOnce(0);
+      db.VesselParticipantCrewTrackJson.destroy.mockResolvedValueOnce(1);
+
+      const result = await deleteTrackJsonById(
+        mockTrackJson.id,
+        mockTransaction,
+      );
+
+      expect(result).toEqual(1);
+      expect(db.TrackHistory.destroy).toHaveBeenCalledWith({
+        where: {
+          crewId: mockTrackJson.vesselParticipantCrewId,
+          competitionUnitId: mockTrackJson.competitionUnitId,
+        },
+        transaction: mockTransaction,
+      });
+      expect(db.VesselParticipantCrewTrackJson.destroy).toHaveBeenCalledWith({
+        where: { id: mockTrackJson.id },
+        transaction: mockTransaction,
+      });
+    });
+
+    it('should not delete my tracks if used by other track', async () => {
+      const mockTrackJson = {
+        id: uuid.v4(),
+        vesselParticipantCrewId: uuid.v4(),
+        competitionUnitId: uuid.v4(),
+      };
+
+      db.VesselParticipantCrewTrackJson.findByPk.mockResolvedValueOnce(
+        mockTrackJson,
+      );
+      db.VesselParticipantCrewTrackJson.count.mockResolvedValueOnce(1);
+      db.VesselParticipantCrewTrackJson.destroy.mockResolvedValueOnce(1);
+
+      const result = await deleteTrackJsonById(
+        mockTrackJson.id,
+        mockTransaction,
+      );
+
+      expect(result).toEqual(1);
+      expect(db.TrackHistory.destroy).not.toHaveBeenCalled();
+      expect(db.VesselParticipantCrewTrackJson.destroy).toHaveBeenCalledWith({
+        where: { id: mockTrackJson.id },
+        transaction: mockTransaction,
+      });
+    });
+
+    it('immediately returns when not found', async () => {
+      const mockTrackJson = {
+        id: uuid.v4(),
+        vesselParticipantCrewId: uuid.v4(),
+        competitionUnitId: uuid.v4(),
+      };
+
+      db.VesselParticipantCrewTrackJson.findByPk.mockResolvedValueOnce(null);
+
+      const result = await deleteTrackJsonById(
+        mockTrackJson.id,
+        mockTransaction,
+      );
+
+      expect(result).toEqual(0);
+      expect(db.TrackHistory.destroy).not.toHaveBeenCalled();
+      expect(db.VesselParticipantCrewTrackJson.destroy).not.toHaveBeenCalled();
     });
   });
 });
