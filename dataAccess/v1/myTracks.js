@@ -452,3 +452,40 @@ exports.deleteEmptyTracksByCompetitionUnitId = async (
     }),
   ]);
 };
+
+exports.deleteTrackJsonById = async (id, transaction) => {
+  const track = await db.VesselParticipantCrewTrackJson.findByPk(id);
+
+  if (!track) return 0;
+
+  const sameRaceTrack = await db.VesselParticipantCrewTrackJson.count({
+    where: {
+      vesselParticipantCrewId: track.vesselParticipantCrewId,
+      competitionUnitId: track.competitionUnitId,
+      id: {
+        [db.Op.ne]: id,
+      },
+    },
+  });
+
+  const task = [];
+
+  task.push(
+    db.VesselParticipantCrewTrackJson.destroy({ where: { id }, transaction }),
+  );
+
+  if (sameRaceTrack === 0)
+    task.push(
+      db.TrackHistory.destroy({
+        where: {
+          crewId: track.vesselParticipantCrewId,
+          competitionUnitId: track.competitionUnitId,
+        },
+        transaction,
+      }),
+    );
+
+  const [result] = await Promise.all(task);
+
+  return result;
+};
