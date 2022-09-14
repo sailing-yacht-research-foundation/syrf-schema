@@ -1,7 +1,7 @@
 const { faker } = require('@faker-js/faker');
 const uuid = require('uuid');
 
-const { create, getAll } = require('../../dataAccess/v1/scrapedFailedUrl');
+const { create, getAll, getAllWithPaging } = require('../../dataAccess/v1/scrapedFailedUrl');
 
 const db = require('../../index');
 
@@ -52,6 +52,48 @@ describe('Scraped Failed URL DAL', () => {
         where: {
           source,
         },
+      });
+    });
+  });
+
+  describe('getAllWithPaging', () => {
+    it('should call findAll on ScrapedFailedUrl table with where condition', async () => {
+      const mockUrls = Array(2)
+        .fill()
+        .map(() => {
+          return { url: faker.internet.url(), error: 'Error' };
+        });
+      db.ScrapedFailedUrl.findAll.mockResolvedValueOnce(mockUrls);
+      const result = await getAllWithPaging();
+
+      expect(result).toEqual(mockUrls);
+      expect(db.ScrapedFailedUrl.findAll).toHaveBeenCalledWith({
+        attributes: expect.arrayContaining(["url", "error", "createdAt"]),
+        raw: true,
+        where: {
+          error: expect.any(Object),
+        },
+        order: [["createdAt", "DESC"]],
+        limit: 10,
+        offset: 0
+      });
+    });
+    it('should call findAll on ScrapedFailedUrl table without where condition if excludeNoPositions is true', async () => {
+      const mockUrls = Array(2)
+        .fill()
+        .map(() => {
+          return { url: faker.internet.url(), error: 'Error' };
+        });
+      db.ScrapedFailedUrl.findAll.mockResolvedValueOnce(mockUrls);
+      const result = await getAllWithPaging(3, 20, { excludeNoPositions: false });
+
+      expect(result).toEqual(mockUrls);
+      expect(db.ScrapedFailedUrl.findAll).toHaveBeenCalledWith({
+        attributes: expect.arrayContaining(["url", "error", "createdAt"]),
+        raw: true,
+        order: [["createdAt", "DESC"]],
+        limit: 20,
+        offset: 40
       });
     });
   });
