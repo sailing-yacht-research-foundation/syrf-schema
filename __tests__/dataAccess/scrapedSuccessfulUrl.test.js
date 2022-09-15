@@ -1,11 +1,13 @@
 const { faker } = require('@faker-js/faker');
 const uuid = require('uuid');
+const { dataSources } = require('../../enums');
 
 const {
   create,
   getAll,
   deleteByOriginalId,
   deleteByUrl,
+  getLastRacePerScrapedSource,
 } = require('../../dataAccess/v1/scrapedSuccessfulUrl');
 
 const db = require('../../index');
@@ -102,6 +104,40 @@ describe('Scraped Successful URL DAL', () => {
           url: mockSuccessUrl.url,
         },
         transaction: mockTransaction,
+      });
+    });
+  });
+
+  describe('getLastRacePerScrapedSource', () => {
+    it('should call findAll on ScrapedSuccessfulUrl table with correct source conditions', async () => {
+      const mockUrls = Array(5)
+        .fill()
+        .map(() => {
+          return { source: dataSources.BLUEWATER, url: faker.internet.url(), createdAt: new Date() };
+        });
+      db.ScrapedSuccessfulUrl.findAll.mockResolvedValueOnce(mockUrls);
+      const result = await getLastRacePerScrapedSource();
+
+      expect(result).toEqual(mockUrls);
+      expect(db.ScrapedSuccessfulUrl.findAll).toHaveBeenCalledWith({
+        attributes: [db.Sequelize.literal('DISTINCT ON (source) 1'), 'source', 'url', 'createdAt'],
+        raw: true,
+        where: {
+          source: [dataSources.BLUEWATER,
+            dataSources.ESTELA,
+            dataSources.GEORACING,
+            dataSources.GEOVOILE,
+            dataSources.ISAIL,
+            dataSources.KATTACK,
+            dataSources.KWINDOO,
+            dataSources.METASAIL,
+            dataSources.RACEQS,
+            dataSources.TACKTRACKER,
+            dataSources.TRACTRAC,
+            dataSources.YACHTBOT,
+            dataSources.YELLOWBRICK]
+        },
+        order: [["source"], ["createdAt", "DESC"]]
       });
     });
   });
