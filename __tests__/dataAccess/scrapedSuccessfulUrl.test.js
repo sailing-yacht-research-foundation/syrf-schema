@@ -113,7 +113,7 @@ describe('Scraped Successful URL DAL', () => {
       const mockUrls = Array(5)
         .fill()
         .map(() => {
-          return { source: 'BLUEWATER', url: faker.internet.url(), createdAt: new Date() };
+          return { source: dataSources.BLUEWATER, url: faker.internet.url(), createdAt: new Date() };
         });
       db.ScrapedSuccessfulUrl.findAll.mockResolvedValueOnce(mockUrls);
       const result = await getLastRacePerScrapedSource();
