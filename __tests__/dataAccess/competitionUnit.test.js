@@ -929,6 +929,40 @@ describe('Competition Unit DAL', () => {
 
       expect(result).toEqual(mockCompetitions);
       expect(db.CompetitionUnit.findAll).toHaveBeenCalledTimes(1);
+      expect(db.CompetitionUnit.findAll).toHaveBeenCalledWith(
+        expect.objectContaining({
+          where: {
+            approximateStart: {
+              [db.Op.lte]: filterDate,
+            },
+            '$tracks.id$': null,
+          },
+          subQuery: false,
+          include: [
+            expect.objectContaining({
+              as: 'tracks',
+              required: false,
+              attributes: ['id'],
+            }),
+            expect.objectContaining({
+              as: 'calendarEvent',
+              required: true,
+              where: {
+                status: {
+                  [db.Op.in]: [
+                    calendarEventStatus.SCHEDULED,
+                    calendarEventStatus.CANCELED,
+                    calendarEventStatus.ONGOING,
+                    calendarEventStatus.COMPLETED,
+                  ],
+                },
+                source: dataSources.SYRF,
+                isSimulation: false,
+              },
+            }),
+          ],
+        }),
+      );
     });
   });
 
