@@ -279,7 +279,15 @@ exports.getParticipantsById = async (id, transaction) => {
       calendarEventId: id,
     },
     raw: true,
-    attributes: ['id', 'publicName'],
+    attributes: [
+      'id',
+      'publicName',
+      'invitationStatus',
+      'allowShareInformation',
+      'vesselId',
+      'sailNumber',
+      'trackerDistanceToBow',
+    ],
     transaction,
   });
 
