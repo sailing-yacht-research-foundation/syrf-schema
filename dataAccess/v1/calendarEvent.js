@@ -411,6 +411,7 @@ exports.delete = async (id, transaction) => {
     ),
     participantDAL.delete(
       participants.map((t) => t.id),
+      { shouldDeleteTrackJson: true },
       transaction,
     ),
     courseDAL.delete(
@@ -683,7 +684,13 @@ exports.getByScrapedOriginalIdAndSource = async (originalIds, source) => {
     where.scrapedOriginalId = originalIds;
   }
   return await db.CalendarEvent.findAll({
-    attributes: ['id', 'scrapedOriginalId', 'name', 'approximateStartTime', 'approximateEndTime'],
+    attributes: [
+      'id',
+      'scrapedOriginalId',
+      'name',
+      'approximateStartTime',
+      'approximateEndTime',
+    ],
     where,
   });
 };
