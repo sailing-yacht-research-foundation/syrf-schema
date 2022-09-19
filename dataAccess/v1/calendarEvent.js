@@ -287,6 +287,7 @@ exports.getParticipantsById = async (id, transaction) => {
       'vesselId',
       'sailNumber',
       'trackerDistanceToBow',
+      'userProfileId',
     ],
     transaction,
   });
