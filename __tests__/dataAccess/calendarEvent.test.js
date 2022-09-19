@@ -482,7 +482,16 @@ describe('Calendar Event DAL', () => {
         where: {
           calendarEventId: id,
         },
-        attributes: expect.arrayContaining(['id', 'publicName']),
+        attributes: [
+          'id',
+          'publicName',
+          'invitationStatus',
+          'allowShareInformation',
+          'vesselId',
+          'sailNumber',
+          'trackerDistanceToBow',
+          'userProfileId',
+        ],
         raw: true,
         transaction: undefined,
       });
