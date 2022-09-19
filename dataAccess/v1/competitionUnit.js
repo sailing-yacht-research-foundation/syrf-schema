@@ -640,6 +640,7 @@ exports.getUntrackedRaces = async (filterDate, transaction) => {
           status: {
             [db.Op.in]: [
               calendarEventStatus.SCHEDULED,
+              calendarEventStatus.CANCELED,
               calendarEventStatus.ONGOING,
               calendarEventStatus.COMPLETED,
             ],
