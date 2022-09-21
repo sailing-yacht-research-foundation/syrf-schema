@@ -43,7 +43,7 @@ exports.getAllWithPaging = async (page = 1, size = 10, { excludeNoPositions = tr
       }
     };
   }
-  return await db.ScrapedFailedUrl.findAll({
+  return await db.ScrapedFailedUrl.findAndCountAll({
     attributes: ["url", "error", "createdAt"],
     raw: true,
     where,

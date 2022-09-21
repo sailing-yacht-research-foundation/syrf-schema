@@ -57,17 +57,18 @@ describe('Scraped Failed URL DAL', () => {
   });
 
   describe('getAllWithPaging', () => {
-    it('should call findAll on ScrapedFailedUrl table with where condition', async () => {
+    it('should call findAndCountAll on ScrapedFailedUrl table with where condition', async () => {
       const mockUrls = Array(2)
         .fill()
         .map(() => {
           return { url: faker.internet.url(), error: 'Error' };
         });
-      db.ScrapedFailedUrl.findAll.mockResolvedValueOnce(mockUrls);
+      const mockReturnValue = { count: mockUrls.length, rows: mockUrls };
+      db.ScrapedFailedUrl.findAndCountAll.mockResolvedValueOnce(mockReturnValue);
       const result = await getAllWithPaging();
 
-      expect(result).toEqual(mockUrls);
-      expect(db.ScrapedFailedUrl.findAll).toHaveBeenCalledWith({
+      expect(result).toEqual(mockReturnValue);
+      expect(db.ScrapedFailedUrl.findAndCountAll).toHaveBeenCalledWith({
         attributes: expect.arrayContaining(["url", "error", "createdAt"]),
         raw: true,
         where: {
@@ -78,17 +79,18 @@ describe('Scraped Failed URL DAL', () => {
         offset: 0
       });
     });
-    it('should call findAll on ScrapedFailedUrl table without where condition if excludeNoPositions is true', async () => {
+    it('should call findAndCountAll on ScrapedFailedUrl table without where condition if excludeNoPositions is true', async () => {
       const mockUrls = Array(2)
         .fill()
         .map(() => {
           return { url: faker.internet.url(), error: 'Error' };
         });
-      db.ScrapedFailedUrl.findAll.mockResolvedValueOnce(mockUrls);
+      const mockReturnValue = { count: mockUrls.length, rows: mockUrls };
+      db.ScrapedFailedUrl.findAndCountAll.mockResolvedValueOnce(mockReturnValue);
       const result = await getAllWithPaging(3, 20, { excludeNoPositions: false });
 
-      expect(result).toEqual(mockUrls);
-      expect(db.ScrapedFailedUrl.findAll).toHaveBeenCalledWith({
+      expect(result).toEqual(mockReturnValue);
+      expect(db.ScrapedFailedUrl.findAndCountAll).toHaveBeenCalledWith({
         attributes: expect.arrayContaining(["url", "error", "createdAt"]),
         raw: true,
         order: [["createdAt", "DESC"]],
