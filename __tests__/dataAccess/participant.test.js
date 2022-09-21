@@ -449,6 +449,7 @@ describe('Participant DAL', () => {
 
       const result = await deleteParticipant(
         mockParticipant.id,
+        { shouldDeleteTrackJson: true },
         mockTransaction,
       );
 
@@ -493,6 +494,24 @@ describe('Participant DAL', () => {
         transaction: mockTransaction,
       });
     });
+    it('should not CrewTrackJson of the deleted participant, if shouldDeleteTrackJson = false', async () => {
+      db.Participant.findByPk.mockResolvedValueOnce({
+        toJSON: () => mockParticipant,
+      });
+      const mockCrews = [{ id: uuid.v4() }];
+      db.VesselParticipantCrew.findAll.mockResolvedValueOnce(mockCrews);
+      db.Participant.destroy.mockResolvedValueOnce(1);
+
+      const result = await deleteParticipant(
+        mockParticipant.id,
+        { shouldDeleteTrackJson: false },
+        mockTransaction,
+      );
+
+      expect(result).toEqual(mockParticipant);
+
+      expect(db.VesselParticipantCrewTrackJson.destroy).not.toHaveBeenCalled();
+    });
     it('should skip fetching detail, and return the deleted participant count if a multi-delete request', async () => {
       const mockCrews = [{ id: uuid.v4() }];
       db.VesselParticipantCrew.findAll.mockResolvedValueOnce(mockCrews);
@@ -500,6 +519,7 @@ describe('Participant DAL', () => {
 
       const result = await deleteParticipant(
         [mockParticipant.id],
+        { shouldDeleteTrackJson: true },
         mockTransaction,
       );
 

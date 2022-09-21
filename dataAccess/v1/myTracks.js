@@ -103,6 +103,7 @@ exports.getMyTracks = async (userId, isPrivate, pagination) => {
           model: db.Participant,
           as: 'participant',
           attributes: ['id', 'publicName'],
+          required: false,
           where: {
             userProfileId: userId,
           },
@@ -138,6 +139,9 @@ exports.getMyTracks = async (userId, isPrivate, pagination) => {
           },
         },
       ],
+      where: {
+        userProfileId: userId,
+      },
     },
     {
       ...pagination,

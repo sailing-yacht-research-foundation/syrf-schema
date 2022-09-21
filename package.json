@@ -1,6 +1,6 @@
 {
   "name": "syrf-schema",
-  "version": "1.0.25-1.3",
+  "version": "1.0.25-1.6",
   "description": "",
   "main": "index.js",
   "scripts": {
