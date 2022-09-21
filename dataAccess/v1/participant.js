@@ -239,17 +239,8 @@ exports.delete = async (
     transaction,
   });
 
-  const vpcParam = {
-    where: {
-      vesselParticipantCrewId: {
-        [db.Op.in]: vpc.map((t) => t.id),
-      },
-    },
-    transaction,
-  };
-
   const [count] = await Promise.all([
-    await db.Participant.destroy({
+    db.Participant.destroy({
       where: {
         id: {
           [db.Op.in]: id,
@@ -265,7 +256,14 @@ exports.delete = async (
       transaction,
     }),
     shouldDeleteTrackJson
-      ? db.VesselParticipantCrewTrackJson.destroy(vpcParam)
+      ? db.VesselParticipantCrewTrackJson.destroy({
+          where: {
+            vesselParticipantCrewId: {
+              [db.Op.in]: vpc.map((t) => t.id),
+            },
+          },
+          transaction,
+        })
       : Promise.resolve(),
   ]);
 
