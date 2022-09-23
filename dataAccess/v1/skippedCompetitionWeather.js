@@ -41,6 +41,11 @@ exports.getUnskippedUnslicedCompetition = async (limit) => {
       boundingBox: {
         [db.Op.ne]: null,
       },
+      // Note: This needs to be added in case there's race where endTime is lesser than the startTime
+      // This cause the race to be listed, sliced but produce no result (no file uploaded), and that same race to be re-added back to the queue everytime
+      startTime: {
+        [db.Op.lte]: db.Sequelize.literal('"CompetitionUnit"."endTime"'),
+      },
     },
     include: [
       {
