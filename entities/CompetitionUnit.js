@@ -50,6 +50,11 @@ class CompetitionUnit extends ModelBase {
       foreignKey: 'competitionUnitId',
       constraints: false,
     });
+    this.hasMany(models.SkippedCompetitionWeather, {
+      as: 'skippedWeathers',
+      foreignKey: 'competitionUnitId',
+      constraints: false,
+    });
   }
 }
 
