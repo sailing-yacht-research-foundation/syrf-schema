@@ -1,4 +1,3 @@
-const { competitionUnitStatus } = require('../../../enums');
 const db = require('../../index');
 
 exports.getCurrent = async (userId) => {
@@ -99,41 +98,4 @@ exports.getUsersPrivateTracks = async (userId, transaction) => {
     },
     transaction,
   });
-};
-
-exports.getOngoingTracks = async (userId) => {
-  const result = await db.CompetitionUnit.findAll({
-    where: {
-      status: competitionUnitStatus.ONGOING,
-    },
-    attributes: ['id', 'name', 'status', 'isCompleted'],
-    include: [
-      {
-        model: db.CalendarEvent,
-        as: 'calendarEvent',
-        attributes: ['id', 'name', 'status'],
-        required: true,
-        where: {
-          createdById: userId,
-          isPrivate: true,
-        },
-      },
-      {
-        model: db.VesselParticipantCrewTrackJson,
-        as: 'trackJsons',
-        attributes: ['id'],
-        include: [
-          {
-            model: db.VesselParticipantCrew,
-            as: 'crew',
-            attributes: ['id', 'participantId', 'vesselParticipantId'],
-            required: true,
-          },
-        ],
-        required: true,
-      },
-    ],
-  });
-
-  return result.map((row) => row.toJSON());
 };
