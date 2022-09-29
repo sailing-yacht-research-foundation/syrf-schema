@@ -2,7 +2,7 @@ const uuid = require('uuid');
 const db = require('../../index');
 const { dataSources } = require('../../enums');
 const { MY_TRACK_NAME_SEPARATOR } = require('../../constants');
-const { competitionUnitStatus } = require('../../../enums');
+const { competitionUnitStatus } = require('../../enums');
 
 const excludeMeta = ['ownerId', 'createdById', 'updatedById', 'developerId'];
 
