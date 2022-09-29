@@ -506,6 +506,9 @@ exports.getOngoingTracks = async (userId) => {
         model: db.VesselParticipantCrewTrackJson,
         as: 'trackJsons',
         attributes: ['id'],
+        where: {
+          endTime: null,
+        },
         include: [
           {
             model: db.VesselParticipantCrew,
