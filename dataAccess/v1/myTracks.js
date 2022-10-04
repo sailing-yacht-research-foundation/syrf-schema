@@ -2,6 +2,7 @@ const uuid = require('uuid');
 const db = require('../../index');
 const { dataSources } = require('../../enums');
 const { MY_TRACK_NAME_SEPARATOR } = require('../../constants');
+const { competitionUnitStatus } = require('../../enums');
 
 const excludeMeta = ['ownerId', 'createdById', 'updatedById', 'developerId'];
 
@@ -492,4 +493,45 @@ exports.deleteTrackJsonById = async (id, transaction) => {
   const [result] = await Promise.all(task);
 
   return result;
+};
+
+exports.getOngoingTracks = async (userId) => {
+  const result = await db.CompetitionUnit.findAll({
+    where: {
+      status: competitionUnitStatus.ONGOING,
+    },
+    attributes: ['id', 'name', 'status', 'isCompleted'],
+    include: [
+      {
+        model: db.VesselParticipantCrewTrackJson,
+        as: 'trackJsons',
+        attributes: ['id'],
+        where: {
+          endTime: null,
+        },
+        include: [
+          {
+            model: db.VesselParticipantCrew,
+            as: 'crew',
+            attributes: ['id', 'participantId', 'vesselParticipantId'],
+            required: true,
+            include: [
+              {
+                model: db.Participant,
+                as: 'participant',
+                attributes: ['id', 'userProfileId'],
+                required: true,
+                where: {
+                  userProfileId: userId,
+                },
+              },
+            ],
+          },
+        ],
+        required: true,
+      },
+    ],
+  });
+
+  return result.map((row) => row.toJSON());
 };
