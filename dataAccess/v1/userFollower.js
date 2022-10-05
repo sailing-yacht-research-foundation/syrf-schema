@@ -273,6 +273,21 @@ exports.getTopVelocityUser = async (paging, { country, userId }) => {
     ['$follower.followerId$']: {
       [Op.eq]: null, // Only show top gaining follower that user not followed / request (if private) to follow yet
     },
+    [Op.or]: [
+      {
+        ['$following.userId$']: {
+          [Op.eq]: null, // Show top user not following the user
+        },
+      },
+      {
+        ['$following.status$']: {
+          [Op.ne]: followerStatus.blocked, // Only show user not blocked yet
+        },
+      },
+    ],
+    id: {
+      [Op.ne]: userId, // Exclude the requesting user
+    },
   });
   const checkDate = addHours(new Date(), parseInt(VELOCITY_TIME_OFFSET));
   const result = await db.UserProfile.findAllWithPaging(
@@ -300,6 +315,15 @@ exports.getTopVelocityUser = async (paging, { country, userId }) => {
           required: false,
           where: {
             followerId: userId,
+          },
+        },
+        {
+          as: 'following',
+          model: db.UserFollower,
+          attributes: [],
+          required: false,
+          where: {
+            userId,
           },
         },
       ],
