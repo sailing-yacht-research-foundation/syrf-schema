@@ -529,12 +529,34 @@ describe('User Follower', () => {
                 followerId: userId,
               },
             }),
+            expect.objectContaining({
+              as: 'following',
+              required: false,
+              where: {
+                userId,
+              },
+            }),
           ]),
           where: {
             ['$follower.followerId$']: {
               [db.Op.eq]: null,
             },
             country,
+            id: {
+              [db.Op.ne]: userId,
+            },
+            [db.Op.or]: [
+              {
+                ['$following.userId$']: {
+                  [db.Op.eq]: null,
+                },
+              },
+              {
+                ['$following.status$']: {
+                  [db.Op.ne]: followerStatus.blocked,
+                },
+              },
+            ],
           },
           subQuery: false,
         },
@@ -557,6 +579,21 @@ describe('User Follower', () => {
             ['$follower.followerId$']: {
               [db.Op.eq]: null,
             },
+            id: {
+              [db.Op.ne]: userId,
+            },
+            [db.Op.or]: [
+              {
+                ['$following.userId$']: {
+                  [db.Op.eq]: null,
+                },
+              },
+              {
+                ['$following.status$']: {
+                  [db.Op.ne]: followerStatus.blocked,
+                },
+              },
+            ],
           },
         }),
         {
@@ -592,12 +629,34 @@ describe('User Follower', () => {
                 followerId: userId,
               },
             }),
+            expect.objectContaining({
+              as: 'following',
+              required: false,
+              where: {
+                userId,
+              },
+            }),
           ]),
           where: {
             ['$follower.followerId$']: {
               [db.Op.eq]: null,
             },
             country,
+            id: {
+              [db.Op.ne]: userId,
+            },
+            [db.Op.or]: [
+              {
+                ['$following.userId$']: {
+                  [db.Op.eq]: null,
+                },
+              },
+              {
+                ['$following.status$']: {
+                  [db.Op.ne]: followerStatus.blocked,
+                },
+              },
+            ],
           },
           subQuery: false,
         },
@@ -620,6 +679,21 @@ describe('User Follower', () => {
             ['$follower.followerId$']: {
               [db.Op.eq]: null,
             },
+            id: {
+              [db.Op.ne]: userId,
+            },
+            [db.Op.or]: [
+              {
+                ['$following.userId$']: {
+                  [db.Op.eq]: null,
+                },
+              },
+              {
+                ['$following.status$']: {
+                  [db.Op.ne]: followerStatus.blocked,
+                },
+              },
+            ],
           },
         }),
         {
