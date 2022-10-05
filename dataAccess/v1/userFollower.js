@@ -205,6 +205,21 @@ exports.getTopCountryUser = async (paging, { country, userId }) => {
     ['$follower.followerId$']: {
       [Op.eq]: null, // Only show top user not followed yet
     },
+    [Op.or]: [
+      {
+        ['$following.userId$']: {
+          [Op.eq]: null, // Show top user not following the user
+        },
+      },
+      {
+        ['$following.status$']: {
+          [Op.ne]: followerStatus.blocked, // Only show user not blocked yet
+        },
+      },
+    ],
+    id: {
+      [Op.ne]: userId, // Exclude the requesting user
+    },
   });
 
   const result = await db.UserProfile.findAllWithPaging(
@@ -230,6 +245,15 @@ exports.getTopCountryUser = async (paging, { country, userId }) => {
           required: false,
           where: {
             followerId: userId,
+          },
+        },
+        {
+          as: 'following',
+          model: db.UserFollower,
+          attributes: [],
+          required: false,
+          where: {
+            userId,
           },
         },
       ],
